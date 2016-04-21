@@ -1,0 +1,7 @@
+export(segreg
+,topsegreg
+,fit.seg
+,trendheatmap
+,plotmarker
+,bpdist)
+import(segmented, gplots)
