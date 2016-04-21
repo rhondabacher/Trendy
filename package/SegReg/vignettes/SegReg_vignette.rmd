@@ -30,10 +30,10 @@ $$M^k_{g}: X_g \sim \beta^k_0 + \beta^k_1*I\{s: s\ge 1,s \le b^k_{g,1}\}*s +
 \beta^k_2*I\{s: s\ge b^k_{g,1}+1, s \le b^k_{g,2}\}*(s-b^k_{g,1}) + ,...,  $$
 $$+\beta^k_{k+1}*I\{s: s\ge b^k_{g,k}+1, s \le S\}*(s-b^k_{g,k})
 $$
-For each $k$, the segemented regression estimates $k$ breakpoints 
+For each $k$, the segmented regression estimates $k$ breakpoints 
 ($b^k_{g,1}$, $b^k_{g,2}$, ... $b^k_{g,k})$ between $1$ and $S$.
 The segmented regression also estimate $k+2$ $\beta$s. In which $\beta^k_0$
-indicates the intercept, and the other $\beta$s indicate slopes for the $k+1$ segements separated by the $k$ breakpoints.
+indicates the intercept, and the other $\beta$s indicate slopes for the $k+1$ segments separated by the $k$ breakpoints.
 We denote the adjusted $R^2$ for this model as $r^k_g$.
 
 For a given gene, among the models with varying $k$, SegeReg picks the optimal number of breakpoints for this gene by comparing the adjusted $R^2$s:
@@ -41,7 +41,7 @@ For a given gene, among the models with varying $k$, SegeReg picks the optimal n
 $$\tilde{k_g} = \text{argmax}_{k=1,...,n_k}(r^k_g) $$
 
 To avoid overfitting, the optimal number of breakpoints will be set as $\tilde{k_g} = \tilde{k_g} -1$ if any of the following happens: 
-at least of one segements having less than $c_{num}$ samples, 
+at least of one segments having less than $c_{num}$ samples, 
 or $r^{\tilde{k}}_g - r^{\tilde{k}-1}_g < c_{diff}$. The thresholds
 $c_{num}$ and $c_{diff}$ can be specified by the user; defaults are 5 and 0.1,
 respectively.
@@ -143,7 +143,7 @@ res.top <- topsegreg(res)
 # default adjusted R square cutoff is 0.5
 res.top$radj
 ```
-The topsegreg() function may be used to exract top dynamic genes.
+The topsegreg() function may be used to extract top dynamic genes.
 By default, topsegreg() will extract genes whose adjusted $R^2$ $r_g$
 is greater or equal to 0.5. To change this threshold, a user may specify the
 r.cut parameter in topsegreg() function.
@@ -231,7 +231,7 @@ print(res.top$slp.pval["g2"]) # p value of each the segment
 
 The above printouts show that for gene g2, the optimal number of breakpoints 
 is 2. Two estimated breakpoints are close to s12 and s30. 
-The fitted slopes for the 3 segements are 3.31, 0.06 and -2.97.
+The fitted slopes for the 3 segments are 3.31, 0.06 and -2.97.
 
 ## Breakpoint distribution over the time course
 
