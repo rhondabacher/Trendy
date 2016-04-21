@@ -8,7 +8,7 @@ by taking genes that can be well profiled by its gene-specific segmented regress
 the dynamic genes and their trends, to order dynamic genes by their trends, and to compute breakpoint distribution at different 
 time points (e.g. detect time points with a large number of expression changes).
 
-Details of SegReg may be found at the vignette:
+Details of SegReg may be found in the vignette:
 https://github.com/lengning/SegReg/blob/master/SegReg_vignette.pdf
 
 To download the vignette:
