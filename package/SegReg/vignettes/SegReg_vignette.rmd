@@ -244,14 +244,40 @@ barplot(res.bp, ylab="Number of breakpoint", col="blue")
 
 The bar plot indicates that many genes have breakpoint around s12 and s13.
 
-# More advanced options
+# More advanced analysis
 
+## Time course with non-uniform sampling
+If the samples were collected with different time intervals and the user wants to
+use the original time (instead of a vector of consecutive numbers),
+the user may specify it via the t.vect parameter in segreg() function.
+For example, suppose for the example data, the first 30 samples were collected 
+every hour and the other 10 samples were collected every 5 hours. We may define
+the time vector as:
+```{r, cache=TRUE}
+t.v <- c(1:30,seq(31,80,5))
+names(t.v) <- colnames(SegRegExData)
+print(t.v)
+```
+To run SegReg model using the empirical collecting time instead of sample ID (1-40):
+```{r, cache=TRUE}
+res2 <- segreg(SegRegExData, t.vect=t.v, maxk=2)
+res.top2 <- topsegreg(res2)
+res.trend2 <- trendheatmap(res.top2, showplot=FALSE)
+str(res.trend2)
+```
+To plot the first 6 genes that 
+have up-regulated pattern at the beginning of the time course, by showing empirical time at x axis:
+```{r, cache=TRUE, fig.height=7}
+plot1.new <- plotmarker(SegRegExData,t.vect=t.v,
+									listname=names(res.trend2$firstup)[1:6],fittedres=res2)
+```
+
+## Additional options
 In segreg() function, 
 the thresholds
 $c_{num}$, $c_{diff}$ and  $c_{pval}$
 can be specified via parameters
 min.num.in.seg, cutdiff and pvalcut.
-
 
 
 # SessionInfo

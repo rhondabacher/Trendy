@@ -4,7 +4,7 @@
 \alias{segreg}
 \title{segmented regression on a set of genes}
 \usage{
-segreg(data, meancut=10,maxk=3, min.num.in.seg=5, pvalcut=.1,
+segreg(data, meancut=10,maxk=3, t.vect=NULL, min.num.in.seg=5, pvalcut=.1,
                cutdiff=.1, num.try=100,keepfit=FALSE)
 }
 \arguments{
@@ -15,6 +15,9 @@ For each gene, the function will fit maxk+1 models containing 0->maxk breakpoint
 (1->(maxk+1)) segments. The model with highest adjusted r value will be selected.}
 
 \item{maxk}{max number of breakpoints to consider.}
+
+\item{t.vect}{a numerical vector indicates time points. If it si
+NULL (default), the time will be assumed to be 1:N in which N is number of samples.}
 
 \item{min.num.in.seg}{min number of samples within a segment}
 

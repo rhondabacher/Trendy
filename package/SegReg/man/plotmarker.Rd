@@ -4,13 +4,16 @@
 \alias{plotmarker}
 \title{plot markers of interest}
 \usage{
-plotmarker(data, filename=NULL, listname, pdf=FALSE, seg=TRUE, fittedres=NULL,
+plotmarker(data, t.vect=NULL, filename=NULL, listname, pdf=FALSE, seg=TRUE, fittedres=NULL,
 cond.col=NULL, cond.col.sample=NULL, cond.prefix="day",
 yname="normalized expression",par.param = c(3,2),
 pdfheight=15, pdfwidth=10)
 }
 \arguments{
 \item{data}{normalized expression matrix; rows are genes and columns are samples}
+
+\item{t.vect}{a numerical vector indicates time points. If it si
+NULL (default), the time will be assumed to be 1:N in which N is number of samples.}
 
 \item{filename}{output file name; will be ignored if pdf=F}
 

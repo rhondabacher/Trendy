@@ -1,11 +1,12 @@
 #' @title segmented regression on a gene
-#' @usage fit.seg(data, g.in, maxk=5, min.num.in.seg=5, pvalcut=.1,
+#' @usage fit.seg(data, g.in, maxk=5, t.vect=NULL, min.num.in.seg=5, pvalcut=.1,
 #'                cutdiff=.1, num.try=100,keepfit=FALSE)
 #' @param data normalized expression measure. Rows are genes and columns are samples. The data matrix is expected to be normalized.
 #' @param g.in name of the gene of interest. The gene name should be in the row names of the input data matrix.
 #' @param maxk max number of breakpoints to consider. 
 #' For each gene, the function will fit maxk+1 models containing 0->maxk breakpoints
 #' (1->(maxk+1)) segments. The model with highest adjusted r value will be selected.
+#' @param t.vect a numerical vector indicates time points. If it si NULL (default), the time will be assumed to be 1:N in which N is number of samples.
 #' @param min.num.in.seg min number of samples within a segment
 #' @param pvalcut p value cutoff. If the p value of a segment is greater than pvalcut,
 #' this segment will be called as 'no change'
@@ -28,13 +29,14 @@
 # the optimal k is the last one whose Radj is > last one + 0.1
 # search from 1 to 5 breakpoints
 ###################
-fit.seg <- function(data, g.in, maxk=5, min.num.in.seg=5, pvalcut=.1,
+fit.seg <- function(data, g.in, maxk=5, t.vect=NULL,min.num.in.seg=5, pvalcut=.1, 
 										cutdiff=.1, num.try=100,keepfit=FALSE){
 data.norm <- data	
 if(length(g.in)!=1)stop("only one gene should be considered!")
 if(!g.in%in%rownames(data)) stop("gene name is not in row names of expressiopn matrix!")
 library(segmented)
 t.use <- 1:ncol(data.norm)
+if(!is.null(t.vect))t.use <- t.vect
 t.l <- ncol(data.norm)
 step.r <- c(1:maxk)
 dat.tmp <- data.norm[g.in,]

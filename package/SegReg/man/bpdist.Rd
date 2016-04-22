@@ -4,10 +4,12 @@
 \alias{bpdist}
 \title{Distribution of breakpoints}
 \usage{
-bpdist(topres)
+bpdist(topres, ndigits=0)
 }
 \arguments{
 \item{topres}{results from topsegreg() function}
+
+\item{ndigits}{how many digits to be used when rounding. Default is 0 (return integers).}
 }
 \value{
 The function takes significant genes called from

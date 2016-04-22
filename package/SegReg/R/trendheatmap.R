@@ -29,11 +29,11 @@ bks.sign.sort <- c(bks.sign.sort.list[[1]],bks.sign.sort.list[[2]],bks.sign.sort
 
 seg.all.id.highr.sign.sort <- seg.all.id.highr[names(bks.sign.sort),]
 
-if(showplot)heatmap.2(seg.all.id.highr.sign.sort,trace="none",
+if(showplot){heatmap.2(seg.all.id.highr.sign.sort,trace="none",
 					Rowv=FALSE,Colv=FALSE,col=c("slateblue1","black","tomato"),
 					key=FALSE,
 					cexRow=.5)
 legend("top",ncol=3, c("up","no change","down"), fill=rev(c("slateblue1","black","tomato")))
-
+									 }
 out <- bks.sign.sort.list
 }

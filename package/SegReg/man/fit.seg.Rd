@@ -4,7 +4,7 @@
 \alias{fit.seg}
 \title{segmented regression on a gene}
 \usage{
-fit.seg(data, g.in, maxk=5, min.num.in.seg=5, pvalcut=.1,
+fit.seg(data, g.in, maxk=5, t.vect=NULL, min.num.in.seg=5, pvalcut=.1,
                cutdiff=.1, num.try=100,keepfit=FALSE)
 }
 \arguments{
@@ -15,6 +15,8 @@ fit.seg(data, g.in, maxk=5, min.num.in.seg=5, pvalcut=.1,
 \item{maxk}{max number of breakpoints to consider.
 For each gene, the function will fit maxk+1 models containing 0->maxk breakpoints
 (1->(maxk+1)) segments. The model with highest adjusted r value will be selected.}
+
+\item{t.vect}{a numerical vector indicates time points. If it si NULL (default), the time will be assumed to be 1:N in which N is number of samples.}
 
 \item{min.num.in.seg}{min number of samples within a segment}
 

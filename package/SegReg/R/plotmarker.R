@@ -1,9 +1,11 @@
 #' @title plot markers of interest
-#' @usage plotmarker(data, filename=NULL, listname, pdf=FALSE, seg=TRUE, fittedres=NULL,
+#' @usage plotmarker(data, t.vect=NULL, filename=NULL, listname, pdf=FALSE, seg=TRUE, fittedres=NULL,
 #' cond.col=NULL, cond.col.sample=NULL, cond.prefix="day",
 #' yname="normalized expression",par.param = c(3,2),
 #' pdfheight=15, pdfwidth=10)
 #' @param data normalized expression matrix; rows are genes and columns are samples
+#' @param t.vect a numerical vector indicates time points. If it si
+#'  NULL (default), the time will be assumed to be 1:N in which N is number of samples.
 #' @param filename output file name; will be ignored if pdf=F
 #' @param listname a list of genes of interest
 #' @param whether output figs to a pdf file
@@ -24,12 +26,12 @@
 #################
 # check genes
 #################
-plotmarker <- function(data, x=NULL,filename=NULL, listname, pdf=FALSE, seg=TRUE, fittedres=NULL,
+plotmarker <- function(data, t.vect=NULL,filename=NULL, listname, pdf=FALSE, seg=TRUE, fittedres=NULL,
 cond.col=NULL, cond.col.sample=NULL, cond.prefix="day", 
 yname="normalized expression",par.param = c(3,2),
 pdfheight=15, pdfwidth=10){
 		data.norm <- data
-		if(is.null(x))x <- 1:ncol(data.norm)
+		if(is.null(t.vect))t.vect <- 1:ncol(data.norm)
 		out <- vector("list",length(listname))
 		names(out) <- listname
 		if(pdf)pdf(filename, height=pdfheight, width=pdfwidth)
@@ -40,12 +42,12 @@ pdfheight=15, pdfwidth=10){
 		}
 		if(is.null(cond.col))cond.col.sample="black"
 		for(i in 1:length(listname)){
-		plot(x, data.norm[listname[i],],pch=20,col=cond.col.sample, 
+		plot(t.vect, data.norm[listname[i],],pch=20,col=cond.col.sample, 
 				 main=listname[i],ylab=yname, xlab="")
 		if(seg){
 		if(is.null(fittedres))tmp <- fit.seg(data,listname[i])
 		if(!is.null(fittedres))tmp <- fittedres[[listname[i]]]
-		lines(tmp$fitted,lwd=2)
+		lines(t.vect,tmp$fitted,lwd=2)
 		out[[i]] <- tmp
 		}
 		}

@@ -1,8 +1,10 @@
 #' @title segmented regression on a set of genes
-#' @usage segreg(data, meancut=10,maxk=3, min.num.in.seg=5, pvalcut=.1,
+#' @usage segreg(data, meancut=10,maxk=3, t.vect=NULL, min.num.in.seg=5, pvalcut=.1,
 #'                cutdiff=.1, num.try=100,keepfit=FALSE)
 #' @param data normalized expression measure. Rows are genes and columns are samples. The data matrix is expected to be normalized.
 #' @param maxk max number of breakpoints to consider. 
+#' @param t.vect a numerical vector indicates time points. If it si
+#' NULL (default), the time will be assumed to be 1:N in which N is number of samples.
 #' @param meancut default is 10. Genes whose mean is less than meancut will not be considered.
 #' For each gene, the function will fit maxk+1 models containing 0->maxk breakpoints
 #' (1->(maxk+1)) segments. The model with highest adjusted r value will be selected.
@@ -28,7 +30,7 @@
 # the optimal k is the last one whose Radj is > last one + 0.1
 # search from 1 to 5 breakpoints
 ###################
-segreg <- function(data, meancut=10, maxk=3, min.num.in.seg=5, pvalcut=.1,
+segreg <- function(data, meancut=10, maxk=3, t.vect=NULL,min.num.in.seg=5, pvalcut=.1,
                     cutdiff=.1, num.try=100,keepfit=FALSE
 										){
 
@@ -50,7 +52,7 @@ if(nsample < (maxk+1)*min.num.in.seg){
 
 seg.all <- sapply(1:nrow(data.gt10),function(i){
 aa=fit.seg(data.gt10, rownames(data.gt10)[i], 
-				maxk=maxk, min.num.in.seg=min.num.in.seg, pvalcut=pvalcut,
+				maxk=maxk, t.vect=t.vect,min.num.in.seg=min.num.in.seg, pvalcut=pvalcut,
                     cutdiff=cutdiff, num.try=num.try,keepfit=keepfit)
 },simplify=F)
 names(seg.all) <-  rownames(data.gt10)
