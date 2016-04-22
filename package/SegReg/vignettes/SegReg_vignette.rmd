@@ -215,7 +215,7 @@ plot2 <- plotmarker(SegRegExData,listname=names(res.trend$firstdown)[1:6],
 
 To plot the 2 genes in the third group of genes (first no change):
 ```{r, cache=TRUE, fig.height=3}
-plot2 <- plotmarker(SegRegExData,listname=names(res.trend$firstdown)[1:2],
+plot2 <- plotmarker(SegRegExData,listname=names(res.trend$firstnochange)[1:2],
 										fittedres=res,par.param=c(1,2))
 ```
 
