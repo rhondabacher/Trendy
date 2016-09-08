@@ -31,10 +31,9 @@
 # search from 1 to 5 breakpoints
 ###################
 segreg <- function(data, meancut=10, maxk=3, t.vect=NULL,min.num.in.seg=5, pvalcut=.1,
-                    cutdiff=.1, num.try=100,keepfit=FALSE
-										){
+                    cutdiff=.1, num.try=100,keepfit=FALSE) {
 
-data.gt10.raw <- data[which(rowMeans(data)>=meancut),]
+data.gt10.raw <- data[which(rowMeans(data) >= meancut),]
 
 #data.gt10 <- t(apply(data.gt10.raw,1,scale))
 #rownames(data.gt10) <- rownames(data.gt10.raw)
@@ -43,18 +42,28 @@ data.gt10.raw <- data[which(rowMeans(data)>=meancut),]
 data.gt10 <- data.gt10.raw
 
 nsample <- ncol(data)
-if(nsample < (maxk+1)*min.num.in.seg){
-	maxk <- floor(nsample/min.num.in.seg)-1
-	message("number of samples (", nsample, ") is less than 
+if (nsample < (maxk + 1) * min.num.in.seg) {
+	maxk <- floor(nsample / min.num.in.seg) - 1
+	message("Number of samples (", nsample, ") is less than 
 	[# segments] * [min number of samples in a segment]. maxk has been
 	set to", maxk)
 	}
 
-seg.all <- sapply(1:nrow(data.gt10),function(i){
-aa=fit.seg(data.gt10, rownames(data.gt10)[i], 
-				maxk=maxk, t.vect=t.vect,min.num.in.seg=min.num.in.seg, pvalcut=pvalcut,
-                    cutdiff=cutdiff, num.try=num.try,keepfit=keepfit)
-},simplify=F)
-names(seg.all) <-  rownames(data.gt10)
+	library(parallel)
+	NCores <- detectCores() - 1
+	
+# system.time(seg.all <- sapply(1:nrow(data.gt10), function(i) {
+# 	aa = fit.seg(data.gt10, rownames(data.gt10)[i],
+# 				maxk=maxk, t.vect=t.vect,min.num.in.seg=min.num.in.seg, pvalcut=pvalcut,
+#                 cutdiff=cutdiff, num.try=num.try,keepfit=keepfit)
+# }, simplify = F))
+
+seg.all <- mclapply(1:nrow(data.gt10), function(x) {
+	fit.seg(data = data.gt10[rownames(data.gt10)[x],], g.in = rownames(data.gt10)[x], maxk=maxk, t.vect=t.vect, 
+			min.num.in.seg=min.num.in.seg, pvalcut=pvalcut, cutdiff=cutdiff, num.try=num.try, keepfit=keepfit)}, mc.cores=NCores)
+
+			
+names(seg.all) <- rownames(data.gt10)
+
 seg.all
 }

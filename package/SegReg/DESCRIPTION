@@ -6,6 +6,6 @@ Date: 2016-04-20
 Author: Ning Leng
 Maintainer: Ning Leng <lengning1@gmail.com>
 Description: SegReg implements segemented regression to detect breakpoints for each gene in time course expression data
-Depends: segmented, gplots
+Depends: segmented, gplots, parallel
 Collate: 'segreg.R' 'topsegreg.R' 'fit.seg.R' 'trendheatmap.R' 'plotmarker.R' 'bpdist.R'
 BuildVignettes: yes
