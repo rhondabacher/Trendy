@@ -59,7 +59,7 @@ if (nsample < (maxk + 1) * min.num.in.seg) {
 # }, simplify = F))
 
 seg.all <- mclapply(1:nrow(data.gt10), function(x) {
-	fit.seg(data = data.gt10[rownames(data.gt10)[x],], g.in = rownames(data.gt10)[x], maxk=maxk, t.vect=t.vect, 
+	fit.seg(data = data.gt10[rownames(data.gt10)[x],], maxk=maxk, t.vect=t.vect, 
 			min.num.in.seg=min.num.in.seg, pvalcut=pvalcut, cutdiff=cutdiff, num.try=num.try, keepfit=keepfit)}, mc.cores=NCores)
 
 			
