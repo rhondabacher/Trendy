@@ -34,9 +34,12 @@ data.norm <- data
 # if (length(g.in)!=1) stop("Only one gene should be considered!")
 # if (!g.in%in%rownames(data)) stop("Gene name is not in row names of expression matrix!")
 library(segmented)
-t.use <- 1:length(data.norm)
-if (!is.null(t.vect)) t.use <- t.vect
-t.l <- length(data.norm)
+t.use <- 1:ncol(data.norm)
+t.l <- ncol(data.norm)
+if(!is.null(t.vect)) { 
+	t.use <- t.vect
+	t.l <- t.vect[length(t.vect)]
+}
 step.r <- c(1:maxk)
 dat.tmp <- data.norm
 seed.use <- 1
