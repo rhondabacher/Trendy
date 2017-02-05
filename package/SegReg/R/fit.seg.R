@@ -87,7 +87,7 @@ if (length(isna) > 0) { # if one of step.r cant be fitted..
 }
 
 slp.l <- sapply(fit.l, slope, simplify=F)
-radj <- sapply(fit.l,function(i)summary(i)$adj.r.squared)
+radj <- sapply(fit.l,function(i)summary(i)$r.squared)
 #print(radj)
 brk.l <- sapply(fit.l ,function(i)i$psi[,2], simplify=F)
 id.l <- sapply(fit.l, function(i)i$id.group, simplify=F)
