@@ -8,6 +8,7 @@
 #' slp: fitted slopes, slp.sign: sign of fitted slopes, slp.pval: p value of each segment, 
 #' bp: estimated breakpoints, fitted: fitted values radj: adjusted r value of the model
 #' fit: fit object
+#' @export
 
 topsegreg <- function(res.segreg, r.cut=.5){
 seg.all <- res.segreg	

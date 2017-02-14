@@ -8,6 +8,7 @@
 #' the genes are sorted by their first break point. The heatmap shows expression trends of these 
 #' three groups of genes. In the heatmap, red/blue/black represents up/down/nochange.
 #' @author Ning Leng
+#' @export
 
 
 trendheatmap <- function(topres, showplot=TRUE){

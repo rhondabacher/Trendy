@@ -7,6 +7,7 @@
 #' have breakpoint at this time point. The output is the numbers of genes sorted
 #' by time point
 #' @author Ning Leng
+#' @export
 
 bpdist <- function(topres, ndigits=0){
 tmpbp <- topres$bp

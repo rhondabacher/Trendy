@@ -10,6 +10,9 @@
 ###################
 # Enter pattern of interest and return genes having that pattern.
 ###################
+#' @export
+
+
 extractpattern <- function (segdata, radjcut = .5, pattern = NULL) 
 {
 	

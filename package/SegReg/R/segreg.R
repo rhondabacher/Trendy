@@ -30,6 +30,8 @@
 # the optimal k is the last one whose Radj is > last one + 0.1
 # search from 1 to 5 breakpoints
 ###################
+#' @export
+
 segreg <- function(data, meancut=10, maxk=3, t.vect=NULL,min.num.in.seg=5, pvalcut=.1,
                     cutdiff=.1, num.try=100,keepfit=FALSE) {
 

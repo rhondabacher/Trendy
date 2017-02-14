@@ -26,6 +26,8 @@
 #################
 # check genes
 #################
+#' @export
+
 plotmarker <- function(data, t.vect=NULL,filename=NULL, listname, pdf=FALSE, seg=TRUE, fittedres=NULL,
 cond.col=NULL, cond.col.sample=NULL, cond.prefix="day", 
 yname="normalized expression",par.param = c(3,2),
