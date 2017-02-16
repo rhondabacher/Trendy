@@ -38,7 +38,7 @@ extractpattern <- function (segdata, radjcut = .5, pattern = NULL, delay = 0)
 	
 	
 	if(length(pattern) == 1) {
-		pattern = rep(pattern, length(seg.all[[1]]$id.sign))
+		pattern = rep(pattern, length(segdata[[1]]$id.sign))
 	}
 	
 	pattern <- paste(pattern, collapse="")
@@ -51,7 +51,7 @@ extractpattern <- function (segdata, radjcut = .5, pattern = NULL, delay = 0)
 			gslp <- segdata.slps[[genes.pass[j]]]
 			gslp[gslp == -1] <- 2
 			
-			if(length(gslp) == 1) { gslp = rep(gslp, length(seg.all[[1]]$id.sign))}
+			if(length(gslp) == 1) { gslp = rep(gslp, length(segdata[[1]]$id.sign))}
 			slps <- paste(gslp, collapse="")
 						
 			
