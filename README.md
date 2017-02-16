@@ -9,7 +9,34 @@ the dynamic genes and their trends, to order dynamic genes by their trends, and 
 time points (e.g. detect time points with a large number of expression changes).
 
 Details of SegReg may be found in the vignette:
-https://github.com/lengning/SegReg/blob/master/SegReg_vignette.pdf
+https://github.com/rhondabacher/SegReg/blob/master/SegReg_vignette.pdf
 
 To download the vignette:
-https://github.com/lengning/SegReg/raw/master/SegReg_vignette.pdf
+https://github.com/rhondabacher/SegReg/raw/master/SegReg_vignette.pdf
+
+
+## SegReg shiny
+
+SegReg shiny assumes you have already run the make segreg function and save the output as an Rdata object. The app allow you to extract lists of genes according to any pattern of interest. The patten of interest can also be extracted after a given condition(time-point).
+
+#####Make sure packages are installed:
+
+install.packages(c("segmented","gplots")) 
+
+install_github("rhondabacher/SegReg/package/SegReg")
+
+install.packages("shiny")
+
+
+####To launch the Shiny app:
+
+runGitHub('rhondabacher/SegReg')
+
+Example of patterns:
+
+"up,down" : Genes/Features which contain a peak through the time-course.
+
+"down,up" : Genes/Features which contain a trough in the time-course.
+
+"up" : Genes/Features which constantly increase throughout the time-course.
+
