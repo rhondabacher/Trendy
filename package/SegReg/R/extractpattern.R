@@ -14,63 +14,61 @@
 ###################
 #' @export
 
-
 extractpattern <- function (segdata, radjcut = .5, pattern = NULL, delay = 0) 
 {
-	
-	if(is.null(pattern)) stop("Must specify a pattern")
-		
-	##restrict to genes that have certain breakpoint pattern
-	
-	segdata.radj <- sort(sapply(segdata, function(i)i$radj), decreasing=TRUE) #get radj for each gene
-	
-	genes.pass <- names(segdata.radj)[which(segdata.radj >= radjcut)] #get genes with fit >= radjcut
-	segdata.pass <- segdata[genes.pass]
-
-
-	segdata.bks <- sapply(segdata.pass, function(i) i$bp) #Get breakpoints for all genes
-	segdata.bks[is.na(segdata.bks)] <- 0
-	segdata.slps <- sapply(segdata.pass, function(i) i$slp.sign) #Get slps for all genes
-	
-	pattern[pattern == "up"] <- 1
-	pattern[pattern == "same"] <- 0
-	pattern[pattern == "down"] <- 2
-	
-	
-	if(length(pattern) == 1) {
-		pattern = rep(pattern, length(segdata[[1]]$id.sign))
-	}
-	
-	pattern <- paste(pattern, collapse="")
-	
-	
-	#find genes that have peaks at ANY breakpoint
-	genes <- c()
-	for (j in 1:length(genes.pass)) {
-		
-			gslp <- segdata.slps[[genes.pass[j]]]
-			gslp[gslp == -1] <- 2
-			
-			if(length(gslp) == 1) { gslp = rep(gslp, length(segdata[[1]]$id.sign))}
-			slps <- paste(gslp, collapse="")
-						
-			
-			if(grepl(pattern, slps) == TRUE) {
-				
-				patstart <- regexpr(pattern, slps)[[1]][1]
-				if(segdata.bks[[genes.pass[j]]][patstart] >= delay) {
-					
-					brk <- genes.pass[j]
-					genes <- c(genes, brk)
-				}
-			}
-	}
-	
-
-	return(genes)
+  
+  if(is.null(pattern)) stop("Must specify a pattern")
+  
+  ##restrict to genes that have certain breakpoint pattern
+  
+  segdata.radj <- sort(sapply(segdata, function(i)i$radj), decreasing=TRUE) #get radj for each gene
+  
+  genes.pass <- names(segdata.radj)[which(segdata.radj >= radjcut)] #get genes with fit >= radjcut
+  segdata.pass <- segdata[genes.pass]
+  
+  
+  segdata.bks <- sapply(segdata.pass, function(i) i$bp) #Get breakpoints for all genes
+  segdata.bks[is.na(segdata.bks)] <- 0
+  segdata.slps <- sapply(segdata.pass, function(i) i$slp.sign) #Get slps for all genes
+  
+  pattern[pattern == "up"] <- 1
+  pattern[pattern == "same"] <- 0
+  pattern[pattern == "down"] <- 2
+  
+  
+  if(length(pattern) == 1) {
+    pattern = rep(pattern, length(segdata[[1]]$id.sign))
+  }
+  
+  pattern <- paste(pattern, collapse="")
+  
+  
+  #find genes that have peaks at ANY breakpoint
+  genes <- c()
+  for (j in 1:length(genes.pass)) {
     
+    gslp <- segdata.slps[[genes.pass[j]]]
+    gslp[gslp == -1] <- 2
+    
+    if(length(gslp) == 1) { gslp = rep(gslp, length(segdata[[1]]$id.sign))}
+    slps <- paste(gslp, collapse="")
+    
+    
+    if(grepl(pattern, slps) == TRUE) {
+      
+      patstart <- gregexpr(pattern, slps)[[1]]
+      for(i in 1:length(patstart)) {
+        if(segdata.bks[[genes.pass[j]]][i] >= delay) {
+        
+        brk <- segdata.bks[[genes.pass[j]]][patstart[i]]
+        names(brk) <- genes.pass[j]
+        genes <- c(genes, brk)
+        }
+      }
+    }
+  }
+  
+  
+  return(genes)
+  
 }
-
-
-
-regexpr("15", c("23451231555555")) 
