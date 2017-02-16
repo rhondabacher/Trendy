@@ -17,9 +17,11 @@ https://github.com/rhondabacher/SegReg/raw/master/SegReg_vignette.pdf
 
 ## SegReg shiny
 
-SegReg shiny assumes you have already run the make segreg function and save the output as an Rdata object. The app allow you to extract lists of genes according to any pattern of interest. The patten of interest can also be extracted after a given condition(time-point).
+SegReg shiny assumes you have already run the make segreg function and saved the output as an Rdata object. 
+The app allows you to extract lists of genes/features according to any pattern of interest. 
+The patten of interest can also be extracted after a given condition(time-point).
 
-#####Make sure packages are installed:
+####Make sure packages are installed:
 
 install.packages(c("segmented","gplots")) 
 
