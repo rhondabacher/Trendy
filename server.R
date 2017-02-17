@@ -73,7 +73,7 @@ shinyServer(function(input, output, session) {
 	  if(input$scatterplots == "1") {
 	  		  
 		  incProgress( 0, detail = "Making scatter plots of patterned genes")
-	  	  XX <- plotmarker(orig.data, t.vect=t.vect, filename = outfileP, listname = genes.pass, pdf = TRUE, seg = TRUE,
+	  	  XX <- plotmarker(orig.data, t.vect=t.vect, filename = outfileP, listname = genes.pass$Gene, pdf = TRUE, seg = TRUE,
 	  			 fittedres = seg.object, yname="Normalized Expression", par.param = c(3,2), pdfheight=15, pdfwidth=10)
 	   
 	  }
