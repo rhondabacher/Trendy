@@ -25,6 +25,8 @@ The patten of interest can also be extracted after a given condition(time-point)
 
 install.packages(c("segmented","gplots")) 
 
+library(devtools)
+
 install_github("rhondabacher/SegReg/package/SegReg")
 
 install.packages("shiny")
