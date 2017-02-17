@@ -76,7 +76,7 @@ extractpattern <- function (segdata, radjcut = .5, pattern = NULL, delay = 0)
   }
 
   
-  genes <- data.frame(Gene = trackNames, do.call(rbind, genes))
+  genes <- data.frame(Gene = trackNames, do.call(rbind, genes), stringsAsFactors=FALSE)
 
   return(genes)
   
