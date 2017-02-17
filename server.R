@@ -53,7 +53,7 @@ shinyServer(function(input, output, session) {
 		   genes.pass <- extractpattern(seg.object, radjcut = input$radj, pattern = pattern, delay=delay)
 		   # print("X")
 	   
-		  genes.pass =  data.frame(Gene = names(genes.pass), Breakpoint = genes.pass)
+
 		   
 	  if(input$OutFileName == "") {
 	  	outfilename = paste0("genes_with_", input$pattern)
