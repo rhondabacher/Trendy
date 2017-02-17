@@ -46,11 +46,12 @@ shinyServer(function(input, output, session) {
   		pattern <- strsplit(input$pattern, ",")[[1]]
 	  
   	    delay <- as.numeric(input$delay)
-		
+		rcut <- as.numeric(input$rcut)
 		
 		   incProgress(0.4, detail = "Extracting genes")
 		   
-		   genes.pass <- extractpattern(seg.object, radjcut = input$radj, pattern = pattern, delay=delay)
+		   
+		   genes.pass <- extractpattern(seg.object, radjcut = rcut, pattern = pattern, delay=delay)
 		   # print("X")
 	   
 

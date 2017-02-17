@@ -39,7 +39,7 @@ shinyUI(fluidPage(
 					
                       # Num permutation
                       textInput("pattern", "Enter pattern (separate by comma, no spaces):", "up,down"),
-   				      textInput("radj", "Only consider genes with adjusted R squared greater than: ", ".5", placeholder="Must be between 0 and 1."),
+   				      textInput("rcut", "Only consider genes with adjusted R squared greater than: ", ".5", placeholder="Must be between 0 and 1."),
 					  textInput("delay", "Only consider genes with pattern after time-point: ", "0"),
                       
                       # Normalization
