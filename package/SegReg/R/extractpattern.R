@@ -18,7 +18,7 @@ extractpattern <- function (segdata, radjcut = .5, pattern = NULL, delay = 0)
 {
   
   if(is.null(pattern)) stop("Must specify a pattern")
-  
+  ogpat <- pattern
   ##restrict to genes that have certain breakpoint pattern
   
   segdata.radj <- sort(sapply(segdata, function(i)i$radj), decreasing=TRUE) #get radj for each gene
@@ -44,7 +44,9 @@ extractpattern <- function (segdata, radjcut = .5, pattern = NULL, delay = 0)
   
   
   #find genes that have peaks at ANY breakpoint
-  genes <- c()
+  genes <- list()
+  k <- 1
+  trackNames <- c()
   for (j in 1:length(genes.pass)) {
     
     gslp <- segdata.slps[[genes.pass[j]]]
@@ -57,18 +59,25 @@ extractpattern <- function (segdata, radjcut = .5, pattern = NULL, delay = 0)
     if(grepl(pattern, slps) == TRUE) {
       
       patstart <- gregexpr(pattern, slps)[[1]]
+      
       for(i in 1:length(patstart)) {
-        if(segdata.bks[[genes.pass[j]]][i] >= delay) {
-        
-        brk <- segdata.bks[[genes.pass[j]]][patstart[i]]
-        names(brk) <- genes.pass[j]
-        genes <- c(genes, brk)
+      
+          if(segdata.bks[[genes.pass[j]]][i] >= delay) {
+            patend <- patstart[i] + nchar(pattern)-2
+            brk <- segdata.bks[[genes.pass[j]]][patstart[i]:patend]
+            names(brk) <- paste0(rep("BreakPoint", nchar(pattern) - 1), 1:(nchar(pattern) - 1))
+            genes[[k]] <- brk
+            k = k + 1
+            trackNames<- c(trackNames, genes.pass[j])
         }
+      
       }
     }
   }
+
   
-  
+  genes <- data.frame(Gene = trackNames, do.call(rbind, genes))
+
   return(genes)
   
 }

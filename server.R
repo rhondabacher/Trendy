@@ -53,6 +53,8 @@ shinyServer(function(input, output, session) {
 		   genes.pass <- extractpattern(seg.object, radjcut = input$radj, pattern = pattern, delay=delay)
 		   # print("X")
 	   
+		  genes.pass =  data.frame(Gene = names(genes.pass), Breakpoint = genes.pass)
+		   
 	  if(input$OutFileName == "") {
 	  	outfilename = paste0("genes_with_", input$pattern)
 	  }else {outfilename <- input$OutFileName}
@@ -62,7 +64,7 @@ shinyServer(function(input, output, session) {
 	  outfileG = paste0(outdir, outfilename, ".csv")
 	  
 
-	  write.table(genes.pass, file=outfileG, quote=F, row.names=FALSE, col.names=FALSE, sep=",")
+	  write.table(genes.pass, file=outfileG, quote=F, row.names=FALSE, sep=",")
 
 	  incProgress(0.4, detail = "Writing genes to output folder")
 
