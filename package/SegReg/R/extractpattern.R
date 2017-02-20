@@ -14,7 +14,7 @@
 ###################
 #' @export
 
-extractpattern <- function (segdata, radjcut = .5, pattern = NULL, delay = 0) 
+extractpattern <- function (segdata, pattern = NULL, radjcut = .5,  delay = 0) 
 {
   
   if(is.null(pattern)) stop("Must specify a pattern")
@@ -27,9 +27,9 @@ extractpattern <- function (segdata, radjcut = .5, pattern = NULL, delay = 0)
   segdata.pass <- segdata[genes.pass]
   
   
-  segdata.bks <- sapply(segdata.pass, function(i) i$bp) #Get breakpoints for all genes
+  segdata.bks <- lapply(segdata.pass, function(i) i$bp) #Get breakpoints for all genes
   segdata.bks[is.na(segdata.bks)] <- 0
-  segdata.slps <- sapply(segdata.pass, function(i) i$slp.sign) #Get slps for all genes
+  segdata.slps <- lapply(segdata.pass, function(i) i$slp.sign) #Get slps for all genes
   
   pattern[pattern == "up"] <- 1
   pattern[pattern == "same"] <- 0
