@@ -33,7 +33,7 @@
 #' @export
 
 segreg <- function(data, meancut=10, maxk=3, t.vect=NULL,min.num.in.seg=5, pvalcut=.1,
-                    cutdiff=.1, num.try=100,keepfit=FALSE) {
+                    cutdiff=.1, num.try=100,keepfit=FALSE, forceRadj = FALSE) {
 
 data.gt10.raw <- data[which(rowMeans(data) >= meancut),]
 
@@ -60,9 +60,9 @@ if (nsample < (maxk + 1) * min.num.in.seg) {
 #                 cutdiff=cutdiff, num.try=num.try,keepfit=keepfit)
 # }, simplify = F))
 
-seg.all <- mclapply(1:nrow(data.gt10), function(x) {
+seg.all <- mclapply(1:3, function(x) {
 	fit.seg(data = data.gt10[rownames(data.gt10)[x],], maxk=maxk, t.vect=t.vect, 
-			min.num.in.seg=min.num.in.seg, pvalcut=pvalcut, cutdiff=cutdiff, num.try=num.try, keepfit=keepfit)}, mc.cores=NCores)
+			min.num.in.seg=min.num.in.seg, pvalcut=pvalcut, cutdiff=cutdiff, num.try=num.try, keepfit=keepfit, forceRadj = FALSE)}, mc.cores=NCores)
 
 			
 names(seg.all) <- rownames(data.gt10)

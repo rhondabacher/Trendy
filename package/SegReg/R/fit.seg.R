@@ -136,6 +136,7 @@ fit.seg <- function(data, maxk=5, t.vect=NULL,min.num.in.seg=5, pvalcut=.1,
   if (length(step.r) == 1) {
     r.choose <- 1
     radj.max <- radj
+	rsq.max <- rsq
   }
   
   # finally decide if best BP model is better than linear
