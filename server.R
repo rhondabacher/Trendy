@@ -1,4 +1,4 @@
-library(SegReg)
+library(Trendy)
 library(shiny)
 
 shinyServer(function(input, output, session) {
@@ -27,7 +27,7 @@ shinyServer(function(input, output, session) {
  		 In <- In()
 
  	  		if(!exists("seg.object") | !exists("orig.data") | !exists("t.vect")) {
-				"Segmented Regression object invalid!"
+				"Trendy object invalid!"
 			} else {"File is uploaded!"}
 		
 	})

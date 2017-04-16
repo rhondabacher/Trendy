@@ -5,7 +5,7 @@ options(shiny.maxRequestSize=10000*1024^2)
 # Define UI for slider demo application
 shinyUI(fluidPage(
   #  Application title
-  headerPanel("SegReg"),
+  headerPanel("Trendy"),
   
   	 fluidRow(
 		 column(width = 7, 
@@ -14,7 +14,7 @@ shinyUI(fluidPage(
                 tags$br(),
                 tags$br(),
 	
-    fileInput("filename", label = "Input .Rdata from segreg() run:"),
+    fileInput("filename", label = "Input .Rdata from trendy() run:"),
 	actionButton("Submit1","Upload File"),
 	    tags$br(),
 	    tags$br(),

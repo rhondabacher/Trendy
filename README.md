@@ -1,23 +1,23 @@
-# SegReg
-SegReg: Breakpoint analysis of time course expression data
+# Trendy
+Trendy: Breakpoint analysis of time course expression data
 
-SegReg is a R package that can be used to perform breakpoint analysis on Microarrays or RNA-seq expression data 
-with ordered conditions (e.g. time course, spatial course). For each gene or other features, SegReg estimates the optimal number of 
-breakpoints as well as the breakpoints by fitting a set of segmented regression models. The top dynamic genes are then identified 
-by taking genes that can be well profiled by its gene-specific segmented regression model. SegReg also implements functions to visualize 
+Trendy is an R package that can be used to perform breakpoint analysis on microarray or RNA-seq expression data 
+with ordered conditions (e.g. time course, spatial course). For each gene or other features, Trendy estimates the optimal number of 
+breakpoints, as well as, the breakpoints by fitting a set of segmented regression models. The top dynamic genes are then identified 
+by taking genes that can be well profiled by its gene-specific segmented regression model. Trendy also implements functions to visualize 
 the dynamic genes and their trends, to order dynamic genes by their trends, and to compute breakpoint distribution at different 
 time points (e.g. detect time points with a large number of expression changes).
 
-Details of SegReg may be found in the vignette:
-https://github.com/rhondabacher/SegReg/blob/master/SegReg_vignette.pdf
+Details of Trendy may be found in the vignette:
+https://github.com/rhondabacher/Trendy/blob/master/Trendy_vignette.pdf
 
 To download the vignette:
-https://github.com/rhondabacher/SegReg/raw/master/SegReg_vignette.pdf
+https://github.com/rhondabacher/Trendy/raw/master/Trendy_vignette.pdf
 
 
-## SegReg shiny
+## Trendy shiny
 
-SegReg shiny assumes you have already run the make segreg function and saved the output as an Rdata object. 
+Trendy shiny assumes you have already run the Trendy function and saved the output as an RData object. 
 The app allows you to extract lists of genes/features according to any pattern of interest. 
 The patten of interest can also be extracted after a given condition(time-point).
 
@@ -27,14 +27,14 @@ install.packages(c("segmented","gplots"))
 
 library(devtools)
 
-install_github("rhondabacher/SegReg/package/SegReg")
+install_github("rhondabacher/Trendy/package/Trendy")
 
 install.packages("shiny")
 
 
 ####To launch the Shiny app:
 
-runGitHub('rhondabacher/SegReg')
+runGitHub('rhondabacher/Trendy')
 
 Example of patterns:
 

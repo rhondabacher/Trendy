@@ -1,0 +1,292 @@
+---
+title: "Trendy: Breakpoint analysis of time course expression data"
+author: "Rhonda Bacher, Ning Leng, Ron Stewart"
+output:
+  pdf_document:
+    toc: true
+---
+
+# Overview
+Trendy is a R package that can be used to perform breakpoint analysis on microarray or RNA-seq expression data with ordered conditions (e.g. time course, spatial course).
+For each gene or other features, Trendy estimates the optimal number of breakpoints as well as
+the breakpoints by fitting a set of segmented regression models.
+The top dynamic genes are then identified by taking genes that can be well profiled by its gene-specific segmented regression model. Trendy also implements functions to visualize the dynamic genes and their trends, to order 
+dynamic genes by their trends, and to compute breakpoint distribution at different
+time points (e.g. detect time points with a large number of expression changes).
+
+# The model
+To illustrate Trendy,
+here we use time course gene expression data as an example. 
+Note Trendy may also be applied to other types of features (e.g. isoform or exon expression) and/or other
+types of experiments with ordered conditions (e.g. spatial course).
+
+Denote the normalized gene expression of gene $g$ and sample $s$ is $X_{g,s}$.
+Denote the total number of genes as $G$ and the total number of samples as $S$.
+For each gene, Trendy fits segmented regression models with varying numbers of breakpoints from 1 to $n_k$. In which $n_k$ defaults to 3 but can also
+be specified by the user. 
+The model with $k$ breakpoints can then be written as:
+$$M^k_{g}: X_g \sim \beta^k_0 + \beta^k_1*I\{s: s\ge 1,s \le b^k_{g,1}\}*s + 
+\beta^k_2*I\{s: s\ge b^k_{g,1}+1, s \le b^k_{g,2}\}*(s-b^k_{g,1}) + ,...,  $$
+$$+\beta^k_{k+1}*I\{s: s\ge b^k_{g,k}+1, s \le S\}*(s-b^k_{g,k})
+$$
+For each $k$, the segmented regression estimates $k$ breakpoints 
+($b^k_{g,1}$, $b^k_{g,2}$, ... $b^k_{g,k})$ between $1$ and $S$.
+The segmented regression also estimate $k+2$ $\beta$s. In which $\beta^k_0$
+indicates the intercept, and the other $\beta$s indicate slopes for the $k+1$ segments separated by the $k$ breakpoints.
+We denote the adjusted $R^2$ for this model as $r^k_g$.
+
+For a given gene, among the models with varying $k$, SegeReg picks the optimal number of breakpoints for this gene by comparing the adjusted $R^2$s:
+
+$$\tilde{k_g} = \text{argmax}_{k=1,...,n_k}(r^k_g) $$
+
+To avoid overfitting, the optimal number of breakpoints will be set as $\tilde{k_g} = \tilde{k_g} -1$ if any of the following happens: 
+at least of one segments having less than $c_{num}$ samples, 
+or $r^{\tilde{k}}_g - r^{\tilde{k}-1}_g < c_{diff}$. The thresholds
+$c_{num}$ and $c_{diff}$ can be specified by the user; defaults are 5 and 0.1,
+respectively.
+
+Then the gene specific adjusted $R^2$ and breakpoint estimates are then obtained from this optimal model:
+$r_g = r^{\tilde{k_g}}_g$; 
+$(\beta_{g,0},...,\beta_{g,\tilde{k_g}+1}) = (\beta^{\tilde{k_g}}_{g,0},...,
+\beta^{\tilde{k_g}}_{g,\tilde{k_g}+1})$ and
+$(b_{g,1},...,b_{g,\tilde{k_g}}) = (b^{\tilde{k_g}}_{g,1},...,
+b^{\tilde{k_g}}_{g,\tilde{k_g}})$.
+Among all genes, the top dynamic genes are defined as those whose optimal model has high adjusted $R^2$s.
+
+To compute the breakpoint distribution over the time course, Trendy calculates:
+
+$$N_s = \sum_{g = 1,...,G} \sum_{j = 1,...,\tilde{k_g}}I\{b_{g,j}=s \}$$
+
+The time points with hign $N_s$ might be considered as time points with a large amount of expression changes.
+
+Trendy also outputs fitted trend of each gene. For samples between the $j^{th}$ 
+and $j+1 ^{th}$ breakpoint for a given gene, if the t statistic of $\beta_{g,j+1}$ has p value greater than $c_{pval}$, 
+the trend of this segment will be defined as no change. Otherwise the
+trend of this segment will be defined as up/down based on the coefficient of
+$\beta_{g,j+1}$.
+The $c_pval$ defaults to 0.1, but can also be specified by the user.
+
+
+# Installation
+
+## Install via GitHub
+
+The Trendy package can be installed using functions in the devtools package.
+
+To install, type the following codes in R:
+
+```{r, eval=FALSE} 
+install.packages("devtools")
+```
+```{r, cache=TRUE, message=FALSE, warning=FALSE}
+library(devtools)
+```
+```{r, eval=FALSE}
+install_github("rhondabacher/Trendy/package/Trendy")
+```
+## Install locally
+
+Install packages segmented and gplots:
+
+
+```{r, eval=FALSE}
+install.packages(c("segmented","gplots"))
+library("segmented")
+library("gplots")
+```
+
+Download the Trendy package from:
+
+\url{https://github.com/rhonda/Trendy/tree/master/package}
+
+And install the package locally.
+
+## Load the package
+To load the Trendy package:
+```{r, cache=TRUE, message=FALSE}
+library(Trendy)
+```
+
+# Analysis
+
+## Input
+
+The input data should be a $G-by-S$ matrix containing the expression values for each gene and
+ each sample, where $G$ is the number of genes and $S$ is the number of samples. 
+The samples should be sorted following the time course order.
+These values should exhibit expression data after normalization across samples. 
+For example, for RNA-seq data, the raw counts may be normalized using MedianNorm and
+GetNormalizedMat() function in EBSeq. More details can be found in the EBSeq vignette:
+
+
+http://www.bioconductor.org/packages/devel/bioc/vignettes/EBSeq/inst/doc/EBSeq_Vignette.pdf
+
+
+The object TrendyExData is a simulated data matrix containing 50 rows of genes and 40 columns of samples.
+
+```{r, cache=TRUE}
+data(TrendyExData)
+str(TrendyExData)
+```
+
+
+
+
+## Run segmented regressions
+The trendy() function can be used to run gene specific segmented regressions.
+Here we want to only consider up to 2 breakpoints for each gene. To do so we may specify maxk=2:
+
+```{r, cache=TRUE}
+res <- trendy(TrendyExData, maxk=2)
+res.top <- toptrendy(res) 
+# default adjusted R square cutoff is 0.5
+res.top$radj
+```
+The toptrendy() function may be used to extract top dynamic genes.
+By default, toptrendy() will extract genes whose adjusted $R^2$ $r_g$
+is greater or equal to 0.5. To change this threshold, a user may specify the
+r.cut parameter in toptrendy() function.
+res.top\$radj gives $r_g$ of the top dynamic genes, sorted decreasingly
+by $r_g$.
+
+
+By default the trendy() function only consider genes whose mean expression is greater than 10. 
+To use another threshold, a user may specify the parameter meancut in
+trendy() function.
+
+
+## Visualize trends of the top dynamic genes
+res.top\$id.sign gives trend specification of the top genes.
+Function trendheatmap() can be used to display these trends:
+
+```{r, cache=TRUE, warning=FALSE, fig.height=7}
+res.trend <- trendheatmap(res.top)
+str(res.trend)
+```
+
+The trendheatmap() function classify the top dynamic genes into
+three groups: start with up, start with down and start with no change.
+Within each group, genes are sorted by the position of the first breakpoint.
+
+
+To generate expression heatmap of the first group of genes (first go up):
+
+```{r, cache=TRUE, warning=FALSE}
+heatmap.2(TrendyExData[names(res.trend$firstup),],trace="none", Rowv=F,Colv=F, 
+					scale="row", main="top genes (first go up)")
+```
+
+
+Similarly, to generate expression heatmap of the second group of genes (first go down):
+```{r, cache=TRUE, warning=FALSE}
+heatmap.2(TrendyExData[names(res.trend$firstdown),],trace="none", Rowv=F,Colv=F, 
+					          scale="row", main="top genes (first go down)")
+```
+To generate expression heatmap of the second group of genes (first no change):
+```{r, cache=TRUE, warning=FALSE, fig.height=4}
+heatmap.2(TrendyExData[names(res.trend$firstnochange),],trace="none", Rowv=F,Colv=F,
+					                    scale="row", main="top genes (first no change)",
+															cexRow=.8)
+```
+
+
+## Visualize individual genes
+The plotmarker() function may be used to plot expression of individual genes and the fitted lines.
+
+For example, to plot the top 6 genes in the first group of genes (first go up): 
+
+```{r, cache=TRUE, fig.height=7}
+plot1 <- plotmarker(TrendyExData,listname=names(res.trend$firstup)[1:6],fittedres=res)
+```
+
+The input of function plotmarker() requires the expression data and a list of genes of interest.
+The parameter fittedres in function plotmarker() takes trendy() fitted results. 
+If it is not specified, the function plotmarker() will
+run Trendy model on the genes of interest before plotting.
+Specifying fitted results obtained from previous steps will save time by avoiding fitting the models again.
+
+Similarly, to plot the top 6 genes in the second group of genes (first go down): 
+
+```{r, cache=TRUE, fig.height=7}
+plot2 <- plotmarker(TrendyExData,listname=names(res.trend$firstdown)[1:6],
+										fittedres=res)
+```
+
+To plot the 2 genes in the third group of genes (first no change):
+```{r, cache=TRUE, fig.height=3}
+plot2 <- plotmarker(TrendyExData,listname=names(res.trend$firstnochange)[1:2],
+										fittedres=res,par.param=c(1,2))
+```
+
+## Gene specific estimates
+
+For a given gene of interest, its estimated parameters can be obtained by (using g2 as an example):
+```{r, cache=TRUE}
+print(res.top$bp["g2"]) # break points
+print(res.top$radj["g2"]) # adjusted r square
+print(res.top$slp["g2"]) # fitted slopes of the segments
+print(res.top$slp.pval["g2"]) # p value of each the segment
+```
+
+The above printouts show that for gene g2, the optimal number of breakpoints 
+is 2. Two estimated breakpoints are close to s12 and s30. 
+The fitted slopes for the 3 segments are 3.31, 0.06 and -2.97.
+
+## Breakpoint distribution over the time course
+
+To calculate number of breakpoints over the time course:
+
+```{r, cache=TRUE}
+res.bp <- bpdist(res.top)
+barplot(res.bp, ylab="Number of breakpoint", col="blue")
+```
+
+The bar plot indicates that many genes have breakpoint around s12 and s13.
+
+# Shiny app
+
+Will add info. here soon.
+
+# More advanced analysis
+
+## Time course with non-uniform sampling
+If the samples were collected with different time intervals and the user wants to
+use the original time (instead of a vector of consecutive numbers),
+the user may specify it via the t.vect parameter in trendy() function.
+For example, suppose for the example data, the first 30 samples were collected 
+every hour and the other 10 samples were collected every 5 hours. We may define
+the time vector as:
+```{r, cache=TRUE}
+t.v <- c(1:30,seq(31,80,5))
+names(t.v) <- colnames(TrendyExData)
+print(t.v)
+```
+To run Trendy model using the empirical collecting time instead of sample ID (1-40):
+```{r, cache=TRUE}
+res2 <- trendy(TrendyExData, t.vect=t.v, maxk=2)
+res.top2 <- toptrendy(res2)
+res.trend2 <- trendheatmap(res.top2, showplot=FALSE)
+str(res.trend2)
+```
+To plot the first 6 genes that 
+have up-regulated pattern at the beginning of the time course, by showing empirical time at x axis:
+```{r, cache=TRUE, fig.height=7}
+plot1.new <- plotmarker(TrendyExData,t.vect=t.v,
+									listname=names(res.trend2$firstup)[1:6],fittedres=res2)
+```
+
+## Additional options
+In trendy() function, 
+the thresholds
+$c_{num}$, $c_{diff}$ and  $c_{pval}$
+can be specified via parameters
+min.num.in.seg, cutdiff and pvalcut.
+
+
+# SessionInfo
+```{r}
+print(sessionInfo())
+```
+
+
+
