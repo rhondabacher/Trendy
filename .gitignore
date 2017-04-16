@@ -1,4 +1,5 @@
 *.DS_Store
 *.tar.gz
+*.Rhistory
 /package/Trendy/vignette/Trendy_vignette_cache/*
 /package/Trendy/vignette/Trendy_vignette_files/*
