@@ -9,10 +9,7 @@ the dynamic genes and their trends, to order dynamic genes by their trends, and 
 time points (e.g. detect time points with a large number of expression changes).
 
 Details of Trendy may be found in the vignette:
-https://github.com/rhondabacher/Trendy/blob/master/Trendy_vignette.pdf
-
-To download the vignette:
-https://github.com/rhondabacher/Trendy/raw/master/Trendy_vignette.pdf
+https://github.com/rhondabacher/Trendy/package/Trendy/vignettes/Trendy_vignette.pdf
 
 
 ## Trendy shiny
