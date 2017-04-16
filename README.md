@@ -18,7 +18,7 @@ Trendy shiny assumes you have already run the Trendy function and saved the outp
 The app allows you to extract lists of genes/features according to any pattern of interest. 
 The patten of interest can also be extracted after a given condition(time-point).
 
-####Make sure packages are installed:
+#### Make sure packages are installed:
 
 install.packages(c("segmented","gplots")) 
 
@@ -29,7 +29,7 @@ install_github("rhondabacher/Trendy/package/Trendy")
 install.packages("shiny")
 
 
-####To launch the Shiny app:
+#### To launch the Shiny app:
 
 runGitHub('rhondabacher/Trendy')
 
