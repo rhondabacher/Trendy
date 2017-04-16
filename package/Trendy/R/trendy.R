@@ -14,9 +14,13 @@
 #' @param cutdiff default is 0.1. if the difference between r_adj from the k+1 breakpoint model
 #' and the r_adj from the k breakpoint model is less than cutdiff, the optimal number
 #' of breakpoint will be set as k instead of k+1
+#' @param saveObject default is FALSE. If TRUE then the trendy object produced will be saved to use in the shiny app.
+#' @param fileName name (and file path) to save the Trendy object, only used is saveObject=TRUE.
 #' @param num.try number of different seeds to try. If all num.try runs fails,
 #' linear regression results will be returned (which represents one segment case).
 #' @param keepfit whether keep the fitted object
+#' @param forceRadj whether to use adjusted Rsq in cutdiff evaluation instead of Rsq.
+#' @param NCores number of cores to use, default is detectCores() - 1. 
 #' @return id.sign: direction of each sample; -1: down, 0: no change, 1: up
 #' slp: fitted slopes, slp.sign: sign of fitted slopes, slp.pval: p value of each segment, 
 #' bp: estimated breakpoints, fitted: fitted values radj: adjusted r value of the model
@@ -32,18 +36,25 @@
 ###################
 #' @export
 
-trendy <- function(data, meancut=10, maxk=3, t.vect=NULL,min.num.in.seg=5, pvalcut=.1,
-                    cutdiff=.1, num.try=100,keepfit=FALSE, forceRadj = FALSE) {
+trendy <- function(Data = NULL, meancut=10, maxk=3, t.vect=NULL, min.num.in.seg=5, pvalcut=.1,
+                    cutdiff=.1, saveObject=FALSE, fileName=NULL, num.try=100, keepfit=FALSE, forceRadj = FALSE, NCores=NULL) {
 
-data.gt10.raw <- data[which(rowMeans(data) >= meancut),]
 
-#data.gt10 <- t(apply(data.gt10.raw,1,scale))
-#rownames(data.gt10) <- rownames(data.gt10.raw)
-#colnames(data.gt10) <- colnames(data.gt10.raw)
 
-data.gt10 <- data.gt10.raw
+if(anyNA(Data)) {stop("Data contains at least one value of NA. Unsure how to proceed.")}
+## checks
+if (is.null(rownames(Data))) {stop("Must supply feature/gene/row names!")}
+if (is.null(colnames(Data))) {stop("Must supply sample/cell names!")}
+if (is.null(NCores)) {NCores <- max(1, detectCores() - 1)}
+if (.Platform$OS.type == "windows") {
+	NCores = 1
+}
 
-nsample <- ncol(data)
+
+data.gt10 <- Data[which(rowMeans(Data) >= meancut),]
+
+
+nsample <- ncol(Data)
 if (nsample < (maxk + 1) * min.num.in.seg) {
 	maxk <- floor(nsample / min.num.in.seg) - 1
 	message("Number of samples (", nsample, ") is less than 
@@ -51,16 +62,25 @@ if (nsample < (maxk + 1) * min.num.in.seg) {
 	set to", maxk)
 	}
 
-	library(parallel)
-	NCores <- detectCores() - 1
-
-
 seg.all <- mclapply(1:nrow(data.gt10), function(x) {
-	fit.seg(data = data.gt10[rownames(data.gt10)[x],], maxk=maxk, t.vect=t.vect, 
+	fit.seg(Data = data.gt10[rownames(data.gt10)[x],], maxk=maxk, t.vect=t.vect, 
 			min.num.in.seg=min.num.in.seg, pvalcut=pvalcut, cutdiff=cutdiff, num.try=num.try, keepfit=keepfit, forceRadj = FALSE)}, mc.cores=NCores)
 
 			
 names(seg.all) <- rownames(data.gt10)
 
-seg.all
+
+if(saveObject == TRUE) {
+	if(is.null(t.vect)) {
+		t.vect = 1:ncol(Data)
+	}
+	if(is.null(fileName)){
+		fileName="data"
+	}
+	orig.data = Data
+	seg.object = seg.all
+	save(seg.object, orig.data, t.vect, file=paste0(fileName, "_trendyForShiny.RData"))
+	
+}
+return(seg.all)
 }

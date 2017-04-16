@@ -31,6 +31,8 @@ install.packages("shiny")
 
 #### To launch the Shiny app:
 
+library(shiny)
+
 runGitHub('rhondabacher/Trendy')
 
 Example of patterns:

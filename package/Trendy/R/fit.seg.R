@@ -31,9 +31,9 @@
 ###################
 #' @export
 
-fit.seg <- function(data, maxk=5, t.vect=NULL,min.num.in.seg=5, pvalcut=.1, 
+fit.seg <- function(Data, maxk=5, t.vect=NULL,min.num.in.seg=5, pvalcut=.1, 
                     cutdiff=.1, num.try=100, keepfit=FALSE, forceRadj = FALSE) {
-  data.norm <- data
+  data.norm <- Data
   
   library(segmented)
   
@@ -163,7 +163,7 @@ fit.seg <- function(data, maxk=5, t.vect=NULL,min.num.in.seg=5, pvalcut=.1,
   slp.sign[which(slp.pval > pvalcut)] <- 0
   id.choose <- id.l[[r.choose]]
   id.sign <- slp.sign[id.choose + 1]
-  names(id.sign) <- colnames(data)
+  names(id.sign) <- colnames(data.norm)
   out = list(id.sign=id.sign, slp=slp.choose, slp.sign=slp.sign, slp.pval=slp.pval, bp=bp.choose, fitted=fv.choose,radj=radj[r.choose],fit=fit.choose)
   if(keepfit == FALSE) out <- out[1:7]
   

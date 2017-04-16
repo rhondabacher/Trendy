@@ -8,8 +8,6 @@ trendy(data, meancut=10,maxk=3, t.vect=NULL, min.num.in.seg=5, pvalcut=.1,
                cutdiff=.1, num.try=100,keepfit=FALSE)
 }
 \arguments{
-\item{data}{normalized expression measure. Rows are genes and columns are samples. The data matrix is expected to be normalized.}
-
 \item{meancut}{default is 10. Genes whose mean is less than meancut will not be considered.
 For each gene, the function will fit maxk+1 models containing 0->maxk breakpoints
 (1->(maxk+1)) segments. The model with highest adjusted r value will be selected.}
@@ -28,10 +26,20 @@ this segment will be called as 'no change'}
 and the r_adj from the k breakpoint model is less than cutdiff, the optimal number
 of breakpoint will be set as k instead of k+1}
 
+\item{saveObject}{default is FALSE. If TRUE then the trendy object produced will be saved to use in the shiny app.}
+
+\item{fileName}{name (and file path) to save the Trendy object, only used is saveObject=TRUE.}
+
 \item{num.try}{number of different seeds to try. If all num.try runs fails,
 linear regression results will be returned (which represents one segment case).}
 
 \item{keepfit}{whether keep the fitted object}
+
+\item{forceRadj}{whether to use adjusted Rsq in cutdiff evaluation instead of Rsq.}
+
+\item{NCores}{number of cores to use, default is detectCores() - 1.}
+
+\item{data}{normalized expression measure. Rows are genes and columns are samples. The data matrix is expected to be normalized.}
 }
 \value{
 id.sign: direction of each sample; -1: down, 0: no change, 1: up

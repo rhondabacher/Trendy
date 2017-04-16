@@ -8,8 +8,6 @@ fit.seg(data, g.in, maxk=5, t.vect=NULL, min.num.in.seg=5, pvalcut=.1,
                cutdiff=.1, num.try=100,keepfit=FALSE)
 }
 \arguments{
-\item{data}{normalized expression measure. Rows are genes and columns are samples. The data matrix is expected to be normalized.}
-
 \item{maxk}{max number of breakpoints to consider. 
 For each gene, the function will fit maxk+1 models containing 0->maxk breakpoints
 (1->(maxk+1)) segments. The model with highest adjusted r value will be selected.}
@@ -31,6 +29,8 @@ linear regression results will be returned (which represents one segment case).}
 \item{keepfit}{whether keep the fitted object}
 
 \item{forceRadj}{corresponds to previous version of SegReg, only use adjR2 to compare models.}
+
+\item{data}{normalized expression measure. Rows are genes and columns are samples. The data matrix is expected to be normalized.}
 }
 \value{
 id.sign: direction of each sample; -1: down, 0: no change, 1: up

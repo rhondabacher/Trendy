@@ -1,10 +1,13 @@
 ---
 title: "Trendy: Breakpoint analysis of time course expression data"
 author: "Rhonda Bacher, Ning Leng, Ron Stewart"
+header-includes:
+   - \usepackage{caption}
 output:
   pdf_document:
     toc: true
 ---
+
 
 # Overview
 Trendy is a R package that can be used to perform breakpoint analysis on microarray or RNA-seq expression data with ordered conditions (e.g. time course, spatial course).
@@ -243,10 +246,6 @@ barplot(res.bp, ylab="Number of breakpoint", col="blue")
 
 The bar plot indicates that many genes have breakpoint around s12 and s13.
 
-# Shiny app
-
-Will add info. here soon.
-
 # More advanced analysis
 
 ## Time course with non-uniform sampling
@@ -282,7 +281,39 @@ $c_{num}$, $c_{diff}$ and  $c_{pval}$
 can be specified via parameters
 min.num.in.seg, cutdiff and pvalcut.
 
+# Trendy shiny app
+The Trendy shiny app requires an RData object output from the trendy() call, which can be obtained by setting saveObject=TRUE.
 
+```{r, cache=TRUE}
+res <- trendy(TrendyExData, maxk=2, saveObject = TRUE, fileName="exampleObject")
+```
+Then in R run:
+
+library(shiny)
+
+runGitHub('rhondabacher/Trendy')
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=1\textwidth]{Shiny_UploadData.png}
+\caption*{Upload shiny object}
+\end{figure}
+
+\newpage
+\begin{figure}[h!]
+\centering
+\includegraphics[width=1\textwidth]{Shing_allGenePat.png}
+\caption*{Find all genes with a given pattern}
+\end{figure}
+
+\newpage
+\begin{figure}[h!]
+\centering
+\includegraphics[width=1\textwidth]{Shiny_geneSearch.png}
+\caption*{Search genes individually}
+\end{figure}
+
+\newpage
 # SessionInfo
 ```{r}
 print(sessionInfo())
