@@ -74,8 +74,8 @@ shinyServer(function(input, output, session) {
 	  if(input$scatterplots == "1") {
 	  		  
 		  incProgress( 0, detail = "Making scatter plots of patterned genes")
-	  	  XX <- plotmarker(orig.data, T.Vect=t.vect, File.Name = outfileP, Feature.Names = genes.pass$Gene, PDF = TRUE, Seg.Fit = TRUE,
-	  			 Seg.Data = seg.object, Y.Name="Normalized Expression", Par.Param = c(3,2), PDF.Height=15, PDF.Width=10)
+	  	  XX <- plotmarker(Orig.Data, T.Vect=T.Vect, File.Name = outfileP, Feature.Names = genes.pass$Gene, PDF = TRUE, Seg.Fit = TRUE,
+	  			 Seg.Data = Seg.Object, Y.Name="Normalized Expression", Par.Param = c(3,2), PDF.Height=15, PDF.Width=10)
 	   
 	  }
 	  
@@ -89,18 +89,18 @@ shinyServer(function(input, output, session) {
    output$genePlot <- renderPlot({
 	   In()
    	  req(input$gene)
-	   if(input$gene == "") {topg <- rownames(orig.data)[1]} else {topg <- input$gene}
+	   if(input$gene == "") {topg <- rownames(Orig.Data)[1]} else {topg <- input$gene}
 		   
        par(mfrow=c(1,2), cex=1.5, cex.lab=1, cex.axis=1, cex.main=1.1, mar=c(6,6,2,2))
 
-       plot(t.vect, orig.data[topg,], pch=20, col="red", main=paste0(topg),
+       plot(T.Vect, Orig.Data[topg,], pch=20, col="red", main=paste0(topg),
             ylab="Normalized Expr.", xlab="Time")
-		if(topg %in% names(seg.object)) {
-			tmp <- seg.object[[topg]]
-			lines(t.vect, tmp$fitted, lwd = 3)
+		if(topg %in% names(Seg.Object)) {
+			tmp <- Seg.Object[[topg]]
+			lines(T.Vect, tmp$fitted, lwd = 3)
 		}
 		
-       plot(t.vect, log2(orig.data[topg,]+1), pch=20, col="red", main=paste0(topg),
+       plot(T.Vect, log2(Orig.Data[topg,]+1), pch=20, col="red", main=paste0(topg),
  	             ylab="Log2 Normalized Expr.", xlab="Time")
 
 				 
