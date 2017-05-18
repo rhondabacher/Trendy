@@ -2,28 +2,36 @@
 % Please edit documentation in R/extractpattern.R
 \name{extractpattern}
 \alias{extractpattern}
-\title{extract pattern from segmented regression}
+\title{Extract pattern from segmented regression}
 \usage{
-extractpattern(segdata, radjcut = 10, pattern = 0)
+extractpattern(Seg.Data, Pattern = NULL, Radj.Cut = .5, Delay = 0)
 }
 \arguments{
-\item{segdata}{trendy object}
+\item{Seg.Data}{output from trendy() function}
 
-\item{pattern}{vector containing pattern to search features. If length is one then only consider features with constant pattern across the entire time-course.}
+\item{Pattern}{vector containing pattern to search genes/features. If length
+is one then it will only consider features with constant pattern 
+across the entire time-course.}
 
-\item{radjcut}{only consider features with adjusted R^2 > radjcut. Default = .5.}
+\item{Radj.Cut}{only consider features with adjusted R^2 > Radj.Cut. 
+Default = .5.}
 
-\item{delay}{search for pattern starting after certain time-point.}
+\item{Delay}{search for pattern starting after certain time-point (e.g. only
+genes with a breakpoint > 10).}
 }
 \value{
-genes: names of features containing pattern.
+genes: names of genes/features containing pattern and the breakpoints
+	corresponding to the pattern.
+}
+\description{
+find dynamic genes that follow a given pattern
 }
 \examples{
-extractpattern(segdata, pattern = c("up")) #increasing only features
-extractpattern(segdata, pattern = c("up", "down")) #features with a peak
-extractpattern(segdata, pattern = c("up", "down"), delay=20) #features with a peak after 20th time-point
+myTrends <- trendy(TrendyExData)
+extractpattern(myTrends, Pattern = c("up")) #increasing only features
+ extractpattern(myTrends, Pattern = c("up", "down")) #features with a peak
+ extractpattern(myTrends, Pattern = c("up", "down"), Delay = 20)
 }
 \author{
 Rhonda Bacher
 }
-

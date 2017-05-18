@@ -4,20 +4,23 @@
 \alias{bpdist}
 \title{Distribution of breakpoints}
 \usage{
-bpdist(topres, ndigits=0)
+bpdist(Top.Trendy, N.Digits=0)
 }
 \arguments{
-\item{topres}{results from toptrendy() function}
+\item{Top.Trendy}{results from toptrendy() function}
 
-\item{ndigits}{how many digits to be used when rounding. Default is 0 (return integers).}
+\item{N.Digits}{how many digits to be used when rounding 
+(default is 0 (return integers))}
 }
 \value{
 The function takes significant genes called from 
 the toptrendy() function. For any time point, this function calculates how many genes
-have breakpoint at this time point. The output is the numbers of genes sorted
-by time point
+have a breakpoint at this time point. The output is the numbers of genes sorted
+by time point.
+}
+\description{
+calculates number of breakpoints at each time.
 }
 \author{
 Ning Leng
 }
-

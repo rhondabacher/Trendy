@@ -2,50 +2,60 @@
 % Please edit documentation in R/plotmarker.R
 \name{plotmarker}
 \alias{plotmarker}
-\title{plot markers of interest}
+\title{Plot markers of interest}
 \usage{
-plotmarker(data, t.vect=NULL, filename=NULL, listname, pdf=FALSE, seg=TRUE, fittedres=NULL,
-cond.col=NULL, cond.col.sample=NULL, cond.prefix="day",
-yname="normalized expression",par.param = c(3,2),
-pdfheight=15, pdfwidth=10)
+plotmarker(Data, T.Vect = NULL, File.Name = NULL, Feature.Names, PDF = FALSE,
+					Seg.Fit = TRUE, Seg.Data = NULL, Cond.Col = NULL, 
+					Cond.Col.Sample = NULL, Cond.Prefix = "Day", 
+					Y.Name = "Normalized Expression", Par.Param = c(3,2),
+					PDF.Height = 15, PDF.Width = 10)
 }
 \arguments{
-\item{data}{normalized expression matrix; rows are genes and columns are samples}
+\item{Data}{matrix of normalized expression measurements. Rows are genes 
+and columns are samples.}
 
-\item{t.vect}{a numerical vector indicates time points. If it si
-NULL (default), the time will be assumed to be 1:N in which N is number of samples.}
+\item{T.Vect}{a numerical vector indicating the time points. If it is NULL
+(default), then the time will be assumed to be equaly spaced from 
+1:N (N is number of samples).}
 
-\item{filename}{output file name; will be ignored if pdf=F}
+\item{File.Name}{the file name (and file path) to save the Trendy object, 
+only used if SaveObject=TRUE.}
 
-\item{listname}{a list of genes of interest}
+\item{Feature.Names}{a list of genes or features to plot}
 
-\item{seg}{whether plot the segmented regression fitting}
+\item{PDF}{whether to output plots to a pdf file (default is FALSE)}
 
-\item{fittedres}{segmented regression fitting result; if fittedres is NULL and seg=T, segmented regression will be fitted for each of the genes and it may take longer runtime}
+\item{Seg.Fit}{whether plot the segmented regression fitting (default is TRUE)}
 
-\item{cond.col}{color for each condition, names of this vector should be condition names; if it is null, no legends will be generated}
+\item{Seg.Data}{segmented regression fitting result from running trendy(); i
+f Seg.Data is NULL and Seg.Fit = T, then the
+segmented regression will be fit for each of the genes and it may take longer to run}
 
-\item{cond.col.sample}{each sample's color. The vector's length should match number of samples. if it si NULL, expressions will be shown in black.}
+\item{Cond.Col}{color for each condition, names of this vector should be condition names; 
+if it is NULL (default), no legend will be generated}
 
-\item{cond.prefix}{prefix to be appended to condition name}
+\item{Cond.Col.Sample}{each sample's color. The vector's length should match number of samples. 
+if it is NULL, expression will be shown in black (default).}
 
-\item{yname}{y axis name}
+\item{Cond.Prefix}{prefix to be appended to condition name (Day is default)}
 
-\item{par.param}{mfrow, default c(3,2)}
+\item{Y.Name}{y-axis name}
 
-\item{pdfheight, pdfwidth}{height and width for the pdf file}
+\item{Par.Param}{mfrow for plot layout(Default is c(3,2))}
 
-\item{whether}{output figs to a pdf file}
+\item{PDF.Height, PDF.Width}{the height and width for the PDF file}
 }
 \value{
 plot of gene expression and fitted line
 }
+\description{
+plot each feature with (or without) the fitted trend.
+}
 \examples{
 d1 <- rbind(c(rep(1,50),1:50), c(100:1))
-rownames(d1) <- c("g1","g2")
-plotmarker(d1, listname=c("g1","g2"), pdf = FALSE)
+	rownames(d1) <- c("g1","g2")
+	plotmarker(d1, Feature.Names=c("g1","g2"), PDF = FALSE)
 }
 \author{
-Ning Leng
+Ning Leng and Rhonda Bacher
 }
-

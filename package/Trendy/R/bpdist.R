@@ -1,24 +1,30 @@
 #' @title Distribution of breakpoints
-#' @usage bpdist(topres, ndigits=0)
-#' @param topres results from toptrendy() function
-#' @param ndigits how many digits to be used when rounding. Default is 0 (return integers).
+
+#' @usage bpdist(Top.Trendy, N.Digits=0)
+#' @description calculates number of breakpoints at each time.
+#' @param Top.Trendy results from toptrendy() function
+#' @param N.Digits how many digits to be used when rounding 
+#'		(default is 0 (return integers))
+
 #' @return The function takes significant genes called from 
 #' the toptrendy() function. For any time point, this function calculates how many genes
-#' have breakpoint at this time point. The output is the numbers of genes sorted
-#' by time point
+#' have a breakpoint at this time point. The output is the numbers of genes sorted
+#' by time point.
+
 #' @author Ning Leng
 #' @export
 
-bpdist <- function(topres, ndigits=0){
-	tmpbp <- topres$bp
-	tab <- table(round(unlist(tmpbp), ndigits))
+bpdist <- function(Top.Trendy, N.Digits=0){
+	
+	tmpbp <- Top.Trendy$bp
+	tab <- table(round(unlist(tmpbp), N.Digits))
 	tabout <- tab[order(as.numeric(names(tab)))]
-	gap <- 1/(10^ndigits)
+	gap <- 1 / (10^N.Digits)
 	tabname.num <- as.numeric(names(tabout))
-	namesuse <- as.character(seq(min(tabname.num),max(tabname.num),gap))
+	namesuse <- as.character(seq(min(tabname.num), max(tabname.num), gap))
 	tabnames <- names(tabout)
-	outv <- rep(0,length(namesuse))
+	outv <- rep(0, length(namesuse))
 	names(outv) <- namesuse
 	outv[tabnames] <- tabout
-	outv
+	return(outv)
 }

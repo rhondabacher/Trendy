@@ -17,7 +17,7 @@ shinyServer(function(input, output, session) {
 
 	  # print(ls())
 	  
-	  List = c(seg.object, orig.data, t.vect)
+	  List = c(Seg.object, Orig.data, T.Vect)
 	 })
 	 
 
@@ -26,7 +26,7 @@ shinyServer(function(input, output, session) {
 	
  		 In <- In()
 
- 	  		if(!exists("seg.object") | !exists("orig.data") | !exists("t.vect")) {
+ 	  		if(!exists("Seg.Object") | !exists("Orig.Data") | !exists("T.Vect")) {
 				"Trendy object invalid!"
 			} else {"File is uploaded!"}
 		
@@ -51,7 +51,7 @@ shinyServer(function(input, output, session) {
 		   incProgress(0.4, detail = "Extracting genes")
 		   
 		   
-		   genes.pass <- extractpattern(seg.object, radjcut = rcut, pattern = pattern, delay=delay)
+		   genes.pass <- extractpattern(Seg.Object, Radj.Cut = rcut, Pattern = pattern, Delay = delay)
 		   # print("X")
 	   
 
@@ -74,8 +74,8 @@ shinyServer(function(input, output, session) {
 	  if(input$scatterplots == "1") {
 	  		  
 		  incProgress( 0, detail = "Making scatter plots of patterned genes")
-	  	  XX <- plotmarker(orig.data, t.vect=t.vect, filename = outfileP, listname = genes.pass$Gene, pdf = TRUE, seg = TRUE,
-	  			 fittedres = seg.object, yname="Normalized Expression", par.param = c(3,2), pdfheight=15, pdfwidth=10)
+	  	  XX <- plotmarker(orig.data, T.Vect=t.vect, File.Name = outfileP, Feature.Names = genes.pass$Gene, PDF = TRUE, Seg.Fit = TRUE,
+	  			 Seg.Data = seg.object, Y.Name="Normalized Expression", Par.Param = c(3,2), PDF.Height=15, PDF.Width=10)
 	   
 	  }
 	  

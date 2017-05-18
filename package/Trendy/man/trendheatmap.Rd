@@ -4,21 +4,24 @@
 \alias{trendheatmap}
 \title{Draw heatmap of gene expression trends}
 \usage{
-trendheatmap(topres, showplot)
+trendheatmap(Top.Trendy, Show.Plot = TRUE)
 }
 \arguments{
-\item{topres}{results from toptrendy() function}
+\item{Top.Trendy}{results from toptrendy() function}
 
-\item{showplot}{whether show the heatmap}
+\item{Show.Plot}{whether plot the heatmap (default=TRUE)}
 }
 \value{
-The function takes significant genes called from 
-the toptrendy() function. These genes are further grouped into three
-groups : go up/down or no change in the first segment. Within each group,
-the genes are sorted by their first break point. The heatmap shows expression trends of these 
-three groups of genes. In the heatmap, red/blue/black represents up/down/nochange.
+The function takes significant genes/features called from 
+	the toptrendy() function. These genes are further grouped into three
+	groups : up, down, or no change in the first segment. Within each group,
+	the genes are sorted by their first break point. The heatmap shows expression 
+	trends of these three groups of genes. In the heatmap, red/blue/black 
+	represents up/down/nochange.
+}
+\description{
+heatmap of the fitted trends
 }
 \author{
 Ning Leng
 }
-

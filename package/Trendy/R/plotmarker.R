@@ -1,60 +1,72 @@
-#' @title plot markers of interest
-#' @usage plotmarker(data, t.vect=NULL, filename=NULL, listname, pdf=FALSE, seg=TRUE, fittedres=NULL,
-#' cond.col=NULL, cond.col.sample=NULL, cond.prefix="day",
-#' yname="normalized expression",par.param = c(3,2),
-#' pdfheight=15, pdfwidth=10)
-#' @param data normalized expression matrix; rows are genes and columns are samples
-#' @param t.vect a numerical vector indicates time points. If it si
-#'  NULL (default), the time will be assumed to be 1:N in which N is number of samples.
-#' @param filename output file name; will be ignored if pdf=F
-#' @param listname a list of genes of interest
-#' @param whether output figs to a pdf file
-#' @param seg whether plot the segmented regression fitting
-#' @param fittedres segmented regression fitting result; if fittedres is NULL and seg=T, segmented regression will be fitted for each of the genes and it may take longer runtime
-#' @param cond.col color for each condition, names of this vector should be condition names; if it is null, no legends will be generated
-#' @param cond.col.sample each sample's color. The vector's length should match number of samples. if it si NULL, expressions will be shown in black.
-#' @param cond.prefix prefix to be appended to condition name
-#' @param yname y axis name
-#' @param par.param mfrow, default c(3,2)
-#' @param pdfheight,pdfwidth height and width for the pdf file
-#' @return plot of gene expression and fitted line
-#' @examples d1 <- rbind(c(rep(1,50),1:50), c(100:1))
-#' rownames(d1) <- c("g1","g2")
-#' plotmarker(d1, listname=c("g1","g2"), pdf = FALSE)
-#' @author Ning Leng
+#' @title Plot markers of interest
+#' @usage plotmarker(Data, T.Vect = NULL, File.Name = NULL, Feature.Names, PDF = FALSE,
+#'						Seg.Fit = TRUE, Seg.Data = NULL, Cond.Col = NULL, 
+#'						Cond.Col.Sample = NULL, Cond.Prefix = "Day", 
+#'						Y.Name = "Normalized Expression", Par.Param = c(3,2),
+#'						PDF.Height = 15, PDF.Width = 10)
 
-#################
-# check genes
-#################
+#' @description plot each feature with (or without) the fitted trend.
+
+#' @inheritParams trendy
+#' @param Feature.Names a list of genes or features to plot
+#' @param PDF whether to output plots to a pdf file (default is FALSE)
+#' @param Seg.Fit whether plot the segmented regression fitting (default is TRUE)
+#' @param Seg.Data segmented regression fitting result from running trendy(); i
+#'		f Seg.Data is NULL and Seg.Fit = T, then the
+#'		segmented regression will be fit for each of the genes and it may take longer to run
+#' @param Cond.Col color for each condition, names of this vector should be condition names; 
+#'		if it is NULL (default), no legend will be generated
+#' @param Cond.Col.Sample each sample's color. The vector's length should match number of samples. 
+#'		if it is NULL, expression will be shown in black (default).
+#' @param Cond.Prefix prefix to be appended to condition name (Day is default)
+#' @param Y.Name y-axis name
+#' @param Par.Param mfrow for plot layout(Default is c(3,2))
+#' @param PDF.Height,PDF.Width the height and width for the PDF file
+#' @return plot of gene expression and fitted line
+
+#' @examples d1 <- rbind(c(rep(1,50),1:50), c(100:1))
+#'		rownames(d1) <- c("g1","g2")
+#'		plotmarker(d1, Feature.Names=c("g1","g2"), PDF = FALSE)
+#' @author Ning Leng and Rhonda Bacher
+#' @import graphics
+#' @import grDevices
 #' @export
 
-plotmarker <- function(data, t.vect=NULL,filename=NULL, listname, pdf=FALSE, seg=TRUE, fittedres=NULL,
-	cond.col=NULL, cond.col.sample=NULL, cond.prefix="day", 
-	yname="normalized expression",par.param = c(3,2),
-	pdfheight=15, pdfwidth=10){
-		data.norm <- data
-		if(is.null(t.vect))t.vect <- 1:ncol(data.norm)
-		out <- vector("list",length(listname))
-		names(out) <- listname
-		if(pdf)pdf(filename, height=pdfheight, width=pdfwidth)
-		par(mfrow=par.param)
-		if(!is.null(cond.col)){
-		plot(1, type="n", axes=FALSE, xlab="", ylab="")
-		legend("top", paste(cond.prefix, names(cond.col)),col=cond.col,ncol=4, lwd=2)
+plotmarker <- function(Data, T.Vect = NULL, File.Name = NULL, Feature.Names, PDF = FALSE, 
+						Seg.Fit = TRUE, Seg.Data = NULL, Cond.Col = NULL, Cond.Col.Sample = NULL,
+						Cond.Prefix = "Day", Y.Name = "Normalized Expression", Par.Param = c(3,2), 
+						PDF.Height = 15, PDF.Width = 10){
+							
+	data.norm <- Data
+	if(is.null(T.Vect)) {T.Vect <- 1:ncol(data.norm)}
+	
+	out <- vector("list",length(Feature.Names))
+	names(out) <- Feature.Names
+	
+	if(PDF) {pdf(File.Name, height = PDF.Height, width = PDF.Width)}
+	
+	par(mfrow = Par.Param)
+	if(!is.null(Cond.Col)){
+		plot(1, type = "n", axes = FALSE, xlab = "", ylab="")
+		legend("top", paste(Cond.Prefix, names(Cond.Col)), col = Cond.Col, ncol = 4, lwd = 2)
+	}
+	
+	if(is.null(Cond.Col)) {Cond.Col.Sample="black"}
+		
+	for(i in 1:length(Feature.Names)){
+		plot(T.Vect, data.norm[Feature.Names[i],], pch = 20, col = Cond.Col.Sample, 
+			 main = Feature.Names[i], ylab = Y.Name, xlab = "")
+		if(Seg.Fit){
+			if(is.null(Seg.Data)) {tmp <- fit.seg(data.norm, Feature.Names[i])}
+			if(!is.null(Seg.Data)) {tmp <- Seg.Data[[Feature.Names[i]]]}
+			lines(T.Vect, tmp$fitted, lwd = 2)
+			out[[i]] <- tmp
 		}
-		if(is.null(cond.col))cond.col.sample="black"
-		for(i in 1:length(listname)){
-		plot(t.vect, data.norm[listname[i],],pch=20,col=cond.col.sample, 
-				 main=listname[i],ylab=yname, xlab="")
-		if(seg){
-		if(is.null(fittedres))tmp <- fit.seg(data,listname[i])
-		if(!is.null(fittedres))tmp <- fittedres[[listname[i]]]
-		lines(t.vect,tmp$fitted,lwd=2)
-		out[[i]] <- tmp
-		}
-		}
-		if(pdf)dev.off()
-		out
+	}
+	
+	if(PDF) dev.off()
+	
+	return(out)
 }
 
 

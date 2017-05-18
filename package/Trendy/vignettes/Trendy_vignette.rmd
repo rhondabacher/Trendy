@@ -10,7 +10,7 @@ output:
 
 
 # Overview
-Trendy is a R package that can be used to perform breakpoint analysis on microarray or RNA-seq expression data with ordered conditions (e.g. time course, spatial course).
+Trendy is an R package that can be used to perform breakpoint analysis on microarray or RNA-seq expression data with ordered conditions (e.g. time course, spatial course).
 For each gene or other features, Trendy estimates the optimal number of breakpoints as well as
 the breakpoints by fitting a set of segmented regression models.
 The top dynamic genes are then identified by taking genes that can be well profiled by its gene-specific segmented regression model. Trendy also implements functions to visualize the dynamic genes and their trends, to order 
@@ -81,7 +81,7 @@ To install, type the following codes in R:
 ```{r, eval=FALSE} 
 install.packages("devtools")
 ```
-```{r, cache=TRUE, message=FALSE, warning=FALSE}
+```{r, cache=FALSE, message=FALSE, warning=FALSE}
 library(devtools)
 ```
 ```{r, eval=FALSE}
@@ -106,7 +106,7 @@ And install the package locally.
 
 ## Load the package
 To load the Trendy package:
-```{r, cache=TRUE, message=FALSE}
+```{r, message=FALSE}
 library(Trendy)
 ```
 
@@ -127,7 +127,7 @@ http://www.bioconductor.org/packages/devel/bioc/vignettes/EBSeq/inst/doc/EBSeq_V
 
 The object TrendyExData is a simulated data matrix containing 50 rows of genes and 40 columns of samples.
 
-```{r, cache=TRUE}
+```{r, cache=FALSE}
 data(TrendyExData)
 str(TrendyExData)
 ```
@@ -139,8 +139,8 @@ str(TrendyExData)
 The trendy() function can be used to run gene specific segmented regressions.
 Here we want to only consider up to 2 breakpoints for each gene. To do so we may specify maxk=2:
 
-```{r, cache=TRUE}
-res <- trendy(TrendyExData, maxk=2)
+```{r, cache=FALSE}
+res <- trendy(TrendyExData, Max.K = 2)
 res.top <- toptrendy(res) 
 # default adjusted R square cutoff is 0.5
 res.top$radj
@@ -162,7 +162,7 @@ trendy() function.
 res.top\$id.sign gives trend specification of the top genes.
 Function trendheatmap() can be used to display these trends:
 
-```{r, cache=TRUE, warning=FALSE, fig.height=7}
+```{r, cache=FALSE, warning=FALSE, fig.height=7}
 res.trend <- trendheatmap(res.top)
 str(res.trend)
 ```
@@ -174,19 +174,21 @@ Within each group, genes are sorted by the position of the first breakpoint.
 
 To generate expression heatmap of the first group of genes (first go up):
 
-```{r, cache=TRUE, warning=FALSE}
+```{r, cache=FALSE, warning=FALSE}
+library(gplots)
 heatmap.2(TrendyExData[names(res.trend$firstup),],trace="none", Rowv=F,Colv=F, 
 					scale="row", main="top genes (first go up)")
 ```
 
 
 Similarly, to generate expression heatmap of the second group of genes (first go down):
-```{r, cache=TRUE, warning=FALSE}
+```{r, cache=FALSE, warning=FALSE}
 heatmap.2(TrendyExData[names(res.trend$firstdown),],trace="none", Rowv=F,Colv=F, 
 					          scale="row", main="top genes (first go down)")
 ```
+
 To generate expression heatmap of the second group of genes (first no change):
-```{r, cache=TRUE, warning=FALSE, fig.height=4}
+```{r, cache=FALSE, warning=FALSE, fig.height=4}
 heatmap.2(TrendyExData[names(res.trend$firstnochange),],trace="none", Rowv=F,Colv=F,
 					                    scale="row", main="top genes (first no change)",
 															cexRow=.8)
@@ -198,8 +200,8 @@ The plotmarker() function may be used to plot expression of individual genes and
 
 For example, to plot the top 6 genes in the first group of genes (first go up): 
 
-```{r, cache=TRUE, fig.height=7}
-plot1 <- plotmarker(TrendyExData,listname=names(res.trend$firstup)[1:6],fittedres=res)
+```{r, cache=FALSE, fig.height=7}
+plot1 <- plotmarker(TrendyExData, Feature.Names = names(res.trend$firstup)[1:6], Seg.Data = res)
 ```
 
 The input of function plotmarker() requires the expression data and a list of genes of interest.
@@ -210,21 +212,21 @@ Specifying fitted results obtained from previous steps will save time by avoidin
 
 Similarly, to plot the top 6 genes in the second group of genes (first go down): 
 
-```{r, cache=TRUE, fig.height=7}
-plot2 <- plotmarker(TrendyExData,listname=names(res.trend$firstdown)[1:6],
-										fittedres=res)
+```{r, cache=FALSE, fig.height=7}
+plot2 <- plotmarker(TrendyExData, Feature.Names = names(res.trend$firstdown)[1:6],
+										Seg.Data = res)
 ```
 
 To plot the 2 genes in the third group of genes (first no change):
-```{r, cache=TRUE, fig.height=3}
-plot2 <- plotmarker(TrendyExData,listname=names(res.trend$firstnochange)[1:2],
-										fittedres=res,par.param=c(1,2))
+```{r, cache=FALSE, fig.height=3}
+plot2 <- plotmarker(TrendyExData, Feature.Names = names(res.trend$firstnochange)[1:2],
+										Seg.Data = res, Par.Param=c(1,2))
 ```
 
 ## Gene specific estimates
 
 For a given gene of interest, its estimated parameters can be obtained by (using g2 as an example):
-```{r, cache=TRUE}
+```{r, cache=FALSE}
 print(res.top$bp["g2"]) # break points
 print(res.top$radj["g2"]) # adjusted r square
 print(res.top$slp["g2"]) # fitted slopes of the segments
@@ -239,7 +241,7 @@ The fitted slopes for the 3 segments are 3.31, 0.06 and -2.97.
 
 To calculate number of breakpoints over the time course:
 
-```{r, cache=TRUE}
+```{r, cache=FALSE}
 res.bp <- bpdist(res.top)
 barplot(res.bp, ylab="Number of breakpoint", col="blue")
 ```
@@ -255,37 +257,66 @@ the user may specify it via the t.vect parameter in trendy() function.
 For example, suppose for the example data, the first 30 samples were collected 
 every hour and the other 10 samples were collected every 5 hours. We may define
 the time vector as:
-```{r, cache=TRUE}
+```{r, cache=FALSE}
 t.v <- c(1:30,seq(31,80,5))
 names(t.v) <- colnames(TrendyExData)
 print(t.v)
 ```
 To run Trendy model using the empirical collecting time instead of sample ID (1-40):
-```{r, cache=TRUE}
-res2 <- trendy(TrendyExData, t.vect=t.v, maxk=2)
+
+```{r, cache=FALSE}
+res2 <- trendy(TrendyExData, T.Vect=t.v, Max.K=2)
 res.top2 <- toptrendy(res2)
-res.trend2 <- trendheatmap(res.top2, showplot=FALSE)
+res.trend2 <- trendheatmap(res.top2, Show.Plot=FALSE)
 str(res.trend2)
 ```
 To plot the first 6 genes that 
 have up-regulated pattern at the beginning of the time course, by showing empirical time at x axis:
-```{r, cache=TRUE, fig.height=7}
-plot1.new <- plotmarker(TrendyExData,t.vect=t.v,
-									listname=names(res.trend2$firstup)[1:6],fittedres=res2)
+```{r, cache=FALSE, fig.height=7}
+plot1.new <- plotmarker(TrendyExData, T.Vect=t.v,
+									Feature.Names = names(res.trend2$firstup)[1:6], Seg.Data = res2)
 ```
+
+
+
+## Extract genes with certain pattern
+Genes that have a peak along the time-course will have fitted trend somewhere as "up-down". Genes that are oscillating may have the fitted trend "up-down-up-down".
+
+```{r, cache=FALSE, fig.height=5}
+res3 <- trendy(TrendyExData, Max.K=2)
+# Genes that peak
+pat1 <- extractpattern(res3, Pattern = c("up","down"))
+head(pat1)
+plotPat1 <- plotmarker(TrendyExData, T.Vect=t.v,
+									Feature.Names = pat1$Gene[1:6], Seg.Data = res3)
+
+```
+```{r, cache=FALSE, error=TRUE}
+# Genes that oscillate
+pat1 <- extractpattern(res3, Pattern = c("up","down", "up","down"))
+```
+
+```{r, cache=FALSE, fig.height=5}
+# Genes that peak after some time
+pat3 <- extractpattern(res3, Pattern = c("up","down"), Delay = 15)
+head(pat3)
+plotPat3 <- plotmarker(TrendyExData, T.Vect=t.v,
+									Feature.Names = pat3$Gene[1:6], Seg.Data = res3)
+```
+
 
 ## Additional options
 In trendy() function, 
 the thresholds
 $c_{num}$, $c_{diff}$ and  $c_{pval}$
 can be specified via parameters
-min.num.in.seg, cutdiff and pvalcut.
+Min.Num.In.Seg, Cut.Diff and Pval.Cut, respectively.
 
 # Trendy shiny app
 The Trendy shiny app requires an RData object output from the trendy() call, which can be obtained by setting saveObject=TRUE.
 
-```{r, cache=TRUE}
-res <- trendy(TrendyExData, maxk=2, saveObject = TRUE, fileName="exampleObject")
+```{r, cache=FALSE}
+res <- trendy(TrendyExData, Max.K=2, Save.Object = TRUE, File.Name="exampleObject")
 ```
 Then in R run:
 

@@ -15,4 +15,3 @@ Example time-course dataset.
 data(TrendyExData)
 }
 \keyword{datasets}
-

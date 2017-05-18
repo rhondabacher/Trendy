@@ -2,48 +2,58 @@
 % Please edit documentation in R/fit.seg.R
 \name{fit.seg}
 \alias{fit.seg}
-\title{segmented regression on a gene}
+\title{Fit Segmented regression models on a feature/gene}
 \usage{
-fit.seg(data, g.in, maxk=5, t.vect=NULL, min.num.in.seg=5, pvalcut=.1,
-               cutdiff=.1, num.try=100,keepfit=FALSE)
+fit.seg(Data, Max.K = 5, T.Vect = NULL, Min.Num.In.Seg = 5, Pval.Cut = .1, 
+               Cut.Diff = .1, Num.Try = 100, Keep.Fit = FALSE, Force.Radj = FALSE)
 }
 \arguments{
-\item{maxk}{max number of breakpoints to consider. 
-For each gene, the function will fit maxk+1 models containing 0->maxk breakpoints
-(1->(maxk+1)) segments. The model with highest adjusted r value will be selected.}
+\item{Data}{matrix of normalized expression measurements. Rows are genes 
+and columns are samples.}
 
-\item{t.vect}{a numerical vector indicates time points. If it si NULL (default), the time will be assumed to be 1:N in which N is number of samples.}
+\item{Max.K}{maximum number of breakpoints to consider. For each gene, the
+trendy will fit Max.K + 1 models containing 0 -> Max.K breakpoints
+(1 -> (Max.K+1) segments). The model with the highest adjusted r^2 
+value will be selected.}
 
-\item{min.num.in.seg}{min number of samples within a segment}
+\item{T.Vect}{a numerical vector indicating the time points. If it is NULL
+(default), then the time will be assumed to be equaly spaced from 
+1:N (N is number of samples).}
 
-\item{pvalcut}{p value cutoff. If the p value of a segment is greater than pvalcut,
-this segment will be called as 'no change'}
+\item{Min.Num.In.Seg}{minimum number of samples required to be within 
+a segment.}
 
-\item{cutdiff}{default is 0.1. if the difference between r_adj from the k+1 breakpoint model
-and the r_adj from the k breakpoint model is less than cutdiff, the optimal number
-of breakpoint will be set as k instead of k+1}
+\item{Pval.Cut}{p-value cutoff. If the p-value of a segment is greater than
+PvalCut, then the segment will be called as 'no change'.}
 
-\item{num.try}{number of different seeds to try. If all num.try runs fails,
-linear regression results will be returned (which represents one segment case).}
+\item{Cut.Diff}{If the difference between the r^2 from the k + 1 breakpoint
+model and the r^2 from the k breakpoint model is less than CutFiff, 
+then the optimal number of breakpoints is set as k instead of k + 1.}
 
-\item{keepfit}{whether keep the fitted object}
+\item{Num.Try}{the number of different seeds to try. If all NumTry runs 
+fail, then linear regression (no breakpoints, one segment) model will
+be returned.}
 
-\item{forceRadj}{corresponds to previous version of SegReg, only use adjR2 to compare models.}
+\item{Keep.Fit}{whether report the fitted object (default is FALSE).}
 
-\item{data}{normalized expression measure. Rows are genes and columns are samples. The data matrix is expected to be normalized.}
+\item{Force.Radj}{whether to use adjusted r^2 in CutDiff evaluation 
+instead of r^2.}
 }
 \value{
 id.sign: direction of each sample; -1: down, 0: no change, 1: up
-slp: fitted slopes, slp.sign: sign of fitted slopes, slp.pval: p value of each segment, 
-bp: estimated breakpoints, fitted: fitted values radj: adjusted r value of the model
-fit: fit object
+	slp: fitted slopes, slp.sign: sign of fitted slopes, 
+	slp.pval: p value of each segment, bp: estimated breakpoints, 
+	fitted: fitted values radj: adjusted r value of the model
+		fit: fit object
+}
+\description{
+fits segmented regression models
 }
 \examples{
 d1 <- rbind(c(rep(1,50),1:50), c(100:1))
-rownames(d1) <- c("g1","g2")
-fit.seg(d1, "g1")
+		rownames(d1) <- c("g1","g2")
+		fit.seg(d1, "g1")
 }
 \author{
 Ning Leng and Rhonda Bacher
 }
-

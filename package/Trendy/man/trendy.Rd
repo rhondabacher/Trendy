@@ -4,55 +4,71 @@
 \alias{trendy}
 \title{segmented regression on a set of genes}
 \usage{
-trendy(data, meancut=10,maxk=3, t.vect=NULL, min.num.in.seg=5, pvalcut=.1,
-               cutdiff=.1, num.try=100,keepfit=FALSE)
+trendy(Data = NULL, Mean.Cut=10, Max.K=3, T.Vect=NULL,
+               Min.Num.In.Seg=5, Pval.Cut=.1, Cut.Diff=.1, Save.Object=FALSE,
+               File.Name=NULL, Num.Try=100, Keep.Fit=FALSE, Force.Radj = FALSE,
+               N.Cores=NULL)
 }
 \arguments{
-\item{meancut}{default is 10. Genes whose mean is less than meancut will not be considered.
-For each gene, the function will fit maxk+1 models containing 0->maxk breakpoints
-(1->(maxk+1)) segments. The model with highest adjusted r value will be selected.}
+\item{Data}{matrix of normalized expression measurements. Rows are genes 
+and columns are samples.}
 
-\item{maxk}{max number of breakpoints to consider.}
+\item{Mean.Cut}{genes whose mean is less than MeanCut will not be 
+considered, default is 10.}
 
-\item{t.vect}{a numerical vector indicates time points. If it si
-NULL (default), the time will be assumed to be 1:N in which N is number of samples.}
+\item{Max.K}{maximum number of breakpoints to consider. For each gene, the
+trendy will fit Max.K + 1 models containing 0 -> Max.K breakpoints
+(1 -> (Max.K+1) segments). The model with the highest adjusted r^2 
+value will be selected.}
 
-\item{min.num.in.seg}{min number of samples within a segment}
+\item{T.Vect}{a numerical vector indicating the time points. If it is NULL
+(default), then the time will be assumed to be equaly spaced from 
+1:N (N is number of samples).}
 
-\item{pvalcut}{p value cutoff. If the p value of a segment is greater than pvalcut,
-this segment will be called as 'no change'}
+\item{Min.Num.In.Seg}{minimum number of samples required to be within 
+a segment.}
 
-\item{cutdiff}{default is 0.1. if the difference between r_adj from the k+1 breakpoint model
-and the r_adj from the k breakpoint model is less than cutdiff, the optimal number
-of breakpoint will be set as k instead of k+1}
+\item{Pval.Cut}{p-value cutoff. If the p-value of a segment is greater than
+PvalCut, then the segment will be called as 'no change'.}
 
-\item{saveObject}{default is FALSE. If TRUE then the trendy object produced will be saved to use in the shiny app.}
+\item{Cut.Diff}{If the difference between the r^2 from the k + 1 breakpoint
+model and the r^2 from the k breakpoint model is less than CutFiff, 
+then the optimal number of breakpoints is set as k instead of k + 1.}
 
-\item{fileName}{name (and file path) to save the Trendy object, only used is saveObject=TRUE.}
+\item{Save.Object}{If TRUE then the trendy object produced will be saved 
+to use in the shiny app (default is FALSE).}
 
-\item{num.try}{number of different seeds to try. If all num.try runs fails,
-linear regression results will be returned (which represents one segment case).}
+\item{File.Name}{the file name (and file path) to save the Trendy object, 
+only used if SaveObject=TRUE.}
 
-\item{keepfit}{whether keep the fitted object}
+\item{Num.Try}{the number of different seeds to try. If all NumTry runs 
+fail, then linear regression (no breakpoints, one segment) model will
+be returned.}
 
-\item{forceRadj}{whether to use adjusted Rsq in cutdiff evaluation instead of Rsq.}
+\item{Keep.Fit}{whether report the fitted object (default is FALSE).}
 
-\item{NCores}{number of cores to use, default is detectCores() - 1.}
+\item{Force.Radj}{whether to use adjusted r^2 in CutDiff evaluation 
+instead of r^2.}
 
-\item{data}{normalized expression measure. Rows are genes and columns are samples. The data matrix is expected to be normalized.}
+\item{N.Cores}{number of cores to use, default is detectCores() - 1.}
 }
 \value{
 id.sign: direction of each sample; -1: down, 0: no change, 1: up
-slp: fitted slopes, slp.sign: sign of fitted slopes, slp.pval: p value of each segment, 
-bp: estimated breakpoints, fitted: fitted values radj: adjusted r value of the model
-fit: fit object
+     slp: fitted slopes, slp.sign: sign of fitted slopes, 
+     slp.pval: p value of each segment, 
+     bp: estimated breakpoints, fitted: fitted values 
+     radj: adjusted r value of the model
+     fit: fit object
+}
+\description{
+Segmented regression models are fit for each genes. 
+ The number of model fits is 1 -> Max.K.
 }
 \examples{
 d1 <- rbind(c(rep(1,50),1:50), c(100:1))
-rownames(d1) <- c("g1","g2")
-trendy(d1)
+     rownames(d1) <- c("g1","g2")
+     trendy(d1)
 }
 \author{
 Ning Leng and Rhonda Bacher
 }
-
