@@ -17,7 +17,7 @@ shinyServer(function(input, output, session) {
 
 	  # print(ls())
 	  
-	  List = c(Seg.object, Orig.data, T.Vect)
+	  List = c(Seg.Object, Orig.data, T.Vect)
 	 })
 	 
 
