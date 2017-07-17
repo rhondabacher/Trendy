@@ -21,13 +21,13 @@ The patten of interest can also be extracted after a given condition(time-point)
 #### Make sure packages are installed:
 
 install.packages(c("segmented","gplots")) 
+install.packages("devtools")
 
 library(devtools)
-
 install_github("rhondabacher/Trendy/package/Trendy")
 
 install.packages("shiny")
-
+install.packages("shinyFiles")
 
 #### To launch the Shiny app:
 
