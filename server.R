@@ -12,12 +12,11 @@ shinyServer(function(input, output, session) {
   
   In <- eventReactive(input$Submit1, {
     
-    
     load(input$filename$datapath)
-    
-    print(ls())
-    
-    List = c(Seg.Object, Orig.Data, T.Vect)
+
+    LIST = list(Seg.Object, Orig.Data, T.Vect)
+    names(LIST) <- c("Seg.Object", "Orig.Data", "T.Vect")
+    return(LIST)
   })
   
   
@@ -38,7 +37,7 @@ shinyServer(function(input, output, session) {
     
     withProgress(message = 'Finding gene patterns:', value = 0, {
       
-      In <- In()
+      IN <- In()
       
       outdir <- paste0("~", do.call("file.path", input$Outdir[[1]]), "/")
       
@@ -51,7 +50,7 @@ shinyServer(function(input, output, session) {
       incProgress(0.4, detail = "Extracting genes")
       
       
-      genes.pass <- extractpattern(Seg.Object, Radj.Cut = rcut, Pattern = pattern, Delay = delay)
+      genes.pass <- extractpattern(IN$Seg.Object, Radj.Cut = rcut, Pattern = pattern, Delay = delay)
       # print("X")
       
       
@@ -74,8 +73,9 @@ shinyServer(function(input, output, session) {
       if(input$scatterplots == "1") {
         
         incProgress( 0, detail = "Making scatter plots of patterned genes")
-        XX <- plotmarker(Data=Orig.Data, T.Vect=T.Vect, File.Name = outfileP, Feature.Names = genes.pass$Gene, PDF = TRUE, Seg.Fit = TRUE,
-                         Seg.Data = Seg.Object, Y.Name="Normalized Expression", Par.Param = c(3,2), PDF.Height=15, PDF.Width=10)
+       
+        XX <- plotmarker(Data=IN$Orig.Data, T.Vect=IN$T.Vect, File.Name = outfileP, Feature.Names = genes.pass$Gene, PDF = TRUE, Seg.Fit = TRUE,
+                         Seg.Data = IN$Seg.Object, Y.Name="Normalized Expression", Par.Param = c(3,2), PDF.Height=15, PDF.Width=10)
         
       }
       
@@ -87,22 +87,25 @@ shinyServer(function(input, output, session) {
   
   
   output$genePlot <- renderPlot({
-    In <- In()
+
+   IN <- In()
+      
     req(input$gene)
     if(input$gene == "") {
-      topg <- rownames(Orig.Data)[1]
+      topg <- rownames(In$Orig.Data)[1]
       } else {topg <- input$gene}
+
     
     par(mfrow=c(1,2), cex=1.5, cex.lab=1, cex.axis=1, cex.main=1.1, mar=c(6,6,2,2))
-    
-    plot(T.Vect, Orig.Data[topg,], pch=20, col="red", main=paste0(topg),
+
+    plot(IN$T.Vect, IN$Orig.Data[topg,], pch=20, col="red", main=paste0(topg),
          ylab="Normalized Expr.", xlab="Time")
-    if(topg %in% names(Seg.Object)) {
-      tmp <- Seg.Object[[topg]]
-      lines(T.Vect, tmp$fitted, lwd = 3)
+    if(topg %in% names(IN$Seg.Object)) {
+      tmp <- IN$Seg.Object[[topg]]
+      lines(IN$T.Vect, tmp$fitted, lwd = 3)
     }
     
-    plot(T.Vect, log2(Orig.Data[topg,]+1), pch=20, col="red", main=paste0(topg),
+    plot(IN$T.Vect, log2(IN$Orig.Data[topg,]+1), pch=20, col="red", main=paste0(topg),
          ylab="Log2 Normalized Expr.", xlab="Time")
     
     
