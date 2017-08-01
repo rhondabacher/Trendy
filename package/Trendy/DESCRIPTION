@@ -6,7 +6,6 @@ Author: Rhonda Bacher and Ning Leng
 Maintainer: Rhonda Bacher <rbacher@wisc.edu>
 Description: Trendy implements segmented regression to detect breakpoints for
     each gene in high throughput data with ordered conditions.
-Depends: R (>= 3.4.0)
 Imports: stats,
     graphics,
     grDevices,

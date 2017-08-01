@@ -96,7 +96,8 @@ fit.seg <- function(Data, Max.K = 5, T.Vect = NULL, Min.Num.In.Seg = 5, Pval.Cut
 	  		out <- list(id.sign=lm.id.sign, slp=lm.slp, slp.sign=lm.sign, 
 					slp.pval=lm.pval, bp=NA, fitted=lm.fit,radj=lm.radj,fit=lm1)
 	  		if (Keep.Fit == FALSE) {out <- out[1:7]}
-	  		return(out)}
+	  		return(out)
+	  		break}
 
 		# now make sure that optimal value satisfies having minimum number of segments, 
 		# if it does not then decrease breakpoints.
@@ -108,7 +109,8 @@ fit.seg <- function(Data, Max.K = 5, T.Vect = NULL, Min.Num.In.Seg = 5, Pval.Cut
 	  	  	out <- list(id.sign=lm.id.sign, slp=lm.slp, slp.sign=lm.sign, 
 						slp.pval=lm.pval, bp=NA, fitted=lm.fit,radj=lm.radj,fit=lm1)
 	  		if(Keep.Fit == FALSE) {out <- out[1:7]}
-	  		return(out)}
+	  		return(out)
+	  	  	break}
 	}
 
 	if (length(step.r) == 1) {

@@ -1,10 +1,5 @@
 #' @title segmented regression on a set of genes
 
-#' @usage trendy(Data = NULL, Mean.Cut=10, Max.K=3, T.Vect=NULL,
-#'                Min.Num.In.Seg=5, Pval.Cut=.1, Cut.Diff=.1, Save.Object=FALSE,
-#'                File.Name=NULL, Num.Try=100, Keep.Fit=FALSE, Force.Radj = FALSE,
-#'                N.Cores=NULL)
-
 #' @param Data matrix of normalized expression measurements. Rows are genes 
 #'      and columns are samples.
 #' @param Mean.Cut genes whose mean is less than MeanCut will not be 
@@ -66,7 +61,7 @@ trendy <- function(Data = NULL, Mean.Cut=10, Max.K=3, T.Vect=NULL,
             to proceed.")}
     if (is.null(rownames(Data))) {stop("Must supply feature/gene/row names!")}
     if (is.null(colnames(Data))) {stop("Must supply sample/cell names!")}
-    if (is.null(N.Cores)) {N.Cores <- max(1, detectCores() - 1)}
+    if (is.null(N.Cores)) {N.Cores <- max(1, parallel::detectCores() - 1)}
     if (.Platform$OS.type == "windows") {
     	N.Cores = 1
     }
