@@ -120,7 +120,7 @@ fit.seg <- function(Data, Max.K = 5, T.Vect = NULL, Min.Num.In.Seg = 5, Pval.Cut
 
 	# finally decide if best BP model is better than linear
 
-	if(radj.max < lm.radj | rsq.max - lm.rsq < Cut.Diff){
+	if (radj.max < lm.radj | (rsq.max - lm.rsq) < Cut.Diff | min(table(id.l[[r.choose]])) < Min.Num.In.Seg){
 		out <- list(id.sign=lm.id.sign, slp=lm.slp, slp.sign=lm.sign, 
 					slp.pval=lm.pval, bp=NA, fitted=lm.fit,radj=lm.radj,fit=lm1)
 		if(Keep.Fit == FALSE) {out <- out[1:7]}
