@@ -35,6 +35,7 @@ install.packages("shinyFiles")
 #### To launch the Shiny app:
 
 library(shiny)
+
 library(Trendy)
 
 runGitHub('rhondabacher/Trendy')
