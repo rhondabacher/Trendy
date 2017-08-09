@@ -4,7 +4,7 @@
 \alias{bpdist}
 \title{Distribution of breakpoints}
 \usage{
-bpdist(Top.Trendy, N.Digits=0)
+bpdist(Top.Trendy, N.Digits = 0)
 }
 \arguments{
 \item{Top.Trendy}{results from toptrendy() function}

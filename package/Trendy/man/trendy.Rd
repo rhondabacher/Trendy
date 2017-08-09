@@ -4,14 +4,24 @@
 \alias{trendy}
 \title{segmented regression on a set of genes}
 \usage{
-trendy(Data = NULL, Mean.Cut=10, Max.K=3, T.Vect=NULL,
-               Min.Num.In.Seg=5, Pval.Cut=.1, Cut.Diff=.1, Save.Object=FALSE,
-               File.Name=NULL, Num.Try=100, Keep.Fit=FALSE, Force.Radj = FALSE,
-               N.Cores=NULL)
+trendy(Data = NULL, T.Vect = NULL, Save.Object = FALSE,
+  File.Name = NULL, Mean.Cut = 10, Max.K = 3, Min.Num.In.Seg = 5,
+  Pval.Cut = 0.1, Cut.Diff = 0.1, Num.Try = 100, Keep.Fit = FALSE,
+  Force.Radj = FALSE, N.Cores = NULL)
 }
 \arguments{
 \item{Data}{matrix of normalized expression measurements. Rows are genes 
 and columns are samples.}
+
+\item{T.Vect}{a numerical vector indicating the time points. If it is NULL
+(default), then the time will be assumed to be equaly spaced from 
+1:N (N is number of samples).}
+
+\item{Save.Object}{If TRUE then the trendy object produced will be saved 
+to use in the shiny app (default is FALSE).}
+
+\item{File.Name}{the file name (and file path) to save the Trendy object, 
+only used if SaveObject=TRUE.}
 
 \item{Mean.Cut}{genes whose mean is less than MeanCut will not be 
 considered, default is 10.}
@@ -20,10 +30,6 @@ considered, default is 10.}
 trendy will fit Max.K + 1 models containing 0 -> Max.K breakpoints
 (1 -> (Max.K+1) segments). The model with the highest adjusted r^2 
 value will be selected.}
-
-\item{T.Vect}{a numerical vector indicating the time points. If it is NULL
-(default), then the time will be assumed to be equaly spaced from 
-1:N (N is number of samples).}
 
 \item{Min.Num.In.Seg}{minimum number of samples required to be within 
 a segment.}
@@ -34,12 +40,6 @@ PvalCut, then the segment will be called as 'no change'.}
 \item{Cut.Diff}{If the difference between the r^2 from the k + 1 breakpoint
 model and the r^2 from the k breakpoint model is less than CutFiff, 
 then the optimal number of breakpoints is set as k instead of k + 1.}
-
-\item{Save.Object}{If TRUE then the trendy object produced will be saved 
-to use in the shiny app (default is FALSE).}
-
-\item{File.Name}{the file name (and file path) to save the Trendy object, 
-only used if SaveObject=TRUE.}
 
 \item{Num.Try}{the number of different seeds to try. If all NumTry runs 
 fail, then linear regression (no breakpoints, one segment) model will

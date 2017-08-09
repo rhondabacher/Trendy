@@ -1,6 +1,5 @@
 #' @title Distribution of breakpoints
 
-#' @usage bpdist(Top.Trendy, N.Digits=0)
 #' @description calculates number of breakpoints at each time.
 #' @param Top.Trendy results from toptrendy() function
 #' @param N.Digits how many digits to be used when rounding 
@@ -14,7 +13,7 @@
 #' @author Ning Leng
 #' @export
 
-bpdist <- function(Top.Trendy, N.Digits=0){
+bpdist <- function(Top.Trendy, N.Digits = 0){
 	
 	tmpbp <- Top.Trendy$bp
 	tab <- table(round(unlist(tmpbp), N.Digits))

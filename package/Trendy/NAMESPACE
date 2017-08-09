@@ -2,7 +2,8 @@
 
 export(bpdist)
 export(extractpattern)
-export(plotmarker)
+export(formatresults)
+export(plotfeature)
 export(toptrendy)
 export(trendheatmap)
 export(trendy)

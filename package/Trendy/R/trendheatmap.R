@@ -1,22 +1,20 @@
 #' @title Draw heatmap of gene expression trends
 
-#' @usage trendheatmap(Top.Trendy, Show.Plot = TRUE)
 #' @description heatmap of the fitted trends
 #' @param Top.Trendy results from toptrendy() function
-#' @param Show.Plot whether plot the heatmap (default=TRUE)
 #' @return The function takes significant genes/features called from 
 #'		the toptrendy() function. These genes are further grouped into three
 #'		groups : up, down, or no change in the first segment. Within each group,
 #'		the genes are sorted by their first break point. The heatmap shows expression 
 #'		trends of these three groups of genes. In the heatmap, red/blue/black 
-#'		represents up/down/nochange.
-#' @author Ning Leng
+#'		represents up/down/nochange. A list of genes in the heatmap order is returned.
+#' @author Ning Leng and Rhonda Bacher
 #' @import graphics
 #' @import grDevices
 #' @importFrom gplots heatmap.2
 #' @export
 
-trendheatmap <- function(Top.Trendy, Show.Plot = TRUE){
+trendheatmap <- function(Top.Trendy){
 
 	bks.all <- Top.Trendy$bp
 	bks.first <- sapply(bks.all, function(i) i[1])
@@ -35,13 +33,10 @@ trendheatmap <- function(Top.Trendy, Show.Plot = TRUE){
 
 	seg.all.id.highr.sign.sort <- seg.all.id.highr[names(bks.sign.sort),]
 
-	if(Show.Plot) {
-		heatmap.2(seg.all.id.highr.sign.sort, trace = "none",
+	gplots::heatmap.2(seg.all.id.highr.sign.sort, trace = "none",
 						Rowv = FALSE, Colv = FALSE, col = c("slateblue1", "black", "tomato"),
 						key = FALSE, cexRow = .5)
-		legend("top", ncol = 3, c("up", "no change", "down"), fill = rev(c("slateblue1", "black", "tomato")))
-	}
-	
-	out <- bks.sign.sort.list
-	return(out)
+	legend("top", ncol = 3, c("up", "no change", "down"), fill = rev(c("slateblue1", "black", "tomato")))
+
+return(bks.sign.sort.list)
 }

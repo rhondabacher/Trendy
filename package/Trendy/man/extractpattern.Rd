@@ -4,7 +4,7 @@
 \alias{extractpattern}
 \title{Extract pattern from segmented regression}
 \usage{
-extractpattern(Seg.Data, Pattern = NULL, Radj.Cut = .5, Delay = 0)
+extractpattern(Seg.Data, Pattern = NULL, Radj.Cut = 0.5, Delay = 0)
 }
 \arguments{
 \item{Seg.Data}{output from trendy() function}

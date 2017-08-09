@@ -4,7 +4,7 @@
 \alias{toptrendy}
 \title{obtain top genes from trendy results}
 \usage{
-toptrendy(Seg.Data, AdjR.Cut = .5)
+toptrendy(Seg.Data, AdjR.Cut = 0.5)
 }
 \arguments{
 \item{Seg.Data}{output from the trendy function}

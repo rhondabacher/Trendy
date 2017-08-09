@@ -51,10 +51,11 @@
 #'      rownames(d1) <- c("g1","g2")
 #'      trendy(d1)
 
-trendy <- function(Data = NULL, Mean.Cut=10, Max.K=3, T.Vect=NULL,
-                Min.Num.In.Seg=5, Pval.Cut=.1, Cut.Diff=.1, Save.Object=FALSE,
-                File.Name=NULL, Num.Try=100, Keep.Fit=FALSE, Force.Radj = FALSE,
-                N.Cores=NULL) {
+trendy <- function(Data = NULL, T.Vect = NULL, Save.Object = FALSE, 
+                    File.Name = NULL, Mean.Cut = 10, Max.K = 3, 
+                    Min.Num.In.Seg = 5, Pval.Cut = .1, Cut.Diff = .1, 
+                    Num.Try = 100, Keep.Fit = FALSE, Force.Radj = FALSE,
+                    N.Cores = NULL) {
 
   ## Checks
     if (anyNA(Data)) {stop("Data contains at least one value of NA. Unsure how 
@@ -81,10 +82,10 @@ trendy <- function(Data = NULL, Mean.Cut=10, Max.K=3, T.Vect=NULL,
     
     Features = rownames(Data.MeanFiltered)
     Seg.All <- mclapply(1:nrow(Data.MeanFiltered), function(x) {
-    	fit.seg(Data = Data.MeanFiltered[Features[x],], Max.K = Max.K, 
-                T.Vect = T.Vect, Min.Num.In.Seg = Min.Num.In.Seg, 
+    	fitseg(Data = Data.MeanFiltered[Features[x],],
+                T.Vect = T.Vect,  Max.K = Max.K, Min.Num.In.Seg = Min.Num.In.Seg, 
                 Pval.Cut = Pval.Cut, Cut.Diff = Cut.Diff, Num.Try = Num.Try, 
-                Keep.Fit = Keep.Fit, Force.Radj = FALSE)}, mc.cores = N.Cores)
+                Keep.Fit = Keep.Fit, Force.Radj = Force.Radj)}, mc.cores = N.Cores)
 
 			
     names(Seg.All) <- Features
@@ -95,7 +96,7 @@ trendy <- function(Data = NULL, Mean.Cut=10, Max.K=3, T.Vect=NULL,
     		T.Vect = 1:ncol(Data)
     	}
     	if(is.null(File.Name)){
-    		File.Name="MyData"
+    		File.Name="Ouput"
     	}
     	Orig.Data = Data
     	Seg.Object = Seg.All

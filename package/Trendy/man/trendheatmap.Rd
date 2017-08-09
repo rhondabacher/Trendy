@@ -4,12 +4,10 @@
 \alias{trendheatmap}
 \title{Draw heatmap of gene expression trends}
 \usage{
-trendheatmap(Top.Trendy, Show.Plot = TRUE)
+trendheatmap(Top.Trendy)
 }
 \arguments{
 \item{Top.Trendy}{results from toptrendy() function}
-
-\item{Show.Plot}{whether plot the heatmap (default=TRUE)}
 }
 \value{
 The function takes significant genes/features called from 
@@ -17,11 +15,11 @@ The function takes significant genes/features called from
 	groups : up, down, or no change in the first segment. Within each group,
 	the genes are sorted by their first break point. The heatmap shows expression 
 	trends of these three groups of genes. In the heatmap, red/blue/black 
-	represents up/down/nochange.
+	represents up/down/nochange. A list of genes in the heatmap order is returned.
 }
 \description{
 heatmap of the fitted trends
 }
 \author{
-Ning Leng
+Ning Leng and Rhonda Bacher
 }

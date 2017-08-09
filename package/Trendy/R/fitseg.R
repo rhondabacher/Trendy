@@ -1,6 +1,5 @@
 #' @title Fit Segmented regression models on a feature/gene
-#' @usage fit.seg(Data, Max.K = 5, T.Vect = NULL, Min.Num.In.Seg = 5, Pval.Cut = .1, 
-#'                Cut.Diff = .1, Num.Try = 100, Keep.Fit = FALSE, Force.Radj = FALSE)
+
 #' @description fits segmented regression models
 #' @inheritParams trendy
 #' @return id.sign: direction of each sample; -1: down, 0: no change, 1: up
@@ -10,20 +9,23 @@
 #' 		fit: fit object
 #' @examples d1 <- rbind(c(rep(1,50),1:50), c(100:1))
 #' 		rownames(d1) <- c("g1","g2")
-#' 		fit.seg(d1, "g1")
+#' 		fitseg(d1, "g1")
 #' @author Ning Leng and Rhonda Bacher
 #' @import stats
 #' @import segmented
 
 
-fit.seg <- function(Data, Max.K = 5, T.Vect = NULL, Min.Num.In.Seg = 5, Pval.Cut = .1, 
-                    Cut.Diff = .1, Num.Try = 100, Keep.Fit = FALSE, Force.Radj = FALSE) {
+fitseg <- function(Data,  T.Vect = NULL, Max.K = 5, 
+                    Min.Num.In.Seg = 5, Pval.Cut = .1, 
+                    Cut.Diff = .1, Num.Try = 100, 
+                    Keep.Fit = FALSE, Force.Radj = FALSE) {
 
 	Data.Norm <- Data
 
 	t.use <- 1:length(Data.Norm)
 	t.l <- length(Data.Norm)
-	if(!is.null(T.Vect)) { 
+	
+  if(!is.null(T.Vect)) { 
 		t.use <- T.Vect
 		t.l <- T.Vect[length(T.Vect)]}
 		
@@ -44,27 +46,28 @@ fit.seg <- function(Data, Max.K = 5, T.Vect = NULL, Min.Num.In.Seg = 5, Pval.Cut
 
 	# fit all possible breakpoints now:
 	fit.l.0 <- sapply(1:length(step.r), function(j) {
-		i <- step.r[j]
-		lmseg.try <- suppressMessages(try(segmented(lm1, seg.Z = ~t.use, 
-			psi = round(seq(1, t.l, length.out = i + 2)[2:(i + 1)]), 
-			control = seg.control(seed = seed.use)), silent = T))
-		seed.use2 <- seed.use
-		while("try-error" %in% class(lmseg.try) & seed.use2 <= Num.Try) {
-	 	   seed.use2 <- seed.use2 + 1
-		   lmseg.try <- suppressMessages(try(segmented(lm1, seg.Z = ~t.use, 
-			   psi = round(seq(1, t.l, length.out = i + 2)[2:(i + 1)]), 
-			   control = seg.control(seed = seed.use2)), silent = T))}
-		out <- lmseg.try}, simplify = F)
+		           i <- step.r[j]
+		           lmseg.try <- suppressMessages(try(segmented::segmented(lm1, seg.Z = ~t.use, 
+			                        psi = round(seq(1, t.l, length.out = i + 2)[2:(i + 1)]), 
+			                         control = segmented::seg.control(seed = seed.use)), silent = T))
+		           seed.use2 <- seed.use
+		           while("try-error" %in% class(lmseg.try) & seed.use2 <= Num.Try) {
+	 	               seed.use2 <- seed.use2 + 1
+		               lmseg.try <- suppressMessages(try(segmented::segmented(lm1, seg.Z = ~t.use, 
+			                               psi = round(seq(1, t.l, length.out = i + 2)[2:(i + 1)]), 
+			                               control = segmented::seg.control(seed = seed.use2)), silent = T))}
+		                                 out <- lmseg.try}, 
+            simplify = F)
 
 	isna <- which(sapply(fit.l.0, function(i) "try-error" %in% class(i)))
 
+# if it is not solved in 100 trys then return lm results (if Num.Try=100)
 	if (length(isna) == Max.K) {
 		out <- list(id.sign = lm.id.sign, slp = lm.slp, slp.sign = lm.sign,
-				 slp.pval = lm.pval, bp = NA, fitted = lm.fit, radj = lm.radj, fit = lm1)
+				        slp.pval = lm.pval, bp = NA, fitted = lm.fit, radj = lm.radj, fit = lm1)
 		if (Keep.Fit == FALSE) { out <- out[1:7] }
 		return(out) 
-	# if it is not solved in 100 trys then return lm results (if Num.Try=100)
-		break}
+    break}
 
 
 	fit.l <- fit.l.0
@@ -88,13 +91,13 @@ fit.seg <- function(Data, Max.K = 5, T.Vect = NULL, Min.Num.In.Seg = 5, Pval.Cut
 		if (length(rsq.whichmax) > 0) {
 			# start with the largest difference in rsq value
 			r.choose <- max(rsq.whichmax) + 1} 
-		# compare here using adjusted Rsq. 
+		  # compare here using adjusted Rsq. 
 		if (length(rsq.whichmax) == 0 & radj[1] > lm.radj) {
 			r.choose <- 1} #if none larger than diff use smallest bp =1
 		if (length(rsq.whichmax) == 0 & radj[1] <= lm.radj) {
 	  	  	# if none of them satisfy, then take the linear, return values
 	  		out <- list(id.sign=lm.id.sign, slp=lm.slp, slp.sign=lm.sign, 
-					slp.pval=lm.pval, bp=NA, fitted=lm.fit,radj=lm.radj,fit=lm1)
+					          slp.pval=lm.pval, bp=NA, fitted=lm.fit,radj=lm.radj,fit=lm1)
 	  		if (Keep.Fit == FALSE) {out <- out[1:7]}
 	  		return(out)
 	  		break}
@@ -107,10 +110,10 @@ fit.seg <- function(Data, Max.K = 5, T.Vect = NULL, Min.Num.In.Seg = 5, Pval.Cut
 		if(r.choose == 1 & (min(table(id.l[[r.choose]])) < Min.Num.In.Seg)) {
 	  	  	# if 1 bp gives small segment, then take the linear
 	  	  	out <- list(id.sign=lm.id.sign, slp=lm.slp, slp.sign=lm.sign, 
-						slp.pval=lm.pval, bp=NA, fitted=lm.fit,radj=lm.radj,fit=lm1)
+						           slp.pval=lm.pval, bp=NA, fitted=lm.fit,radj=lm.radj,fit=lm1)
 	  		if(Keep.Fit == FALSE) {out <- out[1:7]}
 	  		return(out)
-	  	  	break}
+	  	  break}
 	}
 
 	if (length(step.r) == 1) {
@@ -122,7 +125,7 @@ fit.seg <- function(Data, Max.K = 5, T.Vect = NULL, Min.Num.In.Seg = 5, Pval.Cut
 
 	if (radj.max < lm.radj | (rsq.max - lm.rsq) < Cut.Diff | min(table(id.l[[r.choose]])) < Min.Num.In.Seg){
 		out <- list(id.sign=lm.id.sign, slp=lm.slp, slp.sign=lm.sign, 
-					slp.pval=lm.pval, bp=NA, fitted=lm.fit,radj=lm.radj,fit=lm1)
+					        slp.pval=lm.pval, bp=NA, fitted=lm.fit,radj=lm.radj,fit=lm1)
 		if(Keep.Fit == FALSE) {out <- out[1:7]}
 	    return(out) 
 		# if lm is better 
@@ -133,9 +136,13 @@ fit.seg <- function(Data, Max.K = 5, T.Vect = NULL, Min.Num.In.Seg = 5, Pval.Cut
 	fit.choose <- fit.l[[r.choose]]
 	fv.choose <- fitted.values(fit.choose)
 	bp.choose <- brk.l[[r.choose]]
+  if(length(bp.choose) >= 1) {
+    names(bp.choose) <- paste0("breakpoint", 1:length(bp.choose))}
 	slp.choose <- slp.l[[r.choose]][[1]][,1]
 	slp.t <- slp.l[[r.choose]][[1]][,3]
 	slp.pval <- pt(-abs(slp.t), 1)
+  if(length(slp.pval) >= 1) {
+    names(slp.pval) <- paste0("pval", 1:length(slp.pval))}
 	slp.sign <- ifelse(slp.t > 0, 1, -1)
 	slp.sign[which(slp.pval > Pval.Cut)] <- 0
 	id.choose <- id.l[[r.choose]]

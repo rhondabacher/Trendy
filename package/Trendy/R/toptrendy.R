@@ -1,6 +1,5 @@
 #' @title obtain top genes from trendy results
 
-#' @usage toptrendy(Seg.Data, AdjR.Cut = .5)
 #' @description reformats the list output for genes with a given adjusted R^2 cutoff
 #' @param Seg.Data output from the trendy function
 #' @param AdjR.Cut cutoff for the adjusted r^2. Genes whose adjusted

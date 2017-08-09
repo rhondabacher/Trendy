@@ -1,5 +1,4 @@
 #' @title Extract pattern from segmented regression
-#' @usage extractpattern(Seg.Data, Pattern = NULL, Radj.Cut = .5, Delay = 0)
 
 #' @description find dynamic genes that follow a given pattern
 
