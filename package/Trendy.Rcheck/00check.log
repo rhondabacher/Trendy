@@ -1,0 +1,122 @@
+* using log directory ‘/Users/rhondabacher/Desktop/Trendy/package/Trendy.Rcheck’
+* using R version 3.4.1 (2017-06-30)
+* using platform: x86_64-apple-darwin15.6.0 (64-bit)
+* using session charset: UTF-8
+* checking for file ‘Trendy/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘Trendy’ version ‘0.99.0’
+* package encoding: UTF-8
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘Trendy’ can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking DESCRIPTION meta-information ... OK
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+plotfeature: no visible global function definition for ‘fitseg’
+Undefined global functions or variables:
+  fitseg
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... WARNING
+Undocumented code objects:
+  ‘Seg.Object’ ‘T.Vect’
+Undocumented data sets:
+  ‘Seg.Object’ ‘T.Vect’
+All user-level objects in a package should have documentation entries.
+See chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... WARNING
+Undocumented arguments in documentation object 'plotfeature'
+  ‘Cond.Prefix’
+
+Functions with \usage entries need to have the appropriate \alias
+entries, and all their arguments documented.
+The \usage entries must correspond to syntactically valid R code.
+See chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking contents of ‘data’ directory ... OK
+* checking data for non-ASCII characters ... OK
+* checking data for ASCII and uncompressed saves ... OK
+* checking files in ‘vignettes’ ... WARNING
+Files in the 'vignettes' directory but no files in 'inst/doc':
+  ‘Shing_allGenePat.png’, ‘Shiny_UploadData.png’,
+    ‘Shiny_geneSearch.png’, ‘Trendy_vignette-concordance.tex’,
+    ‘Trendy_vignette.Rnw’, ‘Trendy_vignette.log’,
+    ‘Trendy_vignette.pdf’, ‘Trendy_vignette.rmd’,
+    ‘Trendy_vignette.synctex.gz’, ‘Trendy_vignette.tex’,
+    ‘Trendy_vignette.toc’, ‘exampleObject_trendyForShiny.RData’,
+    ‘figure/unnamed-chunk-10-1.pdf’, ‘figure/unnamed-chunk-11-1.pdf’,
+    ‘figure/unnamed-chunk-12-1.pdf’, ‘figure/unnamed-chunk-13-1.pdf’,
+    ‘figure/unnamed-chunk-15-1.pdf’, ‘figure/unnamed-chunk-17-1.pdf’,
+    ‘figure/unnamed-chunk-18-1.pdf’, ‘figure/unnamed-chunk-19-1.pdf’,
+    ‘figure/unnamed-chunk-20-1.pdf’, ‘figure/unnamed-chunk-6-1.pdf’,
+    ‘figure/unnamed-chunk-7-1.pdf’, ‘figure/unnamed-chunk-8-1.pdf’,
+    ‘figure/unnamed-chunk-9-1.pdf’
+The following files look like leftovers/mistakes:
+  ‘Trendy_vignette.log’, ‘Trendy_vignette.toc’
+Please remove them from your package.
+The following directory looks like a leftover from 'knitr':
+  ‘figure’
+Please remove from your package.
+* checking examples ... ERROR
+Running examples in ‘Trendy-Ex.R’ failed
+The error most likely occurred in:
+
+> ### Name: extractpattern
+> ### Title: Extract pattern from segmented regression
+> ### Aliases: extractpattern
+> 
+> ### ** Examples
+> 
+> myTrends <- trendy(TrendyExData)
+> extractpattern(myTrends, Pattern = c("up")) #increasing only features
+Error in extractpattern(myTrends, Pattern = c("up")) : 
+  No genes follow this pattern!
+Execution halted
+* checking for unstated dependencies in vignettes ... OK
+* checking package vignettes in ‘inst/doc’ ... WARNING
+Package vignette without corresponding PDF/HTML:
+   ‘Trendy_vignette.Rnw’
+
+* checking running R code from vignettes ... NONE
+* checking re-building of vignette outputs ... WARNING
+Error in re-building vignettes:
+  ...
+Warning in buildVignettes(dir = "/Users/rhondabacher/Desktop/Trendy/package/Trendy.Rcheck/vign_test/Trendy") :
+  Files named as vignettes but with no recognized vignette engine:
+   ‘vignettes/Trendy_vignette.rmd’
+(Is a VignetteBuilder field missing?)
+Quitting from lines 12-13 (Trendy_vignette.Rnw) 
+Error: processing vignette 'Trendy_vignette.Rnw' failed with diagnostics:
+there is no package called 'BiocStyle'
+Execution halted
+
+* checking PDF version of manual ... OK
+* DONE
+Status: 1 ERROR, 5 WARNINGs, 1 NOTE

@@ -1,0 +1,17 @@
+Package: Trendy
+Type: Package
+Title: Breakpoint analysis of time course gene expression data
+Version: 0.99.0
+Author: Rhonda Bacher and Ning Leng
+Maintainer: Rhonda Bacher <rbacher@wisc.edu>
+Description: Trendy implements segmented regression to detect breakpoints for
+    each gene in high throughput data with ordered conditions.
+Imports: stats, graphics, grDevices, segmented, gplots, parallel
+License: GPL (>= 2)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Suggests: knitr
+VignetteBuilder: knitr
+NeedsCompilation: no
+Packaged: 2017-08-21 16:26:28 UTC; rhondabacher

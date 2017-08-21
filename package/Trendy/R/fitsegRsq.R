@@ -15,22 +15,20 @@
 #' @import segmented
 
 
-fitseg <- function(Data,  T.Vect = NULL, Max.K = 5, 
+fitsegRsq <- function(Data,  T.Vect = NULL, Max.K = 5, 
                     Min.Num.In.Seg = 5, Pval.Cut = .1, 
                     Cut.Diff = .1, Num.Try = 100, 
-                    Keep.Fit = FALSE, Force.Radj = FALSE) {
+                    Keep.Fit = FALSE) {
 
-	Data.Norm <- Data
-
-	t.use <- 1:length(Data.Norm)
-	t.l <- length(Data.Norm)
+	t.use <- 1:length(Data)
+	t.l <- length(Data)
 	
   if(!is.null(T.Vect)) { 
 		t.use <- T.Vect
 		t.l <- T.Vect[length(T.Vect)]}
 		
 	step.r <- c(1:Max.K)
-	dat.tmp <- Data.Norm
+	dat.tmp <- Data
 	seed.use <- 1
 
 	# start with lm without bp
@@ -81,7 +79,7 @@ fitseg <- function(Data,  T.Vect = NULL, Max.K = 5,
 	brk.l <- sapply(fit.l ,function(i) {i$psi[,2]}, simplify = F)
 	id.l <- sapply(fit.l, function(i) {i$id.group}, simplify = F)
 
-	if(Force.Radj == TRUE) {rsq = radj}
+
 
 	if (length(step.r) > 1) {
 		rsq.diff <- diff(rsq) # get differences in R^2
@@ -147,7 +145,7 @@ fitseg <- function(Data,  T.Vect = NULL, Max.K = 5,
 	slp.sign[which(slp.pval > Pval.Cut)] <- 0
 	id.choose <- id.l[[r.choose]]
 	id.sign <- slp.sign[id.choose + 1]
-	names(id.sign) <- colnames(Data.Norm)
+	names(id.sign) <- colnames(Data)
 	out = list(id.sign=id.sign, slp=slp.choose, slp.sign=slp.sign, 
 				slp.pval=slp.pval, bp=bp.choose, fitted=fv.choose,
 				radj=radj[r.choose],fit=fit.choose)

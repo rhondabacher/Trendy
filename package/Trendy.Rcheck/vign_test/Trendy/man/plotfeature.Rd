@@ -30,8 +30,6 @@ if it is NULL (default), no legend will be generated}
 \item{Cond.Col.Sample}{each sample's color. The vector's length should match number of samples. 
 if it is NULL, expression will be shown in black (default).}
 
-\item{Cond.Prefix}{name to be used in the condition legend (Default is Day, but could be hour, minute, etc.).}
-
 \item{Y.Name}{y-axis name}
 
 \item{X.Name}{x-axis name}

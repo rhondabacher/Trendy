@@ -12,7 +12,6 @@
 #'		if it is NULL (default), no legend will be generated
 #' @param Cond.Col.Sample each sample's color. The vector's length should match number of samples. 
 #'		if it is NULL, expression will be shown in black (default).
-#' @param Cond.Prefix name to be used in the condition legend (Default is Day, but could be hour, minute, etc.).
 #' @param Y.Name y-axis name
 #' @param X.Name x-axis name
 #' @return plot of gene expression and fitted line

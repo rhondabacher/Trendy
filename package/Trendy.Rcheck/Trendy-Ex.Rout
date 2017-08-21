@@ -1,0 +1,76 @@
+
+R version 3.4.1 (2017-06-30) -- "Single Candle"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "Trendy"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> library('Trendy')
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("Orig.Data")
+> ### * Orig.Data
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: Orig.Data
+> ### Title: Example dataset for Trendy Shiny App
+> ### Aliases: Orig.Data
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> data(exampleObject_trendyForShiny)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("TrendyExData")
+> ### * TrendyExData
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: TrendyExData
+> ### Title: Example dataset for Trendy
+> ### Aliases: TrendyExData
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> data(TrendyExData)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("extractpattern")
+> ### * extractpattern
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: extractpattern
+> ### Title: Extract pattern from segmented regression
+> ### Aliases: extractpattern
+> 
+> ### ** Examples
+> 
+> myTrends <- trendy(TrendyExData)
+> extractpattern(myTrends, Pattern = c("up")) #increasing only features
+Error in extractpattern(myTrends, Pattern = c("up")) : 
+  No genes follow this pattern!
+Execution halted
