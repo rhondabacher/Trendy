@@ -13,6 +13,26 @@ shinyServer(function(input, output, session) {
     
     load(input$filename$datapath)
     
+    if(exists("Seg.Object")) {
+        Trendy.Out  <- Seg.Object
+        Trendy.Out <- lapply(Trendy.Out, function(x) {
+                         
+                              names(x[[1]]) <- paste0(names(T.Vect), ".Trend")
+                              names(x[[2]]) <- paste0("Segment", seq_len(length(x[[2]])), ".Slope")
+                              names(x[[3]]) <- paste0("Segment", seq_len(length(x[[2]])), ".Trend")
+                              names(x[[4]]) <- paste0("Segment", seq_len(length(x[[2]])), ".Pvalue")
+                              names(x[[5]]) <-  paste0("Breakpoint", 1:length(x[[5]]))
+                              names(x[[6]]) <- paste0(names(T.Vect), ".Fitted")
+                             
+                             return(x) 
+                            })
+                              
+        Trendy.Out <- lapply(Trendy.Out, function(x) {
+                              names(x) <- c("Trends", 
+                              "Segment.Slopes", "Segment.Trends", "Segment.Pvalues",
+                              "Breakpoints", "Fitted.Values", "AdjustedR2")
+                              return(x)})
+    }
 
     all.trendy <- topTrendy(Trendy.Out, -1)
     To.Print <- Trendy::formatResults(all.trendy)
@@ -22,18 +42,18 @@ shinyServer(function(input, output, session) {
     return(LIST)
   })
   
-    output$choose_gene <- renderUI({
+  output$choose_gene <- renderUI({
 
-        IN <- In()
+      IN <- In()
 
-        # Get the data set with the appropriate name
-        allg <- rownames(IN$Orig.Data)
+      # Get the data set with the appropriate name
+      allg <- rownames(IN$Orig.Data)
 
-        # Create the checkboxes and select them all by default
-        selectInput("gene", "Gene/Feature Name:",
-                            choices  = allg,
-                            selected = allg[1])
-      })
+      # Create the checkboxes and select them all by default
+      selectInput("gene", "Gene/Feature Name:",
+                          choices  = allg,
+                          selected = allg[1])
+    })
 
 
    observeEvent(input$Submit, {
@@ -107,10 +127,10 @@ shinyServer(function(input, output, session) {
       req(input$gene)
 
       if(input$gene == "") {
-        topg <- rownames(In$Orig.Data)[1]
+        topg <- rownames(IN$Orig.Data)[1]
         } else {topg <- input$gene}
 
-
+    
       par(mfrow=c(1,1), cex=1.5, cex.lab=1, cex.axis=1, cex.main=1.1, mar=c(6,6,2,2))
 
       plot(IN$T.Vect, IN$Orig.Data[topg,], pch=20, col="red", main=paste0(topg),
