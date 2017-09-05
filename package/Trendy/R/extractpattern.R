@@ -2,40 +2,44 @@
 
 #' @description find dynamic genes that follow a given pattern
 
-#' @param Seg.Data output from trendy() function
-#' @param Pattern vector containing pattern to search genes/features. If length
-#'		is one then it will only consider features with constant pattern 
+#' @param Trendy.Out output from trendy() function
+#' @param Pattern vector containing pattern to search genes/features (e.g, c("up", "down")). If length
+#'		is one (e.g c("up")) then it will only consider features with constant pattern 
 #'		across the entire time-course.
-#' @param Radj.Cut only consider features with adjusted R^2 > Radj.Cut. 
+#' @param AdjR2.Cut only consider features with adjusted R^2 > AdjR2.Cut. 
 #'		Default = .5.
 #' @param Delay search for pattern starting after certain time-point (e.g. only
 #'		 genes with a breakpoint > 10).
-#' @return genes: names of genes/features containing pattern and the breakpoints
+#' @return Genes: names of genes/features containing pattern and the breakpoints
 #'		corresponding to the pattern.
 #' @examples 
 #'	myTrends <- trendy(TrendyExData)
-#'	extractpattern(myTrends, Pattern = c("up")) #increasing only features
-#'  extractpattern(myTrends, Pattern = c("up", "down")) #features with a peak
-#'  extractpattern(myTrends, Pattern = c("up", "down"), Delay = 20)
+#'	extractPattern(myTrends, Pattern = c("up")) #increasing only features
+#'  extractPattern(myTrends, Pattern = c("up", "down")) #features with a peak
+#'  extractPattern(myTrends, Pattern = c("up", "down"), Delay = 20)
 #' @author Rhonda Bacher
 #' @export
 
 
-extractpattern <- function(Seg.Data, Pattern = NULL, Radj.Cut = .5, Delay = 0)  {
+extractPattern <- function(Trendy.Out, Pattern = NULL, AdjR2.Cut = .5, Delay = 0)  {
   
-  if(is.null(Pattern)) stop("Must specify a pattern")
+  if(is.null(Pattern)) {stop("Must specify a pattern")}
   ogpat <- Pattern
   ##restrict to genes that have certain breakpoint pattern
   
-  segdata.radj <- sort(sapply(Seg.Data, function(i)i$radj), decreasing=TRUE) #get radj for each gene
+  segdata.radj <- sort(sapply(Trendy.Out, function(i) i$AdjustedR2), decreasing=TRUE) #get radj for each gene
   
-  genes.pass <- names(segdata.radj)[which(segdata.radj >= Radj.Cut)] #get genes with fit >= radjcut
-  segdata.pass <- Seg.Data[genes.pass]
+  genes.pass <- names(segdata.radj)[which(segdata.radj >= AdjR2.Cut)] #get genes with fit >= radjcut
+  if (length(genes.pass) == 0) {
+	  stop("No gene pass the adjusted R^2 cutoff filter!")
+	}
+  
+  segdata.pass <- Trendy.Out[genes.pass]
   
   
-  segdata.bks <- lapply(segdata.pass, function(i) i$bp) #Get breakpoints for all genes
+  segdata.bks <- lapply(segdata.pass, function(i) i$Breakpoints) #Get breakpoints for all genes
   segdata.bks[is.na(segdata.bks)] <- 0
-  segdata.slps <- lapply(segdata.pass, function(i) i$slp.sign) #Get slps for all genes
+  segdata.slps <- lapply(segdata.pass, function(i) i$Segment.Trends) #Get slps for all genes
   
   Pattern[Pattern == "up"] <- 1
   Pattern[Pattern == "same"] <- 0
@@ -43,7 +47,7 @@ extractpattern <- function(Seg.Data, Pattern = NULL, Radj.Cut = .5, Delay = 0)  
   
   
   if(length(Pattern) == 1) {
-    Pattern = rep(Pattern, length(segdata.pass[[1]]$id.sign))
+    Pattern = rep(Pattern, length(segdata.pass[[1]]$Trends))
   }
   
   Pattern <- paste(Pattern, collapse="")

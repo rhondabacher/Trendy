@@ -1,8 +1,0 @@
-Warning in buildVignettes(dir = "/Users/rhondabacher/Desktop/Trendy/package/Trendy.Rcheck/vign_test/Trendy") :
-  Files named as vignettes but with no recognized vignette engine:
-   ‘vignettes/Trendy_vignette.rmd’
-(Is a VignetteBuilder field missing?)
-Quitting from lines 12-13 (Trendy_vignette.Rnw) 
-Error: processing vignette 'Trendy_vignette.Rnw' failed with diagnostics:
-there is no package called 'BiocStyle'
-Execution halted

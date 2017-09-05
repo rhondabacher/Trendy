@@ -2,69 +2,72 @@
 
 #' @description fits segmented regression models
 #' @inheritParams trendy
-#' @return id.sign: direction of each sample; -1: down, 0: no change, 1: up
-#'		slp: fitted slopes, slp.sign: sign of fitted slopes, 
-#'		slp.pval: p value of each segment, bp: estimated breakpoints, 
-#'		fitted: fitted values radj: adjusted r value of the model
-#' 		fit: fit object
+#' @return Trend: direction of each sample; -1: down, 0: no change, 1: up
+#'		Slope: fitted slopes, Slope.Trend: sign of fitted slopes, 
+#'		Slope.Pvalue: p value of each segment, Breakpoint: estimated breakpoints, 
+#'		Fitted.Values: fitted values AdjustedR2: adjusted r value of the model
+#' 		Fit: fit object
 #' @examples d1 <- rbind(c(rep(1,50),1:50), c(100:1))
 #' 		rownames(d1) <- c("g1","g2")
-#' 		fitseg(d1, "g1")
+#' 		fitsegRsq(d1, "g1")
 #' @author Ning Leng and Rhonda Bacher
 #' @import stats
 #' @import segmented
 
 
-fitsegRsq <- function(Data,  T.Vect = NULL, Max.K = 5, 
-                    Min.Num.In.Seg = 5, Pval.Cut = .1, 
-                    Cut.Diff = .1, Num.Try = 100, 
-                    Keep.Fit = FALSE) {
+fitSegRsq <- function(Data, T.Vect = NULL, Max.K = 5, 
+                      Min.Num.In.Seg = 5, Pval.Cut = .1, 
+                      Cut.Diff = .1, Num.Try = 100, 
+                      Keep.Fit = FALSE) {
 
-	t.use <- 1:length(Data)
-	t.l <- length(Data)
-	
-  if(!is.null(T.Vect)) { 
-		t.use <- T.Vect
-		t.l <- T.Vect[length(T.Vect)]}
+  t.l <- T.Vect[length(T.Vect)]
 		
-	step.r <- c(1:Max.K)
+	step.r <- 1:Max.K
 	dat.tmp <- Data
 	seed.use <- 1
 
-	# start with lm without bp
-	lm1 <- lm(dat.tmp ~ t.use)
+	# start with lm withOUT bp
+	lm1 <- lm(dat.tmp ~ T.Vect)
 	lm.radj <- summary(lm1)$adj.r.squared
 	lm.rsq <- summary(lm1)$r.squared
 	lm.slp <- coef(lm1)[2]
+	names(lm.slp) <- paste0("Segment", seq_len(length(lm.slp)), ".Slope")
 	lm.fit <- fitted.values(lm1)
+	
 	lm.pval <- coef(summary(lm1))[2,4]
 	lm.sign <- ifelse(lm.slp > 0, 1, -1)
+	
 	lm.sign[which(lm.pval > Pval.Cut)] <- 0
-	lm.id.sign <- rep(lm.sign, length(t.use))
+	names(lm.sign) <- paste0("Segment", seq_len(length(lm.sign)), ".Trend")
+	
+	lm.id.sign <- rep(lm.sign, length(T.Vect))
+	names(lm.id.sign) <- paste0(names(T.Vect), ".Trend")
+	names(T.Vect) <- paste0(names(T.Vect), ".Fitted")
 
 	# fit all possible breakpoints now:
 	fit.l.0 <- sapply(1:length(step.r), function(j) {
 		           i <- step.r[j]
-		           lmseg.try <- suppressMessages(try(segmented::segmented(lm1, seg.Z = ~t.use, 
+		           lmseg.try <- suppressMessages(try(segmented::segmented(lm1, seg.Z = ~T.Vect, 
 			                        psi = round(seq(1, t.l, length.out = i + 2)[2:(i + 1)]), 
 			                         control = segmented::seg.control(seed = seed.use)), silent = T))
 		           seed.use2 <- seed.use
 		           while("try-error" %in% class(lmseg.try) & seed.use2 <= Num.Try) {
 	 	               seed.use2 <- seed.use2 + 1
-		               lmseg.try <- suppressMessages(try(segmented::segmented(lm1, seg.Z = ~t.use, 
+		               lmseg.try <- suppressMessages(try(segmented::segmented(lm1, seg.Z = ~T.Vect, 
 			                               psi = round(seq(1, t.l, length.out = i + 2)[2:(i + 1)]), 
 			                               control = segmented::seg.control(seed = seed.use2)), silent = T))}
-		                                 out <- lmseg.try}, 
+		                                 OUT <- lmseg.try}, 
             simplify = F)
 
 	isna <- which(sapply(fit.l.0, function(i) "try-error" %in% class(i)))
 
-# if it is not solved in 100 trys then return lm results (if Num.Try=100)
+  # if it is not solved in 100 trys then return lm results (if Num.Try=100)
 	if (length(isna) == Max.K) {
-		out <- list(id.sign = lm.id.sign, slp = lm.slp, slp.sign = lm.sign,
-				        slp.pval = lm.pval, bp = NA, fitted = lm.fit, radj = lm.radj, fit = lm1)
-		if (Keep.Fit == FALSE) { out <- out[1:7] }
-		return(out) 
+		OUT <- list(Trends = lm.id.sign, Segment.Slopes = lm.slp, Segment.Trends = lm.sign, 
+					          Segment.Pvalues = lm.pval, Breakpoints = NA, Fitted.Values = lm.fit,
+                    AdjustedR2 = lm.radj, Fit = lm1)
+		if (Keep.Fit == FALSE) { OUT <- OUT[1:7] }
+		return(OUT) 
     break}
 
 
@@ -73,7 +76,7 @@ fitsegRsq <- function(Data,  T.Vect = NULL, Max.K = 5,
 		fit.l <- fit.l.0[-isna]
 		step.r <- step.r[-isna]}
 
-	slp.l <- sapply(fit.l, slope, simplify = F)
+	slp.l <- sapply(fit.l, segmented::slope, simplify = F)
 	rsq <- sapply(fit.l, function(i) {summary(i)$r.squared})
 	radj <- sapply(fit.l, function(i) {summary(i)$adj.r.squared})
 	brk.l <- sapply(fit.l ,function(i) {i$psi[,2]}, simplify = F)
@@ -94,10 +97,11 @@ fitsegRsq <- function(Data,  T.Vect = NULL, Max.K = 5,
 			r.choose <- 1} #if none larger than diff use smallest bp =1
 		if (length(rsq.whichmax) == 0 & radj[1] <= lm.radj) {
 	  	  	# if none of them satisfy, then take the linear, return values
-	  		out <- list(id.sign=lm.id.sign, slp=lm.slp, slp.sign=lm.sign, 
-					          slp.pval=lm.pval, bp=NA, fitted=lm.fit,radj=lm.radj,fit=lm1)
-	  		if (Keep.Fit == FALSE) {out <- out[1:7]}
-	  		return(out)
+	  		OUT <- list(Trends = lm.id.sign, Segment.Slopes = lm.slp, Segment.Trends = lm.sign, 
+					          Segment.Pvalues = lm.pval, Breakpoints = NA, Fitted.Values = lm.fit,
+                    AdjustedR2 = lm.radj, Fit = lm1)
+	  		if (Keep.Fit == FALSE) {OUT <- OUT[1:7]}
+	  		return(OUT)
 	  		break}
 
 		# now make sure that optimal value satisfies having minimum number of segments, 
@@ -107,10 +111,11 @@ fitsegRsq <- function(Data,  T.Vect = NULL, Max.K = 5,
 
 		if(r.choose == 1 & (min(table(id.l[[r.choose]])) < Min.Num.In.Seg)) {
 	  	  	# if 1 bp gives small segment, then take the linear
-	  	  	out <- list(id.sign=lm.id.sign, slp=lm.slp, slp.sign=lm.sign, 
-						           slp.pval=lm.pval, bp=NA, fitted=lm.fit,radj=lm.radj,fit=lm1)
-	  		if(Keep.Fit == FALSE) {out <- out[1:7]}
-	  		return(out)
+	  	  	OUT <- list(Trends = lm.id.sign, Segment.Slopes = lm.slp, Segment.Trends = lm.sign, 
+					          Segment.Pvalues = lm.pval, Breakpoints = NA, Fitted.Values = lm.fit,
+                    AdjustedR2 = lm.radj, Fit = lm1)
+	  		if(Keep.Fit == FALSE) {OUT <- OUT[1:7]}
+	  		return(OUT)
 	  	  break}
 	}
 
@@ -122,10 +127,11 @@ fitsegRsq <- function(Data,  T.Vect = NULL, Max.K = 5,
 	# finally decide if best BP model is better than linear
 
 	if (radj.max < lm.radj | (rsq.max - lm.rsq) < Cut.Diff | min(table(id.l[[r.choose]])) < Min.Num.In.Seg){
-		out <- list(id.sign=lm.id.sign, slp=lm.slp, slp.sign=lm.sign, 
-					        slp.pval=lm.pval, bp=NA, fitted=lm.fit,radj=lm.radj,fit=lm1)
-		if(Keep.Fit == FALSE) {out <- out[1:7]}
-	    return(out) 
+		OUT <- list(Trends = lm.id.sign, Segment.Slopes = lm.slp, Segment.Trends = lm.sign, 
+					          Segment.Pvalues = lm.pval, Breakpoints = NA, Fitted.Values = lm.fit,
+                    AdjustedR2 = lm.radj, Fit = lm1)
+		if(Keep.Fit == FALSE) {OUT <- OUT[1:7]}
+	    return(OUT) 
 		# if lm is better 
 		break}
 
@@ -133,24 +139,31 @@ fitsegRsq <- function(Data,  T.Vect = NULL, Max.K = 5,
 
 	fit.choose <- fit.l[[r.choose]]
 	fv.choose <- fitted.values(fit.choose)
+	names(fv.choose) <- paste0(names(T.Vect), ".Fitted")
+	
 	bp.choose <- brk.l[[r.choose]]
   if(length(bp.choose) >= 1) {
-    names(bp.choose) <- paste0("breakpoint", 1:length(bp.choose))}
+    names(bp.choose) <- paste0("Breakpoint", 1:length(bp.choose))}
 	slp.choose <- slp.l[[r.choose]][[1]][,1]
+	names(slp.choose) <- paste0("Segment", seq_len(length(slp.choose)), ".Slope")
+	
 	slp.t <- slp.l[[r.choose]][[1]][,3]
 	slp.pval <- pt(-abs(slp.t), 1)
-  if(length(slp.pval) >= 1) {
-    names(slp.pval) <- paste0("pval", 1:length(slp.pval))}
+	names(slp.pval) <- paste0("Segment", seq_len(length(slp.pval)), ".Pvalue")
+	
 	slp.sign <- ifelse(slp.t > 0, 1, -1)
 	slp.sign[which(slp.pval > Pval.Cut)] <- 0
+	names(slp.sign) <- paste0("Segment", seq_len(length(slp.sign)), ".Trend")
+	
 	id.choose <- id.l[[r.choose]]
 	id.sign <- slp.sign[id.choose + 1]
-	names(id.sign) <- colnames(Data)
-	out = list(id.sign=id.sign, slp=slp.choose, slp.sign=slp.sign, 
-				slp.pval=slp.pval, bp=bp.choose, fitted=fv.choose,
-				radj=radj[r.choose],fit=fit.choose)
-	if(Keep.Fit == FALSE) {out <- out[1:7]}
+	names(id.sign) <- paste0(names(T.Vect), ".Trend")
+	
+  OUT = list(Trends = id.sign, Segment.Slopes = slp.choose, Segment.Trends = slp.sign, 
+				      Segment.Pvalues = slp.pval, Breakpoints = bp.choose, Fitted.Values = fv.choose,
+				      AdjustedR2 = radj[r.choose], Fit = fit.choose)
+	if(Keep.Fit == FALSE) {OUT <- OUT[1:7]}
 
-	return(out)
+	return(OUT)
 }
 

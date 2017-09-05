@@ -1,11 +1,20 @@
 # Trendy
 Trendy: Segmented regression analysis of expression dynamics for high-throughput ordered profiling experiments
 
-Trendy is an R package that can be used to perform breakpoint analysis on microarray or RNA-seq expression data 
-with ordered conditions (e.g. time-course, spatial-course). For each gene or other features, Trendy estimates the optimal number of breakpoints, as well as, the breakpoints by fitting a set of segmented regression models. The top dynamic genes are then identified by taking genes that can be well profiled by its gene-specific segmented regression model. Trendy also implements functions to visualize the dynamic genes and their trends, to order dynamic genes by their trends, and to compute breakpoint distribution at different time points (e.g. detect time points with a large number of expression changes).
+Trendy utilizes segmented regression models to simultaneously characterize each gene’s expression pattern and summarize overall dynamic activity in ordered condition experiments. For each gene, Trendy finds the optimal segmented regression model and provides the location and direction of dynamic changes in expression. The top dynamic genes are then identified as genes that can be well profiled by its gene-specific segmented regression model. Trendy also implements functions to visualize the dynamic genes and their trends, to order dynamic genes by their trends, and to compute breakpoint distribution at different time points (e.g. detect time points with a large number of expression changes).
 
 Details of Trendy may be found in the vignette:
 https://github.com/rhondabacher/Trendy/tree/master/package/Trendy/vignettes/Trendy_vignette.pdf
+
+#### To install Trendy:
+
+install.packages(c("segmented","parallel","gplots")) 
+
+install.packages("devtools")
+
+library(devtools)
+
+install_github("rhondabacher/Trendy/package/Trendy")
 
 
 ## Trendy R/Shiny
@@ -14,14 +23,6 @@ Trendy R/Shiny assumes you have already run the trendy() function in the Trendy 
 The patten of interest can also be extracted after a given condition (time-point) via the delay option.
 
 ####  Required packages to install:
-
-install.packages(c("segmented","gplots")) 
-
-install.packages("devtools")
-
-library(devtools)
-
-install_github("rhondabacher/Trendy/package/Trendy")
 
 install.packages("shiny")
 

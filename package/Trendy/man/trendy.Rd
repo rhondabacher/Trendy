@@ -6,30 +6,30 @@
 \usage{
 trendy(Data = NULL, T.Vect = NULL, Save.Object = FALSE,
   File.Name = NULL, Mean.Cut = 10, Max.K = 3, Min.Num.In.Seg = 5,
-  Pval.Cut = 0.1, Cut.Diff = 0.1, Num.Try = 100, Keep.Fit = FALSE,
-  Force.Rsq = FALSE, N.Cores = NULL)
+  Pval.Cut = 0.1, Num.Try = 100, Keep.Fit = FALSE, N.Cores = NULL,
+  Feature.Names = NULL, Force.Rsq = FALSE, Cut.Diff = 0.1)
 }
 \arguments{
-\item{Data}{matrix of normalized expression measurements. Rows are genes 
+\item{Data}{matrix of normalized expression measurements. Rows are genes/features 
 and columns are samples.}
 
-\item{T.Vect}{a numerical vector indicating the time points. If it is NULL
-(default), then the time will be assumed to be equaly spaced from 
+\item{T.Vect}{a numerical vector indicating the time-points (or the order of samples). 
+If it is NULL (default), then the time/order will be assumed to be equaly spaced from 
 1:N (N is number of samples).}
 
-\item{Save.Object}{If TRUE then the trendy object produced will be saved 
+\item{Save.Object}{if TRUE then the trendy object produced will be saved 
 to use in the shiny app (default is FALSE).}
 
 \item{File.Name}{the file name (and file path) to save the Trendy object, 
-only used if SaveObject=TRUE.}
+only used if SaveObject=TRUE (default name is Data_trendyForShiny.RData).}
 
 \item{Mean.Cut}{genes whose mean is less than MeanCut will not be 
 considered, default is 10.}
 
-\item{Max.K}{maximum number of breakpoints to consider. For each gene, the
+\item{Max.K}{maximum number of breakpoints to consider. For each gene, 
 trendy will fit Max.K + 1 models containing 0 -> Max.K breakpoints
-(1 -> (Max.K+1) segments). The model with the highest adjusted r^2 
-value will be selected.}
+(1 -> (Max.K+1) segments). The model with the lowest BIC 
+value will be selected (unless Force.Rsq == TRUE, see below).}
 
 \item{Min.Num.In.Seg}{minimum number of samples required to be within 
 a segment.}
@@ -37,32 +37,32 @@ a segment.}
 \item{Pval.Cut}{p-value cutoff. If the p-value of a segment is greater than
 PvalCut, then the segment will be called as 'no change'.}
 
-\item{Cut.Diff}{Only used if Force.Rsq is set to TRUE. 
-If the difference between the r^2 from the k + 1 breakpoint
- model and the r^2 from the k breakpoint model is less than CutFiff, 
- then the optimal number of breakpoints is set as k instead of k + 1.}
-
 \item{Num.Try}{the number of different seeds to try. If all NumTry runs 
-fail, then linear regression (no breakpoints, one segment) model will
+fail, then the linear regression (no breakpoints, one segment) model will
 be returned.}
 
-\item{Keep.Fit}{whether report the fitted object (default is FALSE).}
-
-\item{Force.Rsq}{whether to use adjusted r^2 in CutDiff evaluation 
-instead of BIC, corresponds to very early versions of Trendy.}
+\item{Keep.Fit}{whether to report the fitted object (default is FALSE).}
 
 \item{N.Cores}{number of cores to use, default is detectCores() - 1.}
+
+\item{Force.Rsq}{whether to use adjusted R^2 in model evaluation 
+instead of BIC, corresponds to very early versions of Trendy. Requires that
+each succesive increase in adjusted R squared by larger than Cut.Diff.}
+
+\item{Cut.Diff}{Only used if Force.Rsq is set to TRUE. 
+ If the difference between the adjusted R^2 from the k + 1 breakpoint
+model and the adjusted R^2 from the k breakpoint model is less than Cut.Diff, 
+then the optimal number of breakpoints is set as k instead of k + 1.}
 }
 \value{
-id.sign: direction of each sample; -1: down, 0: no change, 1: up
-     slp: fitted slopes, slp.sign: sign of fitted slopes, 
-     slp.pval: p value of each segment, 
-     bp: estimated breakpoints, fitted: fitted values 
-     radj: adjusted r value of the model
-     fit: fit object
+Trend: direction of each sample; -1: down, 0: no change, 1: up
+	Slope: fitted slopes, Slope.Trend: sign of fitted slopes, 
+	Slope.Pvalue: p value of each segment, Breakpoint: estimated breakpoints, 
+	Fitted.Values: fitted values AdjustedR2: adjusted r value of the model
+		Fit: fit object
 }
 \description{
-Segmented regression models are fit for each genes. 
+Segmented regression models are fit for each gene. 
  The number of model fits is 1 -> Max.K.
 }
 \examples{
