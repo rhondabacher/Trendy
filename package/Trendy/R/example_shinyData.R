@@ -14,5 +14,5 @@
 #' @examples 
 #' data(exampleObject_trendyForShiny)
 "Orig.Data"
-"Seg.Object"
+"Trendy.Out"
 "T.Vect"
