@@ -124,18 +124,13 @@ shinyServer(function(input, output, session) {
        raVar$plotVals <- input$tab_rows_selected
      
      })
-   
-   getRA <- eventReactive(raVar$plotVals,{
-         topg <- raVar$plotVals
-         return(list(topg = topg))
-       })
        
           
     output$genePlot <- renderPlot({
 
      IN <- In()
 
-    topg <- as.character(IN$To.Print[getRA()$topg, 1])
+    topg <- as.character(IN$To.Print[raVar$plotVals, 1])
 
     par(mfrow=c(1,1), cex=1.5, cex.lab=1, cex.axis=1, cex.main=1.1, mar=c(5,5,2,2), oma=c(0,.1,.1,6))
 
