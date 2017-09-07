@@ -1,33 +1,41 @@
 library(shiny)
 library(shinyFiles)
+library(DT)
 #library(gdata)
 options(shiny.maxRequestSize=10000*1024^2) 
 # Define UI for slider demo application
 shinyUI(fluidPage(
   #  Application title
-  headerPanel("Trendy"),
+  headerPanel("Trendy Visualization"),
   
-  	 fluidRow(
+ fluidRow(
 		 column(width = 7, 
-			 tags$br(),
-				tags$div(tags$b("Upload .RData object first, then obtain list of genes according to some 
-                        pattern or visualize genes one by one.")),
-                tags$br(),
-                tags$br(),
+				tags$div(tags$h4("This shiny app is designed to explore the output from Trendy. 
+                          First the .RData object output from Trendy must be uploaded."),
+                 tags$br()
+                 ),
+     tags$br(),
 	
-    fileInput("filename", label = "Input .Rdata from trendy() run:"),
-	actionButton("Submit1","Upload File"),
-	    tags$br(),
-	    tags$br(),
-		
-	mainPanel(textOutput("InCheck")),
-	br(),
-	br()
-	)),
+     fileInput("filename", label = "Input .Rdata from trendy() run:"),
+	   actionButton("Submit1","Upload File")
+	   
+  )),
 	
   # Sidebar with sliders that demonstrate various available options
  conditionalPanel(condition = "input.Submit1 > 0",
-	 fluidRow( column(8,
+	 fluidRow( 
+    column(width = 7, 
+      tags$br(),
+      tags$br(),
+  		tags$div(
+                tags$h4("To obtain a list of genes according to a specific  
+                         pattern use the 'Obtain gene patterns' tab."),
+                tags$h4("To visualize gene trends one by one, use the 'Visualize genes' tab.")
+               ),
+        tags$br()
+      )),
+  fluidRow(    
+     column(12,
      tabsetPanel(
 	       tabPanel("Obtain gene patterns", #width=22,height=20,
                # file
@@ -41,9 +49,9 @@ shinyUI(fluidPage(
 					
             
             textInput("pattern", "Enter pattern (separate by comma, no spaces):", "up,down"),
-   				  textInput("rcut", "Only consider genes with adjusted R squared greater than: ", ".5", 
+   				  textInput("rcut", "Only consider genes with an adjusted R squared greater than: ", ".5", 
                                       placeholder="Must be between 0 and 1."),
-					  textInput("delay", "Only consider genes with pattern after time-point: ", "0"),
+					  textInput("delay", "Only consider genes with the pattern occurring after time-point: ", "0"),
                       
             
             radioButtons("scatterplots",
@@ -53,7 +61,7 @@ shinyUI(fluidPage(
                          selected = 1),
 
             textInput("OutFileName", 
-                      label = "Output file name (will default to pattern)", 
+                      label = "Name of output files (default will be the specified pattern)", 
                       value = ""),
                br(),
                br(),
@@ -61,7 +69,7 @@ shinyUI(fluidPage(
                tags$br(),
                tags$br()
               ),
-              column(4, textOutput("text1"),
+              column(6, textOutput("text1"),
                   tags$head(tags$style("#text1{color: red;
                                  font-size: 26px;
                                  font-style: bold;
@@ -73,15 +81,20 @@ shinyUI(fluidPage(
 		
 	tabPanel("Visualize genes", 
 	   tags$br(),
-	   br(),
+     # br(),
    
-	    uiOutput("choose_gene"),
-	
-	    column(8,
+      # uiOutput("choose_gene"),
+      column(6, align='left',
+  		tags$div(
+                tags$h4("Select a row in the table to update the trend visualization."))
+      ),
+	    column(10, align="center",
 	           mainPanel(plotOutput('genePlot'), width = "100%"),
              tags$br(),
-             dataTableOutput("tab"))
-  )
+             DT::dataTableOutput("tab"),
+             tags$br(),
+             tags$br()
+  ))
 )))),
 fluidRow(mainPanel(""))
 ))

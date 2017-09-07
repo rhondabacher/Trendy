@@ -1,9 +1,9 @@
 library(Trendy)
 library(shiny)
-
+library(DT)
 shinyServer(function(input, output, session) {
   
-  raVar <- reactiveValues(genes.pass=NULL, outdir=NULL)
+  raVar <- reactiveValues(genes.pass=NULL, outdir=NULL, plotVals=1)
   
   volumes <- c('home'="~")
   shinyDirChoose(input, 'Outdir', roots=volumes, session=session, restrictions=system.file(package='base'))
@@ -42,18 +42,18 @@ shinyServer(function(input, output, session) {
     return(LIST)
   })
   
-  output$choose_gene <- renderUI({
-
-      IN <- In()
-
-      # Get the data set with the appropriate name
-      allg <- rownames(IN$Orig.Data)
-
-      # Create the checkboxes and select them all by default
-      selectInput("gene", "Gene/Feature Name:",
-                          choices  = allg,
-                          selected = allg[1])
-    })
+  # output$choose_gene <- renderUI({
+#
+#       IN <- In()
+#
+#       # Get the data set with the appropriate name
+#       allg <- sort(rownames(IN$Orig.Data))
+#
+#       # Create the checkboxes and select them all by default
+#       selectInput("gene", "Gene/Feature Name:",
+#                           choices  = allg,
+#                           selected = allg[1])
+#     })
 
 
    observeEvent(input$Submit, {
@@ -118,43 +118,94 @@ shinyServer(function(input, output, session) {
     return(MM)
      
    })
-      
-      
+
+   observeEvent(input$tab_rows_selected, {
+     
+       raVar$plotVals <- input$tab_rows_selected
+     
+     })
+   
+   getRA <- eventReactive(raVar$plotVals,{
+         topg <- raVar$plotVals
+         return(list(topg = topg))
+       })
+       
+          
     output$genePlot <- renderPlot({
 
      IN <- In()
 
-      req(input$gene)
+    topg <- as.character(IN$To.Print[getRA()$topg, 1])
 
-      if(input$gene == "") {
-        topg <- rownames(IN$Orig.Data)[1]
-        } else {topg <- input$gene}
+    par(mfrow=c(1,1), cex=1.5, cex.lab=1, cex.axis=1, cex.main=1.1, mar=c(5,5,2,2), oma=c(0,.1,.1,6))
 
-    
-      par(mfrow=c(1,1), cex=1.5, cex.lab=1, cex.axis=1, cex.main=1.1, mar=c(6,6,2,2))
-
-      plot(IN$T.Vect, IN$Orig.Data[topg,], pch=20, col="red", main=paste0(topg),
-           ylab="Normalized Expr.", xlab="Time")
+      plot(IN$T.Vect, IN$Orig.Data[topg,], pch=20, col="#696969", main=paste0(topg),
+           ylab="Normalized Expr.", xlab="Time", cex.axis=1.2, cex.lab=1.2)
       if(topg %in% names(IN$Trendy.Out)) {
         tmp <- IN$Trendy.Out[[topg]]
-        lines(IN$T.Vect, tmp$Fitted.Values, lwd = 3)
-      }
+        lines(IN$T.Vect, tmp$Fitted.Values, lwd = 3, col="#ededed")
+        abline(v = tmp$Breakpoints, lty = 2, lwd = 3, col="chartreuse3")
+         ID <- tmp$Trends
+         FIT <- tmp$Fitted.Values
+          BKS <- c(0, tmp$Breakpoints, max(IN$T.Vect))
+          if(length(BKS) > 2) {
+              for(i in 1:(length(tmp$Breakpoints)+1)) {
+                 toCol <- which(IN$T.Vect <= BKS[i+1] & IN$T.Vect >= BKS[i])
+                 IDseg <- ID[toCol]
+                 useCol <- switch(names(which.max(table(IDseg))), 
+                             "0" = "black", 
+                             "-1" = "cornflowerblue", 
+                             "1" = "coral1")
+                lines(IN$T.Vect[toCol], FIT[toCol], lwd = 5, col=useCol)
+               }
+               par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), mar = c(0, 0, 4, 0), new = TRUE)
+               plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
 
-    }, height=400, width=600)
+               legend("topright", c("Breakpoint"), xpd = TRUE, horiz = FALSE, 
+                 inset = c(.02,0), bty = "n", 
+                 lty = c(2, 1, 1, 1), lwd = c(3,5,5,5), col = c("chartreuse3" ), cex = 1) 
+           
+      
+               par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), mar = c(0, 0, 7.5, 0), new = TRUE)
+               plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
+
+               legend("topright", c("Up", "No change", "Down"), xpd = TRUE, horiz = FALSE, 
+                 inset = c(.02,0), bty = "n", title = "Segment trend:",
+                 lty = c(1, 1, 1), lwd = c(5,5,5), col = c("coral1", "black","cornflowerblue"  ), cex = 1) 
+           }
+         }
+
+    }, height=400, width=800)
 
   # Show the values using an HTML table
-  output$tab <- renderDataTable({
+  output$tab <- DT::renderDataTable({
       IN <- In()
 
-      req(input$gene)
-      if(input$gene == "") {
-        topg <- rownames(In$Orig.Data)[1]
-        } else {topg <- input$gene}
-
-      show.order <- c(topg, setdiff(rownames(IN$To.Print), topg))
+        
       whichCol <- !grepl(".Fitted.Trend", colnames(IN$To.Print))
-      toprint <- IN$To.Print[show.order, whichCol]
-      toprint
+      toprint <- IN$To.Print[, whichCol]
+      toprint[,-1] <- round(toprint[,-1], 3)
+
+      numSeg <- colnames(toprint)[grepl("Trend", colnames(toprint))]
+      numCols <- ncol(toprint)
+      mkSmallTable <- c("Feature", numSeg, colnames(toprint)[grepl("Breakpoint", colnames(toprint))], "AdjustedR2")
+      
+      
+      toprint <- toprint[,mkSmallTable]
+     
+      COLS <- gsub(".", " ", colnames(toprint), fixed=TRUE)
+      DT::datatable(toprint, rownames = FALSE, colnames = COLS, selection = 'single',
+        options = list(
+          autoWidth = TRUE, scrollX=TRUE,
+          columnDefs = list(list(className = 'dt-center', targets = '_all'))
+          )) %>% formatStyle(
+                  columns = numSeg,
+                   valueColumns = numSeg,
+                   color = styleEqual(c(-1, 0, 1), c('white', 'white', 'white')),
+                   backgroundColor = styleEqual(c(-1, 0, 1), c('cornflowerblue', 'black', 'tomato')),
+                   borderRightWidth = '5px', borderStyle = 'solid'
+            )
     })
+
 
 })
