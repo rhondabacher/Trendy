@@ -6,6 +6,9 @@ Trendy utilizes segmented regression models to simultaneously characterize each 
 Details of Trendy may be found in the vignette:
 https://github.com/rhondabacher/Trendy/tree/master/package/Trendy/vignettes/Trendy_vignette.pdf
 
+and in the bioRxiv preprint:
+http://www.biorxiv.org/content/early/2017/09/07/185413
+
 #### To install Trendy:
 
 install.packages(c("segmented","parallel","gplots")) 
