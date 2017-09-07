@@ -28,15 +28,32 @@ shinyUI(fluidPage(
       tags$br(),
       tags$br(),
   		tags$div(
+                tags$h4("To visualize gene trends one by one, use the 'Visualize genes' tab."),
                 tags$h4("To obtain a list of genes according to a specific  
-                         pattern use the 'Obtain gene patterns' tab."),
-                tags$h4("To visualize gene trends one by one, use the 'Visualize genes' tab.")
+                         pattern use the 'Obtain gene patterns' tab.")
+
                ),
         tags$br()
       )),
   fluidRow(    
      column(12,
      tabsetPanel(
+     	tabPanel("Visualize genes", 
+     	   tags$br(),
+          # br(),
+   
+           # uiOutput("choose_gene"),
+           column(6, align='left',
+       		tags$div(
+                     tags$h4("Select a row in the table to update the trend visualization."))
+           ),
+     	    column(10, align="center",
+     	           mainPanel(plotOutput('genePlot'), width = "100%"),
+                  tags$br(),
+                  DT::dataTableOutput("tab"),
+                  tags$br(),
+                  tags$br()
+       )),
 	       tabPanel("Obtain gene patterns", #width=22,height=20,
                # file
 		             tags$br(),
@@ -77,24 +94,9 @@ shinyUI(fluidPage(
                          )
               )
                 )
-        ),
+        )
 		
-	tabPanel("Visualize genes", 
-	   tags$br(),
-     # br(),
-   
-      # uiOutput("choose_gene"),
-      column(6, align='left',
-  		tags$div(
-                tags$h4("Select a row in the table to update the trend visualization."))
-      ),
-	    column(10, align="center",
-	           mainPanel(plotOutput('genePlot'), width = "100%"),
-             tags$br(),
-             DT::dataTableOutput("tab"),
-             tags$br(),
-             tags$br()
-  ))
+
 )))),
 fluidRow(mainPanel(""))
 ))

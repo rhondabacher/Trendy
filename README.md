@@ -28,6 +28,8 @@ install.packages("shiny")
 
 install.packages("shinyFiles")
 
+install.packages("DT")
+
 #### To launch the Shiny app:
 
 library(shiny)
