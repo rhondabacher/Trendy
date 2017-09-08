@@ -42,7 +42,7 @@ fitSegRsq <- function(Data, T.Vect = NULL, Max.K = 5,
 	
 	lm.id.sign <- rep(lm.sign, length(T.Vect))
 	names(lm.id.sign) <- paste0(names(T.Vect), ".Trend")
-	names(T.Vect) <- paste0(names(T.Vect), ".Fitted")
+	names(lm.fit) <- paste0(names(T.Vect), ".Fitted")
 
 	# fit all possible breakpoints now:
 	fit.l.0 <- sapply(1:length(step.r), function(j) {

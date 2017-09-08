@@ -13,7 +13,7 @@ shinyServer(function(input, output, session) {
     
     load(input$filename$datapath)
     
-    if(exists("Seg.Object")) {
+    if(exists("Seg.Object") & !exists("Trendy.Out")) {
         Trendy.Out  <- Seg.Object
         Trendy.Out <- lapply(Trendy.Out, function(x) {
                          
@@ -143,7 +143,7 @@ shinyServer(function(input, output, session) {
          ID <- tmp$Trends
          FIT <- tmp$Fitted.Values
           BKS <- c(0, tmp$Breakpoints, max(IN$T.Vect))
-          if(length(BKS) > 3) {
+          if(length(BKS) > 3 | (length(BKS) == 3 & !is.na(BKS[2]))) {
               for(i in 1:(length(tmp$Breakpoints)+1)) {
                  toCol <- which(IN$T.Vect <= BKS[i+1] & IN$T.Vect >= BKS[i])
                  IDseg <- ID[toCol]
@@ -177,13 +177,13 @@ shinyServer(function(input, output, session) {
       IN <- In()
 
         
-      whichCol <- !grepl(".Fitted.Trend", colnames(IN$To.Print))
-      toprint <- IN$To.Print[, whichCol]
+      # whichCol <- !grepl(".Fitted.Trend", colnames(IN$To.Print))
+      toprint <- IN$To.Print
       toprint[,-1] <- round(toprint[,-1], 3)
 
-      numSeg <- colnames(toprint)[grepl("Trend", colnames(toprint))]
+      numSeg <- colnames(toprint)[grepl("^Segment.*Trend", colnames(toprint))]
       numCols <- ncol(toprint)
-      mkSmallTable <- c("Feature", numSeg, colnames(toprint)[grepl("Breakpoint", colnames(toprint))], "AdjustedR2")
+      mkSmallTable <- c("Feature",  "AdjustedR2", numSeg, colnames(toprint)[grepl("Breakpoint", colnames(toprint))])
       
       
       toprint <- toprint[,mkSmallTable]

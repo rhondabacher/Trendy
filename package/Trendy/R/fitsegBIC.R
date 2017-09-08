@@ -41,7 +41,7 @@ fitSegBIC <- function(Data, Max.K = 5, T.Vect = NULL, Min.Num.In.Seg = 5,
 	
 	lm.id.sign <- rep(lm.sign, length(T.Vect))
 	names(lm.id.sign) <- paste0(names(T.Vect), ".Trend")
-	names(T.Vect) <- paste0(names(T.Vect), ".Fitted")
+	names(lm.fit) <- paste0(names(T.Vect), ".Fitted")
   bic.lm <- BIC(lm1)
   
 	# fit all possible breakpoints now:
