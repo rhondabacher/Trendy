@@ -12,27 +12,28 @@ shinyServer(function(input, output, session) {
   In <- eventReactive(input$Submit1, {
     
     load(input$filename$datapath)
-    
-    if(exists("Seg.Object") & !exists("Trendy.Out")) {
-        Trendy.Out  <- Seg.Object
-        Trendy.Out <- lapply(Trendy.Out, function(x) {
+     
+    if(!is.na(match("Seg.Object", ls()))) {
+
+            Trendy.Out  <- Seg.Object
+            Trendy.Out <- lapply(Trendy.Out, function(x) {
                          
-                              names(x[[1]]) <- paste0(names(T.Vect), ".Trend")
-                              names(x[[2]]) <- paste0("Segment", seq_len(length(x[[2]])), ".Slope")
-                              names(x[[3]]) <- paste0("Segment", seq_len(length(x[[2]])), ".Trend")
-                              names(x[[4]]) <- paste0("Segment", seq_len(length(x[[2]])), ".Pvalue")
-                              names(x[[5]]) <-  paste0("Breakpoint", 1:length(x[[5]]))
-                              names(x[[6]]) <- paste0(names(T.Vect), ".Fitted")
+                                  names(x[[1]]) <- paste0(names(T.Vect), ".Trend")
+                                  names(x[[2]]) <- paste0("Segment", seq_len(length(x[[2]])), ".Slope")
+                                  names(x[[3]]) <- paste0("Segment", seq_len(length(x[[2]])), ".Trend")
+                                  names(x[[4]]) <- paste0("Segment", seq_len(length(x[[2]])), ".Pvalue")
+                                  names(x[[5]]) <-  paste0("Breakpoint", 1:length(x[[5]]))
+                                  names(x[[6]]) <- paste0(names(T.Vect), ".Fitted")
                              
-                             return(x) 
-                            })
+                                 return(x) 
+                                })
                               
-        Trendy.Out <- lapply(Trendy.Out, function(x) {
-                              names(x) <- c("Trends", 
-                              "Segment.Slopes", "Segment.Trends", "Segment.Pvalues",
-                              "Breakpoints", "Fitted.Values", "AdjustedR2")
-                              return(x)})
-    }
+            Trendy.Out <- lapply(Trendy.Out, function(x) {
+                                  names(x) <- c("Trends", 
+                                  "Segment.Slopes", "Segment.Trends", "Segment.Pvalues",
+                                  "Breakpoints", "Fitted.Values", "AdjustedR2")
+                                  return(x)})
+      }
 
     all.trendy <- topTrendy(Trendy.Out, -1)
     To.Print <- Trendy::formatResults(all.trendy)
