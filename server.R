@@ -143,7 +143,7 @@ shinyServer(function(input, output, session) {
          ID <- tmp$Trends
          FIT <- tmp$Fitted.Values
           BKS <- c(0, tmp$Breakpoints, max(IN$T.Vect))
-          if(length(BKS) > 2) {
+          if(length(BKS) > 3) {
               for(i in 1:(length(tmp$Breakpoints)+1)) {
                  toCol <- which(IN$T.Vect <= BKS[i+1] & IN$T.Vect >= BKS[i])
                  IDseg <- ID[toCol]
