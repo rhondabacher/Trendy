@@ -1,0 +1,19 @@
+citHeader("To cite Trendy in publications use:")
+
+citEntry(entry = "Article",
+  title        = "Trendy: Segmented regression analysis of expression dynamics for high-throughput ordered profiling experiments",
+  author       = personList(as.person("Rhonda Bacher"),
+		   as.person("Ning Leng"),
+                 as.person("Li-Fang Chu"),
+                 as.person("James A. Thomson"),
+		   as.person("Christina Kendziorski"),
+                 as.person("Ron M. Stewart")),
+  journal      = "bioRxiv",
+  year         = "2017",
+  url          = "https://www.biorxiv.org/content/early/2017/09/21/185413",
+
+  textVersion  =
+  paste("Bacher R, Leng N, Chu LF, Thomson JA, Kendziorski C, Stewart RM,", 
+        "Trendy: Segmented regression analysis of expression dynamics for high-throughput ordered profiling experiments.", 
+        "bioRxiv. https://www.biorxiv.org/content/early/2017/09/21/185413")
+)

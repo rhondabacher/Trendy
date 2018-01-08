@@ -9,9 +9,10 @@ https://github.com/rhondabacher/Trendy/tree/master/package/Trendy/vignettes/Tren
 and in the bioRxiv preprint:
 http://www.biorxiv.org/content/early/2017/09/07/185413
 
-#### To install Trendy:
+####The current version of Trendy is in submission to Bioconductor. For previous versions check the release page.
 
-install.packages(c("segmented","parallel","gplots")) 
+
+#### To install Trendy:
 
 install.packages("devtools")
 
@@ -22,22 +23,14 @@ install_github("rhondabacher/Trendy/package/Trendy")
 
 ## Trendy R/Shiny Visualization
 
-Trendy R/Shiny assumes you have already run the trendy() function in the Trendy package and saved the output as an .RData object (by setting Save.Object = TRUE). The app allows you to extract lists of genes/features according to any pattern of interest. 
-The patten of interest can also be extracted after a given condition (time-point) via the delay option. The Shiny application also enables the trend and breakpoints of each gene to be explored and visualized.
+Trendy R/Shiny assumes you have already run the trendy() function in the Trendy package and saved the output as an .RData object (by setting Save.Object = TRUE). The app allows you to extract lists of genes/features according to any pattern of interest. The patten of interest can also be extracted after a given condition (time-point) via the delay option. The Shiny application also enables the trend and breakpoints of each gene to be explored and visualized.
 
-####  Required packages to install:
+#### To launch the Shiny app in R:
 
-install.packages("shiny")
+library(Trendy)
 
-install.packages("shinyFiles")
+trendyShiny()
 
-install.packages("DT")
-
-#### To launch the Shiny app:
-
-library(shiny)
-
-runGitHub('rhondabacher/Trendy')
 
 Example of patterns:
 

@@ -1,12 +1,7 @@
 *.DS_Store
 *.gz
 *.Rhistory
-/package/Trendy/vignettes/Trendy_vignette_cache/*
-/package/Trendy/vignettes/Trendy_vignette_files/*
-/package/Trendy.Rcheck/*
 *.png
 *.log
 *.toc
-/package/Trendy/vignettes/*.RData
-/package/Trendy/vignettes/*.tex
-/package/Trendy/vignettes/figure/*
+package/*
