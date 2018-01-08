@@ -9,7 +9,7 @@ https://github.com/rhondabacher/Trendy/tree/master/package/Trendy/vignettes/Tren
 and in the bioRxiv preprint:
 http://www.biorxiv.org/content/early/2017/09/07/185413
 
-####The current version of Trendy is in submission to Bioconductor. For previous versions check the release page.
+#### The current version of Trendy is in submission to Bioconductor. For previous versions check the release page.
 
 
 #### To install Trendy:
