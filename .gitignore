@@ -1,7 +1,6 @@
 *.DS_Store
 *.gz
 *.Rhistory
-*.png
 *.log
 *.toc
 package/*
