@@ -8,7 +8,7 @@
 #'  fitting (default is TRUE)
 #' @param trendyOutData segmented regression fitting result from 
 #'  running trendy(); if showFit is TRUE and trendyOutData is NULL, then the
-#'	segmented regression will be fit for each of the genes and it may 
+#'  segmented regression will be fit for each of the genes and it may 
 #'  take longer to run
 #' @param condCol color for each condition, names of this vector should be
 #'  condition names; if it is NULL (default), no legend will be generated
@@ -22,9 +22,9 @@
 #' @return plot of gene expression and fitted line
 
 #' @examples d1 <- rbind(c(rep(1,50),seq_len(50)), rev(seq_len(100)))
-#'	rownames(d1) <- c("g1","g2")
+#'  rownames(d1) <- c("g1","g2")
 #'  colnames(d1) <- paste0("time", seq_len(100))
-#'	plotFeature(d1, featureNames=c("g1","g2"))
+#'  plotFeature(d1, featureNames=c("g1","g2"))
 #' @author Ning Leng and Rhonda Bacher
 #' @import graphics
 #' @import grDevices
@@ -47,7 +47,6 @@ plotFeature <-
         }
         Data = Trendy::getCounts(Data)
     }
-
     if (!(methods::is(Data, "SummarizedExperiment"))) {
         Data <- data.matrix(Data)
     }
@@ -63,15 +62,12 @@ plotFeature <-
     if (is.null(names(tVectIn))) {
         names(tVectIn) <- colnames(Data)
     }
-
     if (!is.null(condCol)){
         plot(1, type = "n", axes = FALSE, xlab = "", ylab="")
         legend("top", paste(condPrefix, names(condCol)), 
         col = condCol, ncol = 4, lwd = 2)
     }
-
     if (is.null(condCol)) {condColSample = "black"}
-
     ignoreOUT <- lapply(featureNames, function(x) {
         plot(tVectIn, Data[x,], pch = 20, col = condColSample, 
             main = x, ylab = ylab, xlab = xlab)

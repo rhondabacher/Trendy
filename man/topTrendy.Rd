@@ -15,12 +15,12 @@ R^2 is greater than adjR2Cut are called as significant.}
 \value{
 only significant genes will be included in the output. 
  The output is reformatted as:
-     Trend direction of each sample; -1: down, 0: no change, 1: up
-	Slope: fitted slopes, Slope.Trend: sign of fitted slopes, 
-	Slope.Pvalue: p value of each segment, 
-	Breakpoint: estimated breakpoints, Fitted.Values: fitted values 
-	AdjustedR2: adjusted r value of the model
-	Fit: fit object
+ Trend direction of each sample; -1: down, 0: no change, 1: up
+ Slope: fitted slopes, Slope.Trend: sign of fitted slopes, 
+ Slope.Pvalue: p value of each segment, 
+ Breakpoint: estimated breakpoints, Fitted.Values: fitted values 
+ AdjustedR2: adjusted r value of the model
+ Fit: fit object
 }
 \description{
 reformats the list output for genes with a 

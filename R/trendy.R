@@ -112,10 +112,10 @@ trendy <-
     if (is.null(featureNames)) {
         featureNames <- rownames(Trendy::getCounts(Data))
     }
-
+    
     SummarizedExperiment::assays(Data)[["Counts"]]<-
         Trendy::getCounts(Data)[featureNames,]
-
+        
     if (length(featureNames) == 1) {
 
         if (mean(Trendy::getCounts(Data)) >= meanCut) {
@@ -132,7 +132,7 @@ trendy <-
         stop("No genes pass the mean cutoff filter!")
     }
     }
-
+    
     if (NSample < (maxK + 1) * minNumInSeg) {
         maxK <- floor(NSample / minNumInSeg) - 1
         message("Number of samples (", NSample, ") is less than 
@@ -143,7 +143,7 @@ trendy <-
         stop("Invalid value for maxK. Adjust minNumInSeg setting
         in order to run Trendy.")
     }
-
+    
     if (forceRsq) {	
         segAll <- BiocParallel::bplapply(X = seq_len(nrow(Data.MeanFiltered)),
         function(X) {
@@ -166,13 +166,7 @@ trendy <-
                 keepFit = keepFit)
             })
     }
-    
-   
-
     names(segAll) <- rownames(Data.MeanFiltered)
-
-
-
     if (saveObject == TRUE) {
         if (is.null(fileName)){
             fileName <- "trendyForShiny.RData"

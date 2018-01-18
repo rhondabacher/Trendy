@@ -14,14 +14,14 @@
 # tVect <- NULL
 # origData <- NULL
 # trendyOut <- NULL
-
+    
     globalVariables(c("tVect", "origData", "trendyOut"))
-
+    
 trendyShiny <- function() {
-
+    
     options(shiny.maxRequestSize = 10000*1024^2) 
-
-
+    
+    
     ui <- fluidPage(
         #  Application title
         headerPanel("Trendy Visualization"),
@@ -38,7 +38,7 @@ trendyShiny <- function() {
                 actionButton("Submit1","Upload File")
             )
         ),
-
+        
         # Sidebar with sliders that demonstrate various available options
         conditionalPanel(condition = "input.Submit1 > 0",
         fluidRow( 
@@ -71,7 +71,7 @@ trendyShiny <- function() {
                     ),
                 tabPanel("Obtain gene patterns",
                 tags$br(),
-                column(5,	
+                column(5,
                     tags$div(tags$b("Please select a folder for output :")),
                     shinyDirButton('Outdir', label ='Select Output Folder', 
                     title = 'Please select a folder'),
@@ -105,17 +105,17 @@ trendyShiny <- function() {
         )),
     fluidRow(mainPanel(""))
     )
-
-
+    
+    
 server <- function(input, output, session) {
-
+    
     raVar <- reactiveValues(genes.pass=NULL, outdir=NULL, plotVals=1)
-
+    
     volumes <- c('home'="~")
     shinyDirChoose(input, 'Outdir', roots=volumes, session=session, 
     restrictions=system.file(package='base'))
     output$Dir <- renderPrint({parseDirPath(volumes, input$Outdir)})
-
+    
     In <- eventReactive(input$Submit1, {
         load(input$filename$datapath)
 
@@ -127,47 +127,48 @@ server <- function(input, output, session) {
                 "ToPrint", "TopTrendy")
         return(LIST)
     })
-
+    
     observeEvent(input$Submit, {
-
+        
         withProgress(message = 'Finding gene patterns:', value = 0, {
-
+            
             IN <- In()
             outdir <- paste0("~", do.call("file.path", input$Outdir[[1]]), "/")
-
+            
             pattern <- strsplit(input$pattern, ",")[[1]]
             delay <- as.numeric(input$delay)
             rcut <- as.numeric(input$rcut)
-
+            
             incProgress(0.4, detail = "Extracting genes")
             genes.pass <- Trendy::extractPattern(IN$trendyOut, 
                 Pattern = pattern, adjR2Cut = rcut, Delay = delay)
-
+                
             if (input$OutFileName == "") {
                 outfilename = paste0("Pattern_", input$pattern)
             } else {outfilename <- input$OutFileName}
-
+            
             outfileP = paste0(outdir, outfilename, "_Scatter.pdf")
             outfileSS = paste0(outdir, outfilename, "_ShortSummary.csv")
             outfileLS = paste0(outdir, outfilename, "_FullSummary.csv")
-
+            
             write.table(genes.pass, file = outfileSS, quote = FALSE,
                 row.names = FALSE, sep = ",")
-
+                
             toFormat <- genes.pass$Gene
             fullSummary <- IN$ToPrint[toFormat,]
-
+            
             write.table(fullSummary, file = outfileLS, quote=FALSE, 
                 row.names=FALSE, sep=",")
             incProgress(0.4, detail = "Writing genes to output folder")
             if (input$scatterplots == "1") {
-
+                
                 incProgress( 0, detail = "Making scatter plots of 
                     patterned genes")
-
+                    
                 pdf(outfileP, height=15, width=10)
                 par(mar=c(5,5,2,1), mfrow=c(3,2))
-                XX <- Trendy::plotFeature(Data = IN$origData, tVectIn = IN$tVect,
+                XX <- Trendy::plotFeature(Data = IN$origData, 
+                    tVectIn = IN$tVect,
                     featureNames = genes.pass$Gene, showFit = TRUE,
                     trendyOutData = IN$trendyOut)
                 dev.off()
@@ -177,16 +178,16 @@ server <- function(input, output, session) {
             raVar$genes.pass = genes.pass
         })
     })
-
+    
     output$text1 <- renderText({
         if (is.null(raVar$genes.pass)) return() 
         numG <- length(raVar$genes.pass$Gene)
-
+        
         MM <- paste(numG, "genes/features with pattern", input$pattern, 
             "have been output to", raVar$outdir )
         return(MM)
     })
-
+    
     observeEvent(input$tab_rows_selected, {
         raVar$plotVals <- input$tab_rows_selected
     })
@@ -234,22 +235,22 @@ server <- function(input, output, session) {
                 col = c("coral1", "black","cornflowerblue"), cex = 1) 
             }
         }
-
+        
     }, height=400, width=800)
-
+    
     # Show the values using an HTML table
     output$tab <- DT::renderDataTable({
         IN <- In()
         toprint <- IN$ToPrint
         toprint[,-1] <- round(toprint[,-1], 3)
-
+        
         numSeg <-colnames(toprint)[grepl("^Segment.*Trend",colnames(toprint))]
         numCols <- ncol(toprint)
         mkSmallTable <- c("Feature", "AdjustedR2", numSeg, 
         colnames(toprint)[grepl("Breakpoint", colnames(toprint))])
-
+        
         toprint <- toprint[,mkSmallTable]
-
+        
         COLS <- gsub(".", " ", colnames(toprint), fixed=TRUE)
         DT::datatable(toprint, rownames = FALSE, colnames = COLS, 
             selection = 'single',

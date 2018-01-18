@@ -19,12 +19,13 @@
 #'  topGenes <- topTrendy(myTrends)
 #'  bpDist <- breakpointDist(topGenes)
 
-breakpointDist <- function(topTrendyData, NDigits = 0) {
-
+breakpointDist <- 
+    function(topTrendyData, NDigits = 0)
+{
     tmpbp <- topTrendyData$Breakpoints
     tab <- table(round(unlist(tmpbp), NDigits))
     tabout <- tab[order(as.numeric(names(tab)))]
-    gap <- 1 / (10^NDigits)
+    gap <- 1/(10^NDigits)
     tabname.num <- as.numeric(names(tabout))
     namesuse <- as.character(seq(min(tabname.num), max(tabname.num), gap))
     tabnames <- names(tabout)

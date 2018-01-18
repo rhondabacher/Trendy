@@ -37,9 +37,9 @@ will be returned.}
 \value{
 Trend: direction of each sample; -1: down, 0: no change, 1: up
  Slope: fitted slopes, Slope.Trend: sign of fitted slopes, 
-Slope.Pvalue: p value of each segment, Breakpoint: estimated breakpoints,
-Fitted.Values: fitted values AdjustedR2: adjusted r value of the model
-	Fit: fit object
+ Slope.Pvalue: p value of each segment, Breakpoint: estimated breakpoints,
+ Fitted.Values: fitted values AdjustedR2: adjusted r value of the model
+ Fit: fit object
 }
 \description{
 fits segmented regression models

@@ -19,14 +19,14 @@
 #'  ExampleData <- 
 #'  SummarizedExperiment::SummarizedExperiment(assays=list("Counts"=m1))
 #'  myData <- getCounts(ExampleData)
-
+    
 getCounts <- function(DATA) {
     return(SummarizedExperiment::assays(DATA)[["Counts"]])
 }
-
-
+    
+    
 #' @title Function to format results for saving.
-
+    
 #' @description format data from Trendy which can be saved for later use.
 #' @param topTrendyData results from topTrendy() function
 #' @param featureNames an optional vector of features 
@@ -46,8 +46,7 @@ getCounts <- function(DATA) {
 formatResults <- function(topTrendyData, featureNames = NULL) {
     if (is.null(featureNames)) {
         featureNames = names(topTrendyData$AdjustedR2)
-  }
-  
+    }
     ALL_DATA <- data.frame(Feature = featureNames, 
         topTrendyData$Segment.Slopes[featureNames,], 
         topTrendyData$Segment.Trends[featureNames,],
@@ -70,14 +69,14 @@ formatResults <- function(topTrendyData, featureNames = NULL) {
 #' @export
 
 formatFunc <- function(IN) {
-
+    
     getL <- sapply(IN, length)
     maxLen <- max(getL)
     getNames <- names(IN[which.max(getL)[1]][[1]])
     corrected.list <- lapply(IN, function(x) {c(x, rep(NA,maxLen-length(x)))})
     allSummary <- do.call(rbind, corrected.list)
     colnames(allSummary) <- getNames
-
+    
     return(allSummary)
 }
 
