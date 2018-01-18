@@ -14,8 +14,8 @@ R^2 is greater than adjR2Cut are called as significant.}
 }
 \value{
 only significant genes will be included in the output. 
-	The output is reformatted as:
-	Trend direction of each sample; -1: down, 0: no change, 1: up
+ The output is reformatted as:
+     Trend direction of each sample; -1: down, 0: no change, 1: up
 	Slope: fitted slopes, Slope.Trend: sign of fitted slopes, 
 	Slope.Pvalue: p value of each segment, 
 	Breakpoint: estimated breakpoints, Fitted.Values: fitted values 
@@ -24,13 +24,13 @@ only significant genes will be included in the output.
 }
 \description{
 reformats the list output for genes with a 
-   given adjusted R^2 cutoff
+ given adjusted R^2 cutoff
 }
 \examples{
-d1 <- rbind(c(rep(1,50),1:50), c(100:1))
-     rownames(d1) <- c("g1","g2")
-     colnames(d1) <- paste0("time", 1:100)
-     seg.all <- trendy(d1)
-     seg.all <- results(seg.all)
-		  top.genes <- topTrendy(seg.all)
+d1 <- rbind(c(rep(1,50),seq_len(50)), rev(seq_len(100)))
+ rownames(d1) <- c("g1","g2")
+ colnames(d1) <- paste0("time", seq_len(100))
+ seg.all <- trendy(d1)
+ seg.all <- results(seg.all)
+ top.genes <- topTrendy(seg.all)
 }

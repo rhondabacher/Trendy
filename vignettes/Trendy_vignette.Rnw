@@ -241,10 +241,10 @@ par(mfrow=c(1,1))
 plot2 <- plotFeature(TrendyExampleData,
                     featureNames = "g2",
                     trendyOut = res)
-print(res.top$Breakpoints["g2",]) # break points
-print(res.top$AdjustedR2["g2"]) # adjusted r squared
-print(res.top$Segments["g2",]) # fitted slopes of the segments
-print(res.top$Segment.Pvalues["g2",]) # p value of each the segment
+res.top$Breakpoints["g2",] # break points
+res.top$AdjustedR2["g2"] # adjusted r squared
+res.top$Segments["g2",] # fitted slopes of the segments
+res.top$Segment.Pvalues["g2",] # p value of each the segment
 @
 
 The above printouts show that for gene g2 the optimal number of breakpoints
@@ -288,7 +288,7 @@ the time vector as:
 <<eval=TRUE>>=
 t.v <- c(1:30, seq(31, 80, 5))
 names(t.v) <- colnames(TrendyExampleData)
-print(t.v)
+t.v
 @
 
 To run Trendy model using the empirical collecting time instead of sample ID (1-40):
@@ -386,7 +386,7 @@ trendyShiny()
 \section{SessionInfo}
 
 <<eval=TRUE, warning=FALSE, tidy=TRUE>>=
-print(sessionInfo())
+sessionInfo()
 @
 
 

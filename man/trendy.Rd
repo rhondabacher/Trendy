@@ -21,7 +21,7 @@ will be assumed to be equaly spaced from 1:N (N is number of samples).}
 to use in the Shiny app (default is FALSE).}
 
 \item{fileName}{the file name (and file path) to save the Trendy object, 
- only used if saveObject=TRUE (default name is 
+only used if saveObject=TRUE (default name is 
 trendyOutputForShiny.RData).}
 
 \item{meanCut}{genes whose mean is less than MeanCut will not be 
@@ -64,21 +64,21 @@ of k + 1.}
 }
 \value{
 Trend: direction of each sample; -1: down, 0: no change, 1: up
-	Slope: fitted slopes, Slope.Trend: sign of fitted slopes, 
-	Slope.Pvalue: p value of each segment, Breakpoint: estimated breakpoints, 
-	Fitted.Values: fitted values AdjustedR2: adjusted R squared 
-   value of the model
-		Fit: fit object
+ Slope: fitted slopes, Slope.Trend: sign of fitted slopes, 
+ Slope.Pvalue: p value of each segment, Breakpoint: estimated breakpoints, 
+ Fitted.Values: fitted values AdjustedR2: adjusted R squared 
+     value of the model
+ Fit: fit object
 }
 \description{
 Segmented regression models are fit for each gene. 
  The number of model fits is 1 -> maxK.
 }
 \examples{
-m1 <- rbind(c(rep(1,50),1:50), c(100:1))
-     rownames(m1) <- c("g1","g2")
-     colnames(m1) <- paste0("time", 1:100)
-     myTrends <- trendy(m1)
+m1 <- rbind(c(rep(1,50),seq_len(50)), rev(seq_len(100)))
+ rownames(m1) <- c("g1","g2")
+ colnames(m1) <- paste0("time", seq_len(100))
+ myTrends <- trendy(m1)
 }
 \author{
 Ning Leng and Rhonda Bacher

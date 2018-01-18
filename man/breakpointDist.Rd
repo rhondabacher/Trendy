@@ -23,12 +23,12 @@ numbers of genes sorted by time point.
 calculates number of breakpoints at each time.
 }
 \examples{
-m1 <- rbind(c(rep(1,50),1:50), c(100:1))
-     rownames(m1) <- c("g1","g2")
-     colnames(m1) <- paste0("time", 1:100)
-     myTrends <- results(trendy(m1))
-     topGenes <- topTrendy(myTrends)
-     bpDist <- breakpointDist(topGenes)
+m1 <- rbind(c(rep(1,50),seq_len(50)), rev(seq_len(100)))
+ rownames(m1) <- c("g1","g2")
+ colnames(m1) <- paste0("time", seq_len(100))
+ myTrends <- results(trendy(m1))
+ topGenes <- topTrendy(myTrends)
+ bpDist <- breakpointDist(topGenes)
 }
 \author{
 Ning Leng

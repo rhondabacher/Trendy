@@ -14,7 +14,8 @@ normalized expression and other metadata, and the output of the
 \item{type}{A character variable specifying which output is desired, 
 with possible values "TrendyFits".
 By default results() will
-return type="TrendyFits", which is the matrix of normalized counts from SCnorm.}
+return type="TrendyFits", which is the matrix of normalized 
+counts from SCnorm.}
 }
 \value{
 A \code{data.frame} containing output as detailed in the
@@ -27,8 +28,8 @@ Trendy. Results data.frames/matrices are stored in the
 convenience function by calling \code{metadata()}.
 }
 \examples{
-  data(TrendyExampleData)
-  Conditions = rep(c(1), each= 90)
-  trendyOut <- trendy(Data=TrendyExampleData[1:2,])
-  trendyResults <- results(trendyOut)
+ data(TrendyExampleData)
+ Conditions = rep(c(1), each= 90)
+ trendyOut <- trendy(Data=TrendyExampleData[seq_len(2),])
+ trendyResults <- results(trendyOut)
 }

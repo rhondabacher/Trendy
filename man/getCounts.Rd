@@ -15,11 +15,12 @@ A \code{matrix} which contains the expression data
  where genes/features are in rows and samples are in columns
 }
 \description{
-Convenient helper function to extract the normalized expression
-matrix from the SummarizedExperiment
+Convenient helper function to extract the normalized 
+ expression matrix from the SummarizedExperiment
 }
 \examples{
-  m1 <- rbind(c(rep(1,50),1:50), c(100:1))
-  ExampleData <- SummarizedExperiment::SummarizedExperiment(assays=list("Counts"=m1))
-  myData <- getCounts(ExampleData)
+ m1 <- rbind(c(rep(1,50),seq_len(50)), rev(seq_len(100)))
+ ExampleData <- 
+ SummarizedExperiment::SummarizedExperiment(assays=list("Counts"=m1))
+ myData <- getCounts(ExampleData)
 }

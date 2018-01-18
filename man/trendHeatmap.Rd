@@ -11,23 +11,23 @@ trendHeatmap(topTrendyData)
 }
 \value{
 The function takes significant genes/features called from 
-	the topTrendyData() function. These genes are further grouped into three
-	groups: up, down, or no change in the first segment. Within each group,
-	the genes are sorted by their first break point. The heatmap shows 
-	expression trends of these three groups of genes. In the heatmap, 
-	red/blue/black represents up/down/nochange. A list of genes in the heatmap
-    order is returned.
+ the topTrendyData() function. These genes are further grouped into three
+groups: up, down, or no change in the first segment. Within each group,
+the genes are sorted by their first break point. The heatmap shows 
+expression trends of these three groups of genes. In the heatmap, 
+red/blue/black represents up/down/nochange. A list of genes in the heatmap
+ order is returned.
 }
 \description{
 heatmap of the fitted trends
 }
 \examples{
-m1 <- rbind(c(rep(1,50),1:50), c(100:1))
-     rownames(m1) <- c("g1","g2")
-     colnames(m1) <- paste0("time", 1:100)
-     myTrends <- results(trendy(m1))
-     topGenes <- topTrendy(myTrends)
-     #makeHeat <- trendHeatmap(topGenes)
+m1 <- rbind(c(rep(1,50),seq_len(50)), rev(seq_len(100)))
+ rownames(m1) <- c("g1","g2")
+ colnames(m1) <- paste0("time", seq_len(100))
+ myTrends <- results(trendy(m1))
+ topGenes <- topTrendy(myTrends)
+ #makeHeat <- trendHeatmap(topGenes)
 }
 \author{
 Ning Leng and Rhonda Bacher

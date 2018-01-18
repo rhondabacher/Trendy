@@ -22,9 +22,9 @@ will be assumed to be equaly spaced from 1:N (N is number of samples).}
 fitting (default is TRUE)}
 
 \item{trendyOutData}{segmented regression fitting result from 
-running trendy(); if showFit is TRUE and trendyOutData is NULL, then the
- segmented regression will be fit for each of the genes and it may 
-take longer to run}
+ running trendy(); if showFit is TRUE and trendyOutData is NULL, then the
+segmented regression will be fit for each of the genes and it may 
+ take longer to run}
 
 \item{condCol}{color for each condition, names of this vector should be
 condition names; if it is NULL (default), no legend will be generated}
@@ -47,10 +47,10 @@ plot of gene expression and fitted line
 plot each feature with (or without) the fitted trend.
 }
 \examples{
-d1 <- rbind(c(rep(1,50),1:50), c(100:1))
-	rownames(d1) <- c("g1","g2")
-     colnames(d1) <- paste0("time", 1:100)
-	plotFeature(d1, featureNames=c("g1","g2"))
+d1 <- rbind(c(rep(1,50),seq_len(50)), rev(seq_len(100)))
+rownames(d1) <- c("g1","g2")
+ colnames(d1) <- paste0("time", seq_len(100))
+plotFeature(d1, featureNames=c("g1","g2"))
 }
 \author{
 Ning Leng and Rhonda Bacher

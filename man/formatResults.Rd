@@ -23,10 +23,10 @@ format data from Trendy which can be saved for later use.
 }
 \examples{
 data(TrendyExampleData)
-     myTrends <- trendy(Data=TrendyExampleData[1:2,])
-     myTrends <- results(myTrends)
-     topTrendyRes <- topTrendy(myTrends)
-     resToSave <- formatResults(topTrendyRes)
+ myTrends <- trendy(Data=TrendyExampleData[seq_len(2),])
+ myTrends <- results(myTrends)
+ topTrendyRes <- topTrendy(myTrends)
+ resToSave <- formatResults(topTrendyRes)
 }
 \author{
 Rhonda Bacher
