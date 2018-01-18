@@ -18,7 +18,7 @@ install.packages("devtools")
 
 library(devtools)
 
-install_github("rhondabacher/Trendy/package/Trendy")
+install_github("rhondabacher/Trendy")
 
 
 ## Trendy R/Shiny Visualization
