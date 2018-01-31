@@ -34,5 +34,5 @@ Suggests:
 	rmarkdown,
 	devtools
 VignetteBuilder: knitr
-biocViews: TimeCourse, RNASeq
+biocViews: TimeCourse, RNASeq, Regression
 URL: https://github.com/rhondabacher/Trendy
