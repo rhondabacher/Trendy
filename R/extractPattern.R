@@ -76,9 +76,9 @@ extractPattern<-
     outPats <- lapply(seq_along(whichg), function(x) lapply(patstarts[[x]], 
         function(y) {
             patend <- y + nchar(Pattern)-2
-            brk <- segdata.bks[[whichg[x]]][y:patend]
+            brk <- segdata.bks[[whichg[x]]][seq(y,patend,1)]
             names(brk) <- paste0(rep("BreakPoint", nchar(Pattern) - 1), 
-                                    1:(nchar(Pattern) - 1))
+                                    seq(1,(nchar(Pattern) - 1),1))
             RTN <- c(names(gslps[x]), brk)
             return(RTN)
         }))
