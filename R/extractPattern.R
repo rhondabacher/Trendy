@@ -14,7 +14,7 @@
 #' @return Genes: names of genes/features containing pattern 
 #'  and the breakpoints corresponding to the pattern.
 #' @examples 
-#'  myTrends <- trendy(TrendyExampleData[seq_len(5),], tVect=seq_len(40))
+#'  myTrends <- trendy(trendyExampleData[seq_len(5),], tVect=seq_len(40))
 #'  myTrends <- results(myTrends)
 #'  #extractPattern(myTrends, Pattern = c("up")) #increasing only features
 #'  #extractPattern(myTrends, Pattern = c("up", "down")) #features with a peak
@@ -39,7 +39,7 @@ extractPattern<-
         stop("No gene pass the adjusted R^2 cutoff filter!")
     }
     segdata.pass <- trendyOutData[genes.pass]
-    
+
     # Get breakpoints for all genes
     segdata.bks <- lapply(segdata.pass, function(i) i$Breakpoints) 
     segdata.bks[is.na(segdata.bks)] <- 0
@@ -48,47 +48,47 @@ extractPattern<-
     Pattern[Pattern == "up"] <- 1
     Pattern[Pattern == "same"] <- 0
     Pattern[Pattern == "down"] <- 2
-    
+
     if (length(Pattern) == 1) {
         Pattern = rep(Pattern, length(segdata.pass[[1]]$Trends))
     }
-    
+
     Pattern <- paste(Pattern, collapse="")
-    
-    # Find genes that have the pattern of interest.
-    # Hard to initialize since not sure how many will match.
-    genes <- list()
-    k <- 1
-    trackNames <- c()
-    for (j in seq_along(genes.pass)) {
-        gslp <- segdata.slps[[genes.pass[j]]]
-        gslp[gslp == -1] <- 2
-        
-        if (length(gslp) == 1) { gslp = rep(gslp, nchar(Pattern))}
-        slps <- paste(gslp, collapse="")
-        
-        if (grepl(Pattern, slps) == TRUE) {
-            patstart <- gregexpr(Pattern, slps)[[1]]
-            
-            for (i in seq_along(patstart)) {
-                if (segdata.bks[[genes.pass[j]]][i] >= Delay) {
-                    patend <- patstart[i] + nchar(Pattern)-2
-                    brk <- segdata.bks[[genes.pass[j]]][patstart[i]:patend]
-                    names(brk) <- paste0(rep("BreakPoint", nchar(Pattern) - 1), 
+
+
+
+    gslps <- lapply(segdata.slps, function(x) {
+        x[x == -1] <- 2
+        if (length(x) == 1) {x = rep(x, nchar(Pattern))}
+        x <- paste(x, collapse="")
+        return(x)
+    })
+    whichg <- which(grepl(Pattern, gslps))
+    if (length(whichg) == 0) {stop("No genes follow this pattern!")}
+
+    gslps <- gslps[whichg]
+
+    patstarts <- lapply(gslps, function(x) {
+      patstart <- gregexpr(Pattern, x)[[1]]
+      return(patstart)
+    })
+
+    outPats <- lapply(seq_along(whichg), function(x) lapply(patstarts[[x]], 
+        function(y) {
+            patend <- y + nchar(Pattern)-2
+            brk <- segdata.bks[[whichg[x]]][y:patend]
+            names(brk) <- paste0(rep("BreakPoint", nchar(Pattern) - 1), 
                                     1:(nchar(Pattern) - 1))
-                    genes[[k]] <- brk
-                    k = k + 1
-                    trackNames <- c(trackNames, genes.pass[j])
-                }
-            }
-        }
-    }
-    
-    if (length(genes) == 0) {stop("No genes follow this pattern!")}
-    genes <- data.frame(Gene = trackNames, 
-                        do.call(rbind, genes), stringsAsFactors=FALSE)
-                        
-    genes <- genes[order(genes$BreakPoint1),]
-    
-    return(genes)
+            RTN <- c(names(gslps[x]), brk)
+            return(RTN)
+        }))
+
+    outPats <- data.frame(do.call(rbind, do.call(c, outPats)), 
+        stringsAsFactors = FALSE)
+    outPats[,-1] <- apply(outPats[,-1, drop = FALSE], 2, as.numeric)
+    colnames(outPats)[1] <- c("Gene")
+    outPats <- outPats[order(outPats$BreakPoint1),]
+
+
+    return(outPats)
 }

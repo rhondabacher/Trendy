@@ -28,7 +28,7 @@ Genes: names of genes/features containing pattern
 find dynamic genes that follow a given pattern
 }
 \examples{
- myTrends <- trendy(TrendyExampleData[seq_len(5),], tVect=seq_len(40))
+ myTrends <- trendy(trendyExampleData[seq_len(5),], tVect=seq_len(40))
  myTrends <- results(myTrends)
  #extractPattern(myTrends, Pattern = c("up")) #increasing only features
  #extractPattern(myTrends, Pattern = c("up", "down")) #features with a peak

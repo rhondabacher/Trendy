@@ -26,7 +26,7 @@ topTrendy <-
     function(trendyOutData, adjR2Cut = .5) 
 
 {
-    seg.all.radj <- sapply(trendyOutData, function(i) i$AdjustedR2)
+    seg.all.radj <- vapply(trendyOutData, function(i) i$AdjustedR2, numeric(1))
     names(seg.all.radj) <- names(trendyOutData)
     seg.all.radj.sort <- sort(seg.all.radj, decreasing = TRUE)
     toKeep <- which(seg.all.radj.sort > adjR2Cut)

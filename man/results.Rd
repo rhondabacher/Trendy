@@ -28,8 +28,8 @@ Trendy. Results data.frames/matrices are stored in the
 convenience function by calling \code{metadata()}.
 }
 \examples{
- data(TrendyExampleData)
+ data(trendyExampleData)
  Conditions = rep(c(1), each= 90)
- trendyOut <- trendy(Data=TrendyExampleData[seq_len(2),])
+ trendyOut <- trendy(Data=trendyExampleData[seq_len(2),])
  trendyResults <- results(trendyOut)
 }

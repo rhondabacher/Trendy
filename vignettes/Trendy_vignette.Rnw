@@ -148,12 +148,12 @@ More details can be found in the \Biocpkg{EBSeq} vignette:
 \small{\url{http://www.bioconductor.org/packages/devel/bioc/vignettes/EBSeq/inst/doc/EBSeq_Vignette.pdf}}
 
 
-The object \Robject{TrendyExampleData} is a simulated data matrix containing 
+The object \Robject{trendyExampleData} is a simulated data matrix containing 
 50 rows of genes and 40 columns of samples.
 
 <<eval=TRUE>>=
-data("TrendyExampleData")
-str(TrendyExampleData)
+data("trendyExampleData")
+str(trendyExampleData)
 @
 
 
@@ -167,7 +167,7 @@ optimal model. Here we want to only consider a maximum of two breakpoints for
 each gene.
 
 <<eval=TRUE>>=
-res <- trendy(Data = TrendyExampleData, maxK = 2)
+res <- trendy(Data = trendyExampleData, maxK = 2)
 res <- results(res)
 res.top <- topTrendy(res)
 # default adjusted R square cutoff is 0.5
@@ -208,7 +208,7 @@ To generate an expression heatmap of the first group of genes (first go up):
 
 <<eval=TRUE, warning=FALSE, fig.width=7, fig.align='center', out.width='.8\\textwidth', message=FALSE>>=
 library(gplots)
-heatmap.2(TrendyExampleData[names(res.trend$firstup),],
+heatmap.2(trendyExampleData[names(res.trend$firstup),],
   trace="none", Rowv=FALSE,Colv=FALSE,
 	scale="row", main="top genes (first go up)")
 @
@@ -217,7 +217,7 @@ heatmap.2(TrendyExampleData[names(res.trend$firstup),],
 Similarly, to generate an expression heatmap of the second group of genes 
 (first go down):
 <<eval=TRUE, warning=FALSE, fig.width=7, fig.align='center', out.width='.8\\textwidth'>>=
-heatmap.2(TrendyExampleData[names(res.trend$firstdown),],
+heatmap.2(trendyExampleData[names(res.trend$firstdown),],
   trace="none", Rowv=FALSE,Colv=FALSE,
 	scale="row", main="top genes (first go down)")
 @
@@ -225,7 +225,7 @@ heatmap.2(TrendyExampleData[names(res.trend$firstdown),],
 To generate an expression heatmap of the second group of genes 
 (first no change):
 <<eval=TRUE, warning=FALSE, fig.width=7, fig.align='center', out.width='.8\\textwidth'>>=
-heatmap.2(TrendyExampleData[names(res.trend$firstnochange),],
+heatmap.2(trendyExampleData[names(res.trend$firstnochange),],
   trace="none", Rowv=FALSE,Colv=FALSE,
 	scale="row", main="top genes (first no change)",
 	cexRow=.8)
@@ -241,7 +241,7 @@ up):
 
 <<eval=TRUE, warning=FALSE, fig.width=7, fig.align='center', out.width='1\\textwidth'>>=
 par(mfrow=c(3,2))
-plot1 <- plotFeature(TrendyExampleData,
+plot1 <- plotFeature(trendyExampleData,
                     featureNames = names(res.trend$firstup)[1:6],
                     trendyOut = res)
 @
@@ -260,7 +260,7 @@ down):
 
 <<eval=TRUE, warning=FALSE, fig.width=7, fig.align='center', out.width='1\\textwidth'>>=
 par(mfrow=c(3,2))
-plot2 <- plotFeature(Data = TrendyExampleData,
+plot2 <- plotFeature(Data = trendyExampleData,
                     featureNames = names(res.trend$firstdown)[1:6],
                     trendyOut = res)
 @
@@ -268,7 +268,7 @@ plot2 <- plotFeature(Data = TrendyExampleData,
 To plot the two genes in the third group of genes (first no change):
 <<eval=TRUE, warning=FALSE, fig.height=5, fig.width=10, fig.align='center'>>=
 par(mfrow=c(1,2))
-plot2 <- plotFeature(TrendyExampleData,
+plot2 <- plotFeature(trendyExampleData,
                     featureNames = names(res.trend$firstnochange)[1:2],
                     trendyOut = res)
 @
@@ -280,7 +280,7 @@ For a given gene of interest, its estimated parameters can be obtained by
 
 <<eval=TRUE, fig.height=3, fig.width=4, fig.align='center'>>=
 par(mfrow=c(1,1))
-plot2 <- plotFeature(TrendyExampleData,
+plot2 <- plotFeature(trendyExampleData,
                     featureNames = "g2",
                     trendyOut = res)
 res.top$Breakpoints["g2",] # break points
@@ -337,7 +337,7 @@ every hour and the other 10 samples were collected every 5 hours. We may
 define the time vector as:
 <<eval=TRUE>>=
 t.v <- c(1:30, seq(31, 80, 5))
-names(t.v) <- colnames(TrendyExampleData)
+names(t.v) <- colnames(trendyExampleData)
 t.v
 @
 
@@ -345,7 +345,7 @@ To run Trendy model using the empirical collecting time instead of sample
 ID (1-40):
 
 <<eval=TRUE, warning=FALSE, fig.height=7, fig.width=7, fig.align='center', out.width='.8\\textwidth'>>=
-res2 <- trendy(Data = TrendyExampleData, tVectIn = t.v, maxK=2)
+res2 <- trendy(Data = trendyExampleData, tVectIn = t.v, maxK=2)
 res2 <- results(res2)
 res.top2 <- topTrendy(res2)
 res.trend2 <- trendHeatmap(res.top2)
@@ -356,7 +356,7 @@ To plot the first six genes that have up-regulated pattern at the beginning of
 the time course:
 <<eval=TRUE>>=
 par(mfrow=c(3,2))
-plot1.new <- plotFeature(TrendyExampleData, tVectIn=t.v,
+plot1.new <- plotFeature(trendyExampleData, tVectIn=t.v,
                         featureNames = names(res.trend2$firstup)[1:6],
                         trendyOut = res2)
 @
@@ -373,7 +373,7 @@ To extract a list of such genes we can use the \Rfunction{extractPattern}:
 pat1 <- extractPattern(res2, Pattern = c("up","down"))
 head(pat1)
 par(mfrow=c(3,2))
-plotPat1 <- plotFeature(TrendyExampleData, tVectIn=t.v,
+plotPat1 <- plotFeature(trendyExampleData, tVectIn=t.v,
                       featureNames = pat1$Gene[1:6],
                       trendyOut = res2)
 
@@ -389,7 +389,7 @@ plotPat1 <- plotFeature(TrendyExampleData, tVectIn=t.v,
 pat3 <- extractPattern(res2, Pattern = c("up","down"), Delay = 25)
 head(pat3)
 par(mfrow=c(1,2))
-plotPat3 <- plotFeature(TrendyExampleData, tVectIn=t.v,
+plotPat3 <- plotFeature(trendyExampleData, tVectIn=t.v,
                       featureNames = pat3$Gene,
                       trendyOut = res2)
 @
@@ -407,7 +407,7 @@ The Trendy shiny app requires an .RData object output from the
 \Rfunction{trendy} function, which can be obtained by setting \Rcode{saveObject=TRUE}.
 
 <<eval=TRUE, warning=FALSE>>=
-res <- trendy(TrendyExampleData, maxK=2, saveObject = TRUE, fileName="exampleObject")
+res <- trendy(trendyExampleData, maxK=2, saveObject = TRUE, fileName="exampleObject")
 res <- results(res)
 @
 
@@ -432,7 +432,7 @@ trendyShiny()
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=1\textwidth]{Shiny_geneSearchV2.png}
+\includegraphics[width=1\textwidth]{Shiny_geneViz.png}
 \caption{Search genes individually}
 \end{figure}
 

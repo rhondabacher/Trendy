@@ -11,11 +11,11 @@
 #' @importFrom magrittr %>%
 #' @export
 
-# tVect <- NULL
+# tVectIn <- NULL
 # origData <- NULL
 # trendyOut <- NULL
     
-    globalVariables(c("tVect", "origData", "trendyOut"))
+globalVariables(c("tVectIn", "origData", "trendyOut"))
     
 trendyShiny <- function() {
     
@@ -122,8 +122,8 @@ server <- function(input, output, session) {
         allTrendy <- Trendy::topTrendy(trendyOut, -1)
         ToPrint <- Trendy::formatResults(allTrendy)
 
-        LIST = list(trendyOut, origData, tVect, ToPrint, allTrendy)
-        names(LIST) <- c("trendyOut", "origData", "tVect", 
+        LIST = list(trendyOut, origData, tVectIn, ToPrint, allTrendy)
+        names(LIST) <- c("trendyOut", "origData", "tVectIn", 
                 "ToPrint", "TopTrendy")
         return(LIST)
     })
@@ -168,7 +168,7 @@ server <- function(input, output, session) {
                 pdf(outfileP, height=15, width=10)
                 par(mar=c(5,5,2,1), mfrow=c(3,2))
                 XX <- Trendy::plotFeature(Data = IN$origData, 
-                    tVectIn = IN$tVect,
+                    tVectIn = IN$tVectIn,
                     featureNames = genes.pass$Gene, showFit = TRUE,
                     trendyOutData = IN$trendyOut)
                 dev.off()
@@ -197,25 +197,25 @@ server <- function(input, output, session) {
         topg <- as.character(IN$ToPrint[raVar$plotVals, 1])
         par(mfrow=c(1,1), cex=1.5, cex.lab=1, cex.axis=1, cex.main=1.1, 
         mar=c(5,5,2,2), oma=c(0,.1,.1,6))
-        plot(IN$tVect, IN$origData[topg,], pch=20, col="#696969", 
+        plot(IN$tVectIn, IN$origData[topg,], pch=20, col="#696969", 
             main=paste0(topg), ylab="Normalized Expr.", xlab="Time", 
             cex.axis=1.2, cex.lab=1.2)
         if (topg %in% names(IN$trendyOut)) {
             tmp <- IN$trendyOut[[topg]]
-            lines(IN$tVect, tmp$Fitted.Values, lwd = 3, col="#ededed")
+            lines(IN$tVectIn, tmp$Fitted.Values, lwd = 3, col="#ededed")
             abline(v = tmp$Breakpoints, lty = 2, lwd = 3, col="chartreuse3")
             ID <- tmp$Trends
             FIT <- tmp$Fitted.Values
-            BKS <- c(0, tmp$Breakpoints, max(IN$tVect))
+            BKS <- c(0, tmp$Breakpoints, max(IN$tVectIn))
             if (length(BKS) > 3 | (length(BKS) == 3 & !is.na(BKS[2]))) {
-                for (i in seq_len(length(BKS)+1)) {
-                    toCol <- which(IN$tVect <= BKS[i+1] & IN$tVect >= BKS[i])
+                for (i in seq_len(length(BKS) - 1)) {
+                    toCol <- which(IN$tVectIn <= BKS[i+1] & IN$tVectIn >= BKS[i])
                     IDseg <- ID[toCol]
                     useCol <- switch(names(which.max(table(IDseg))), 
                     "0" = "black", 
                     "-1" = "cornflowerblue", 
                     "1" = "coral1")
-                    lines(IN$tVect[toCol], FIT[toCol], lwd = 5, col=useCol)
+                    lines(IN$tVectIn[toCol], FIT[toCol], lwd = 5, col=useCol)
                 }
                 par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), 
                     mar = c(0, 0, 4, 0), new = TRUE)
@@ -264,8 +264,9 @@ server <- function(input, output, session) {
                     'white')),
                     backgroundColor = DT::styleEqual(c(-1, 0, 1), 
                     c('cornflowerblue', 'black', 'tomato')),
-                    borderRightWidth = '5px', borderStyle = 'solid')
-    })
+                    borderRightWidth = '5px', borderStyle = 'solid'
+                )
+        })
     }
     runApp(shinyApp(ui = ui, server = server))
 }

@@ -28,15 +28,6 @@
 #' @param keepFit whether to report the fitted object (default is FALSE).
 #' @param featureNames optional parameter to specify an explicit subset of 
 #'  features/genes to fit the segmented regression model to.
-#' @param forceRsq whether to use R^2 in model evaluation 
-#'  instead of BIC, corresponds to very early versions of Trendy. 
-#'  Requires that each succesive increase in R squared be larger 
-#'  than cutDiff.
-#' @param cutDiff Only used if forceRsq is set to TRUE. 
-#'  If the difference between the R^2 from the k + 1 breakpoint
-#'  model and the R^2 from the k breakpoint model is less than 
-#'  cutDiff, then the optimal number of breakpoints is set as k instead 
-#'  of k + 1.
 #' @param NCores number of cores to use, default is detectCores() - 1.
 
 #' @description Segmented regression models are fit for each gene. 
@@ -68,8 +59,7 @@
 trendy <- 
     function(Data = NULL, tVectIn = NULL, saveObject = FALSE, fileName = NULL,
             meanCut = 10, maxK = 3, minNumInSeg = 5, pvalCut = .1,  
-            numTry = 100, keepFit = FALSE, NCores = NULL, featureNames = NULL,
-            forceRsq = FALSE, cutDiff = .1) 
+            numTry = 100, keepFit = FALSE, NCores = NULL, featureNames = NULL) 
 {
     # Checks
     if (methods::is(Data, "SummarizedExperiment")) {
@@ -144,29 +134,17 @@ trendy <-
         in order to run Trendy.")
     }
     
-    if (forceRsq) {	
-        segAll <- BiocParallel::bplapply(X = seq_len(nrow(Data.MeanFiltered)),
-        function(X) {
-            inGene = Data.MeanFiltered[X,]
-            fitSegRsq(Data = inGene,
-                tVectIn = tVectIn,  maxK = maxK, 
-                minNumInSeg = minNumInSeg, 
-                pvalCut = pvalCut, 
-                cutDiff = cutDiff,
-                numTry = numTry, 
-                keepFit = keepFit)})
-    } else {
-        segAll <- BiocParallel::bplapply(X = seq_len(nrow(Data.MeanFiltered)),
-        function(X) { 
-            inGene = Data.MeanFiltered[X,]
-            fitSegBIC(Data = inGene,
-                tVectIn = tVectIn,  maxK = maxK, 
-                minNumInSeg = minNumInSeg, 
-                pvalCut = pvalCut, numTry = numTry, 
-                keepFit = keepFit)
-            })
-    }
+    segAll <- BiocParallel::bplapply(X = seq_len(nrow(Data.MeanFiltered)),
+    function(X) { 
+        inGene = Data.MeanFiltered[X,]
+        fitSegBIC(Data = inGene,
+            tVectIn = tVectIn,  maxK = maxK, 
+            minNumInSeg = minNumInSeg, 
+            pvalCut = pvalCut, numTry = numTry, 
+            keepFit = keepFit)
+        })
     names(segAll) <- rownames(Data.MeanFiltered)
+    
     if (saveObject == TRUE) {
         if (is.null(fileName)){
             fileName <- "trendyForShiny.RData"

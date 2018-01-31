@@ -4,11 +4,11 @@
 #'
 #' @docType data
 #'
-#' @usage data(TrendyExampleData)
+#' @usage data(trendyExampleData)
 #'
 #' @format data matrix
 #'
 #' @keywords datasets
 #'
-#' @examples data(TrendyExampleData)
-"TrendyExampleData"
+#' @examples data(trendyExampleData)
+"trendyExampleData"

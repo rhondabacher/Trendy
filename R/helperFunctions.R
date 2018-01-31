@@ -37,8 +37,8 @@ getCounts <- function(DATA) {
 #' for those features/genes is returned.
 #' @author Rhonda Bacher
 #' @export
-#' @examples data(TrendyExampleData)
-#'  myTrends <- trendy(Data=TrendyExampleData[seq_len(2),])
+#' @examples data(trendyExampleData)
+#'  myTrends <- trendy(Data=trendyExampleData[seq_len(2),])
 #'  myTrends <- results(myTrends)
 #'  topTrendyRes <- topTrendy(myTrends)
 #'  resToSave <- formatResults(topTrendyRes)
@@ -70,7 +70,7 @@ formatResults <- function(topTrendyData, featureNames = NULL) {
 
 formatFunc <- function(IN) {
     
-    getL <- sapply(IN, length)
+    getL <- vapply(IN, length, integer(1))
     maxLen <- max(getL)
     getNames <- names(IN[which.max(getL)[1]][[1]])
     corrected.list <- lapply(IN, function(x) {c(x, rep(NA,maxLen-length(x)))})
@@ -104,9 +104,9 @@ formatFunc <- function(IN) {
 #'
 #' @importFrom S4Vectors metadata
 #' @examples 
-#'  data(TrendyExampleData)
+#'  data(trendyExampleData)
 #'  Conditions = rep(c(1), each= 90)
-#'  trendyOut <- trendy(Data=TrendyExampleData[seq_len(2),])
+#'  trendyOut <- trendy(Data=trendyExampleData[seq_len(2),])
 #'  trendyResults <- results(trendyOut)
 
 results <- function(DATA, type=c("TrendyFits")) {

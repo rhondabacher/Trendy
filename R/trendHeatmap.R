@@ -30,7 +30,7 @@ trendHeatmap <-
         stop("No breakpoints were found for these genes!")
     }
     
-    bks.first <- sapply(bks.all, function(i) i[1])
+    bks.first <- bks.all[,1]
     names(bks.first) <- rownames(topTrendyData[[1]])
     bks.first.sort <- sort(bks.first)
     

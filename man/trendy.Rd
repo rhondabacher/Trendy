@@ -6,8 +6,7 @@
 \usage{
 trendy(Data = NULL, tVectIn = NULL, saveObject = FALSE, fileName = NULL,
   meanCut = 10, maxK = 3, minNumInSeg = 5, pvalCut = 0.1,
-  numTry = 100, keepFit = FALSE, NCores = NULL, featureNames = NULL,
-  forceRsq = FALSE, cutDiff = 0.1)
+  numTry = 100, keepFit = FALSE, NCores = NULL, featureNames = NULL)
 }
 \arguments{
 \item{Data}{a matrix of normalized expression measurements. Rows are 
@@ -50,17 +49,6 @@ will be returned.}
 
 \item{featureNames}{optional parameter to specify an explicit subset of 
 features/genes to fit the segmented regression model to.}
-
-\item{forceRsq}{whether to use R^2 in model evaluation 
-instead of BIC, corresponds to very early versions of Trendy. 
-Requires that each succesive increase in R squared be larger 
-than cutDiff.}
-
-\item{cutDiff}{Only used if forceRsq is set to TRUE. 
-If the difference between the R^2 from the k + 1 breakpoint
-model and the R^2 from the k breakpoint model is less than 
-cutDiff, then the optimal number of breakpoints is set as k instead 
-of k + 1.}
 }
 \value{
 Trend: direction of each sample; -1: down, 0: no change, 1: up
