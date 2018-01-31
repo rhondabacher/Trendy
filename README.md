@@ -3,10 +3,11 @@ Trendy: Segmented regression analysis of expression dynamics for high-throughput
 
 Trendy utilizes segmented regression models to simultaneously characterize each gene’s expression pattern and summarize overall dynamic activity in ordered condition experiments. For each gene, Trendy finds the optimal segmented regression model and provides the location and direction of dynamic changes in expression. The top dynamic genes are then identified as genes that can be well profiled by its gene-specific segmented regression model. Trendy also implements functions to visualize the dynamic genes and their trends, to order dynamic genes by their trends, and to compute breakpoint distribution at different time points (e.g. detect time points with a large number of expression changes).
 
-Details of Trendy may be found in the vignette:
+Details of Trendy may be found in <!-- the vignette:
 https://github.com/rhondabacher/Trendy/tree/master/package/Trendy/vignettes/Trendy_vignette.pdf
 
-and in the bioRxiv preprint:
+and in  -->
+    the bioRxiv preprint:
 http://www.biorxiv.org/content/early/2017/09/07/185413
 
 #### The current version of Trendy is in submission to Bioconductor. For previous versions check the release page.
