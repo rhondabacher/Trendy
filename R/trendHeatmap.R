@@ -26,12 +26,11 @@ trendHeatmap <-
     
 {
     bks.all <- topTrendyData$Breakpoints
-    if (sum(!is.na(bks.all)) == 0 ){
-        stop("No breakpoints were found for these genes!")
-    }
     
     bks.first <- bks.all[,1]
     names(bks.first) <- rownames(topTrendyData[[1]])
+    nobp <- names(which(is.na(bks.first)))
+    bks.first[nobp] <- max(bks.all, na.rm=T) + 1
     bks.first.sort <- sort(bks.first)
     
     seg.all.id <- topTrendyData[[1]]
