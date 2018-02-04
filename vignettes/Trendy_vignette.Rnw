@@ -137,16 +137,7 @@ library(Trendy)
 
 The input data should be a $G-by-N$ matrix containing the expression values 
 for each gene and each sample, where $G$ is the number of genes and $N$ 
-is the number of samples.
-The samples should be sorted following the time course order.
-These values should exhibit expression data after normalization across
-samples.
-For example, for RNA-seq data, the raw counts may be normalized using
-MedianNorm and \Rfunction{GetNormalizedMat} function in \Biocpkg{EBSeq}. 
-More details can be found in the \Biocpkg{EBSeq} vignette:
-
-\small{\url{http://www.bioconductor.org/packages/devel/bioc/vignettes/EBSeq/inst/doc/EBSeq_Vignette.pdf}}
-
+is the number of samples. The samples should be sorted following the time course order.
 
 The object \Robject{trendyExampleData} is a simulated data matrix containing 
 50 rows of genes and 40 columns of samples.
@@ -155,6 +146,28 @@ The object \Robject{trendyExampleData} is a simulated data matrix containing
 data("trendyExampleData")
 str(trendyExampleData)
 @
+
+These values should exhibit expression data after normalization across
+samples. For example, for RNA-seq data, the raw counts may be normalized using
+MedianNorm and \Rfunction{GetNormalizedMat} function in \Biocpkg{EBSeq}:
+
+<<eval=FALSE>>=
+library(EBSeq)
+Sizes <- MedianNorm(trendyExampleData)
+normalizedData <- GetNormalizedMat(trendyExampleData, Sizes)
+@
+More details can be found in the \Biocpkg{EBSeq} vignette:
+
+\small{\url{http://www.bioconductor.org/packages/devel/bioc/vignettes/EBSeq/inst/doc/EBSeq_Vignette.pdf}}
+
+
+If you are working with microarray expression data, an extensive overview for normalization can be found in the vignette of the \Biocpkg{affy} package:
+
+\small{\url{https://www.bioconductor.org/packages/release/bioc/html/affy.html}}
+
+
+
+
 
 
 

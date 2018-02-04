@@ -6,11 +6,25 @@ Trendy utilizes segmented regression models to simultaneously characterize each 
 Details of Trendy may be found in the bioRxiv preprint:
 http://www.biorxiv.org/content/early/2017/09/07/185413
 
-#### The current version of Trendy is in submission to Bioconductor. For previous versions check the release page.
+The vignette for Trendy can be found here:
+
+
+#### The current version of Trendy is now on Bioconductor. For previous versions check the release page.
 
 
 #### To install Trendy:
 
+You need to have R version 3.5 installed.
+
+##### Option 1:
+
+library(BiocInstaller)
+useDevel()
+source("https://bioconductor.org/biocLite.R")
+biocLite("Trendy")
+
+
+##### Option 2:
 install.packages("devtools")
 
 library(devtools)

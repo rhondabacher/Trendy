@@ -1,7 +1,11 @@
 #' @title Draw heatmap of gene expression trends
 
 #' @description heatmap of the fitted trends
-#' @param topTrendyData results from topTrendyData() function
+#' @param topTrendyData results from topTrendy() function.
+#' @param featureNames names of features/genes to plot if the heatmap should
+#'   be restricted. Deafult is to plot all genes from topTrendy() function.
+#' @param cexRow relative text size of row labels, default=.5.
+#' @param cexCol relative text size of column labels, default=.5.
 #' @return The function takes significant genes/features called from 
 #'  the topTrendyData() function. These genes are further grouped into three
 #'  groups: up, down, or no change in the first segment. Within each group,
@@ -22,7 +26,7 @@
 #'  #makeHeat <- trendHeatmap(topGenes)
 
 trendHeatmap <- 
-    function (topTrendyData)
+    function (topTrendyData, featureNames=NULL, cexRow = .5, cexCol=.5)
     
 {
     bks.all <- topTrendyData$Breakpoints
@@ -37,6 +41,9 @@ trendHeatmap <-
     seg.first <- seg.all.id[,1]
     
     genes <- rownames(seg.all.id)
+    if(!is.null(featureNames)) {
+         genes <- intersect(genes, featureNames) 
+     }
     bks.sign.sort.list <- list(
         firstup = sort(bks.first[genes[which(seg.first == 1)]]),
         firstdown = sort(bks.first[genes[which(seg.first == -1)]]),
@@ -52,7 +59,7 @@ trendHeatmap <-
     
     gplots::heatmap.2(seg.all.id.highr.sign.sort, trace = "none",
         Rowv = FALSE, Colv = FALSE, col = c("slateblue1", "black", "tomato"),
-        key = FALSE, cexRow = .5, cexCol=.5)
+        key = FALSE, cexRow = cexRow, cexCol=cexCol)
     legend("top", ncol = 3, c("up", "no change", "down"), 
         fill = rev(c("slateblue1", "black", "tomato")))
         
