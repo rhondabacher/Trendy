@@ -11,7 +11,7 @@ http://www.bioconductor.org/packages/devel/bioc/vignettes/Trendy/inst/doc/Trendy
 
 #### The current version of Trendy is now on Bioconductor: http://www.bioconductor.org/packages/devel/bioc/html/Trendy.html
 
-####For previous versions check the release page.
+#### For previous versions check the release page.
 
 
 #### To install Trendy:
