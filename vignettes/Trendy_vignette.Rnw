@@ -374,6 +374,26 @@ plot1.new <- plotFeature(trendyExampleData, tVectIn=t.v,
                         trendyOut = res2)
 @
 
+\subsection{Time-course with replicates available}
+Trendy is able to make use of replicated time-points if available. To do so,
+the user can specify the replicated directly into the the tVectIn parameter in the 
+\Rfunction{trendy} function.
+
+For example, suppose for the example data, 10 time points were observed 4 times each. We may 
+define the time vector as:
+<<eval=TRUE>>=
+t.v <- rep(1:10, each=4)
+names(t.v) <- colnames(trendyExampleData)
+t.v
+@
+
+<<eval=TRUE, warning=FALSE, fig.height=7, fig.width=7, fig.align='center', out.width='.8\\textwidth'>>=
+res2 <- trendy(Data = trendyExampleData, tVectIn = t.v, maxK=2)
+res2 <- results(res2)
+res.top2 <- topTrendy(res2)
+res.trend2 <- trendHeatmap(res.top2)
+str(res.trend2)
+@
 
 
 \section{Extract genes with certain pattern}
@@ -406,6 +426,35 @@ plotPat3 <- plotFeature(trendyExampleData, tVectIn=t.v,
                       featureNames = pat3$Gene,
                       trendyOut = res2)
 @
+
+
+
+
+\section{Further analysis of Trendy expression trends}
+For each gene, the Trendy segments are assigned a direction as: "up", "down", or "same".
+These directions can be used to cluster genes having similar trends along the time-course. Here I will use
+a simple hierarchical clustering to demonstrate the clustering but other clustering methods may be applicable.
+
+<<eval=TRUE, warning=FALSE, fig.height=3, fig.width=3, fig.align='center', out.width='.3\\textwidth'>>=
+# Get trend matrix:
+trendMat <- res.top$Trends
+# Cluster genes using hierarchical clustering:
+hc.results <- hclust(dist(trendMat))
+plot(hc.results) #decide how many cluster to choose
+#Let's say there are 4 main clusters
+hc.groups <- cutree(hc.results, k = 4)
+
+cluster1.genes <- names(which(hc.groups == 1))
+res.trend2 <- trendHeatmap(res.top, featureNames = cluster1.genes)
+
+cluster4.genes <- names(which(hc.groups == 4))
+res.trend2 <- trendHeatmap(res.top, featureNames = cluster4.genes)
+@
+
+The genes in each cluster can then be input to a gene enrichment analysis, using tools such as enrichr, allez, or GSEA.
+
+
+
 
 
 \section{Additional options}

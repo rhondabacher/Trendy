@@ -7,9 +7,11 @@ Details of Trendy may be found in the bioRxiv preprint:
 http://www.biorxiv.org/content/early/2017/09/07/185413
 
 The vignette for Trendy can be found here:
+http://www.bioconductor.org/packages/devel/bioc/vignettes/Trendy/inst/doc/Trendy_vignette.pdf
 
+#### The current version of Trendy is now on Bioconductor: http://www.bioconductor.org/packages/devel/bioc/html/Trendy.html
 
-#### The current version of Trendy is now on Bioconductor. For previous versions check the release page.
+####For previous versions check the release page.
 
 
 #### To install Trendy:
@@ -25,11 +27,18 @@ biocLite("Trendy")
 
 
 ##### Option 2:
+
 install.packages("devtools")
 
 library(devtools)
 
 install_github("rhondabacher/Trendy")
+
+##### Option 3 (For R version 3.4):
+
+install.packages("devtools")
+library(devtools)
+install_github("rhondabacher/Trendy", ref="devel")
 
 
 ## Trendy R/Shiny Visualization
