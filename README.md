@@ -16,28 +16,12 @@ http://www.bioconductor.org/packages/devel/bioc/vignettes/Trendy/inst/doc/Trendy
 
 #### To install Trendy:
 
-You need to have R version 3.5 installed.
-
-##### Option 1:
-
-library(BiocInstaller)
-useDevel()
-source("https://bioconductor.org/biocLite.R")
-biocLite("Trendy")
-
-
-##### Option 2:
+You need to have R version 3.4 installed.
 
 install.packages("devtools")
 
 library(devtools)
 
-install_github("rhondabacher/Trendy")
-
-##### Option 3 (For R version 3.4):
-
-install.packages("devtools")
-library(devtools)
 install_github("rhondabacher/Trendy", ref="devel")
 
 
