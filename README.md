@@ -21,8 +21,11 @@ You need to have R version 3.5 installed.
 ##### Option 1:
 
 library(BiocInstaller)
+
 useDevel()
+
 source("https://bioconductor.org/biocLite.R")
+
 biocLite("Trendy")
 
 
@@ -37,7 +40,9 @@ install_github("rhondabacher/Trendy")
 ##### Option 3 (For R version 3.4):
 
 install.packages("devtools")
+
 library(devtools)
+
 install_github("rhondabacher/Trendy", ref="devel")
 
 
