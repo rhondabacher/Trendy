@@ -97,8 +97,13 @@ trendy <-
     }
     if (is.null(NCores)) {NCores <- max(1, parallel::detectCores() - 1)}
     if (.Platform$OS.type == "windows") {
-        NCores = 1
+        param = SnowParam(workers=NCores)
     }
+
+	param = MulticoreParam(workers=NCores)
+	
+	BiocParallel::register(BPPARAM = param)
+    
     if (is.null(featureNames)) {
         featureNames <- rownames(Trendy::getCounts(Data))
     }
