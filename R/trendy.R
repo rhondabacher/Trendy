@@ -42,7 +42,7 @@
 #' @author Ning Leng and Rhonda Bacher
 
 #' @export
-#' @importFrom BiocParallel bplapply register MulticoreParam bpparam
+#' @importFrom BiocParallel bplapply register MulticoreParam bpparam SnowParam
 #' @importFrom parallel detectCores
 #' @importFrom S4Vectors metadata
 #' @importFrom SummarizedExperiment SummarizedExperiment assayNames 

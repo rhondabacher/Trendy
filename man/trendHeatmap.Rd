@@ -4,10 +4,18 @@
 \alias{trendHeatmap}
 \title{Draw heatmap of gene expression trends}
 \usage{
-trendHeatmap(topTrendyData)
+trendHeatmap(topTrendyData, featureNames = NULL, cexRow = 0.5,
+  cexCol = 0.5)
 }
 \arguments{
-\item{topTrendyData}{results from topTrendyData() function}
+\item{topTrendyData}{results from topTrendy() function.}
+
+\item{featureNames}{names of features/genes to plot if the heatmap should
+be restricted. Deafult is to plot all genes from topTrendy() function.}
+
+\item{cexRow}{relative text size of row labels, default=.5.}
+
+\item{cexCol}{relative text size of column labels, default=.5.}
 }
 \value{
 The function takes significant genes/features called from 

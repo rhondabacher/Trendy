@@ -34,7 +34,7 @@ trendHeatmap <-
     bks.first <- bks.all[,1]
     names(bks.first) <- rownames(topTrendyData[[1]])
     nobp <- names(which(is.na(bks.first)))
-    bks.first[nobp] <- max(bks.all, na.rm=T) + 1
+    bks.first[nobp] <- max(bks.all, na.rm=TRUE) + 1
     bks.first.sort <- sort(bks.first)
     
     seg.all.id <- topTrendyData[[1]]
