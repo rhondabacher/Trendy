@@ -412,10 +412,6 @@ plotPat1 <- plotFeature(trendyExampleData, tVectIn=t.v,
 
 @
 
-% # <<eval=TRUE, warning=FALSE, fig.height=7, fig.width=7, fig.align='center', out.width='.8\\textwidth'>>=
-% # # Genes that oscillate
-% # pat1 <- extractPattern(res3, Pattern = c("up","down","up","down"))
-% # @
 
 <<eval=TRUE, warning=FALSE, fig.height=3.5, fig.width=7, fig.align='center', out.width='.8\\textwidth'>>=
 # Genes that peak after some time
@@ -427,7 +423,10 @@ plotPat3 <- plotFeature(trendyExampleData, tVectIn=t.v,
                       trendyOut = res2)
 @
 
-
+<<eval=TRUE, warning=FALSE, fig.height=3.5, fig.width=7, fig.align='center', out.width='.8\\textwidth'>>=
+# Genes that are constant, none
+pat4 <- extractPattern(res2, Pattern = c("same"))
+@
 
 
 \section{Further analysis of Trendy expression trends}
