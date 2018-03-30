@@ -423,7 +423,7 @@ plotPat3 <- plotFeature(trendyExampleData, tVectIn=t.v,
                       trendyOut = res2)
 @
 
-<<eval=TRUE, warning=FALSE, fig.height=3.5, fig.width=7, fig.align='center', out.width='.8\\textwidth'>>=
+<<eval=FALSE, warning=FALSE, fig.height=3.5, fig.width=7, fig.align='center', out.width='.8\\textwidth'>>=
 # Genes that are constant, none
 pat4 <- extractPattern(res2, Pattern = c("same"))
 @
