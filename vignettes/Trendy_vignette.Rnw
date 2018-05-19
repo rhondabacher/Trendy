@@ -9,14 +9,14 @@
 \usepackage{float}
 
 <<style-knitr, eval=TRUE, echo=FALSE, results="asis", tidy=TRUE>>=
-BiocStyle::latex()
+  BiocStyle::latex()
 @
-
-\begin{document}
+  
+  \begin{document}
 
 \title{Trendy: Segmented regression analysis of
-expression dynamics for high-throughput ordered
-profiling experiments}
+  expression dynamics for high-throughput ordered
+  profiling experiments}
 \author{Rhonda Bacher, Ning Leng, Ron Stewart}
 \maketitle
 \tableofcontents
@@ -70,10 +70,10 @@ default is 5.
 
 Trendy reports the following for the optimal model:
 \begin{itemize}
-  \item Gene specific adjusted $R^2$ (penalized for the chosen value of $k$)
-  \item Segment slopes
-  \item Segment trends (and associated p-values)
-  \item Breakpoint estimates
+\item Gene specific adjusted $R^2$ (penalized for the chosen value of $k$)
+\item Segment slopes
+\item Segment trends (and associated p-values)
+\item Breakpoint estimates
 \end{itemize}
 
 Among all genes, the top dynamic genes are defined as those whose optimal
@@ -137,7 +137,16 @@ library(Trendy)
 
 The input data should be a $G-by-N$ matrix containing the expression values 
 for each gene and each sample, where $G$ is the number of genes and $N$ 
-is the number of samples. The samples should be sorted following the time course order.
+is the number of samples.
+The samples should be sorted following the time course order.
+These values should exhibit expression data after normalization across
+samples.
+For example, for RNA-seq data, the raw counts may be normalized using
+MedianNorm and \Rfunction{GetNormalizedMat} function in \Biocpkg{EBSeq}. 
+More details can be found in the \Biocpkg{EBSeq} vignette:
+
+\small{\url{http://www.bioconductor.org/packages/devel/bioc/vignettes/EBSeq/inst/doc/EBSeq_Vignette.pdf}}
+
 
 The object \Robject{trendyExampleData} is a simulated data matrix containing 
 50 rows of genes and 40 columns of samples.
@@ -146,28 +155,6 @@ The object \Robject{trendyExampleData} is a simulated data matrix containing
 data("trendyExampleData")
 str(trendyExampleData)
 @
-
-These values should exhibit expression data after normalization across
-samples. For example, for RNA-seq data, the raw counts may be normalized using
-MedianNorm and \Rfunction{GetNormalizedMat} function in \Biocpkg{EBSeq}:
-
-<<eval=FALSE>>=
-library(EBSeq)
-Sizes <- MedianNorm(trendyExampleData)
-normalizedData <- GetNormalizedMat(trendyExampleData, Sizes)
-@
-More details can be found in the \Biocpkg{EBSeq} vignette:
-
-\small{\url{http://www.bioconductor.org/packages/devel/bioc/vignettes/EBSeq/inst/doc/EBSeq_Vignette.pdf}}
-
-
-If you are working with microarray expression data, an extensive overview for normalization can be found in the vignette of the \Biocpkg{affy} package:
-
-\small{\url{https://www.bioconductor.org/packages/release/bioc/html/affy.html}}
-
-
-
-
 
 
 
@@ -222,8 +209,8 @@ To generate an expression heatmap of the first group of genes (first go up):
 <<eval=TRUE, warning=FALSE, fig.width=7, fig.align='center', out.width='.8\\textwidth', message=FALSE>>=
 library(gplots)
 heatmap.2(trendyExampleData[names(res.trend$firstup),],
-  trace="none", Rowv=FALSE,Colv=FALSE,
-	scale="row", main="top genes (first go up)")
+trace="none", Rowv=FALSE,Colv=FALSE,
+scale="row", main="top genes (first go up)")
 @
 
 
@@ -231,17 +218,17 @@ Similarly, to generate an expression heatmap of the second group of genes
 (first go down):
 <<eval=TRUE, warning=FALSE, fig.width=7, fig.align='center', out.width='.8\\textwidth'>>=
 heatmap.2(trendyExampleData[names(res.trend$firstdown),],
-  trace="none", Rowv=FALSE,Colv=FALSE,
-	scale="row", main="top genes (first go down)")
+trace="none", Rowv=FALSE,Colv=FALSE,
+scale="row", main="top genes (first go down)")
 @
 
 To generate an expression heatmap of the second group of genes 
 (first no change):
 <<eval=TRUE, warning=FALSE, fig.width=7, fig.align='center', out.width='.8\\textwidth'>>=
 heatmap.2(trendyExampleData[names(res.trend$firstnochange),],
-  trace="none", Rowv=FALSE,Colv=FALSE,
-	scale="row", main="top genes (first no change)",
-	cexRow=.8)
+trace="none", Rowv=FALSE,Colv=FALSE,
+scale="row", main="top genes (first no change)",
+cexRow=.8)
 @
 
 
@@ -255,8 +242,8 @@ up):
 <<eval=TRUE, warning=FALSE, fig.width=7, fig.align='center', out.width='1\\textwidth'>>=
 par(mfrow=c(3,2))
 plot1 <- plotFeature(trendyExampleData,
-                    featureNames = names(res.trend$firstup)[1:6],
-                    trendyOut = res)
+featureNames = names(res.trend$firstup)[1:6],
+trendyOut = res)
 @
 
 The input of function \Rfunction{plotFeature} requires the expression data and
@@ -274,16 +261,16 @@ down):
 <<eval=TRUE, warning=FALSE, fig.width=7, fig.align='center', out.width='1\\textwidth'>>=
 par(mfrow=c(3,2))
 plot2 <- plotFeature(Data = trendyExampleData,
-                    featureNames = names(res.trend$firstdown)[1:6],
-                    trendyOut = res)
+featureNames = names(res.trend$firstdown)[1:6],
+trendyOut = res)
 @
 
 To plot the two genes in the third group of genes (first no change):
 <<eval=TRUE, warning=FALSE, fig.height=5, fig.width=10, fig.align='center'>>=
 par(mfrow=c(1,2))
 plot2 <- plotFeature(trendyExampleData,
-                    featureNames = names(res.trend$firstnochange)[1:2],
-                    trendyOut = res)
+featureNames = names(res.trend$firstnochange)[1:2],
+trendyOut = res)
 @
 
 \subsection{Gene specific estimates}
@@ -294,8 +281,8 @@ For a given gene of interest, its estimated parameters can be obtained by
 <<eval=TRUE, fig.height=3, fig.width=4, fig.align='center'>>=
 par(mfrow=c(1,1))
 plot2 <- plotFeature(trendyExampleData,
-                    featureNames = "g2",
-                    trendyOut = res)
+featureNames = "g2",
+trendyOut = res)
 res.top$Breakpoints["g2",] # break points
 res.top$AdjustedR2["g2"] # adjusted r squared
 res.top$Segments["g2",] # fitted slopes of the segments
@@ -370,30 +357,10 @@ the time course:
 <<eval=TRUE>>=
 par(mfrow=c(3,2))
 plot1.new <- plotFeature(trendyExampleData, tVectIn=t.v,
-                        featureNames = names(res.trend2$firstup)[1:6],
-                        trendyOut = res2)
+featureNames = names(res.trend2$firstup)[1:6],
+trendyOut = res2)
 @
 
-\subsection{Time-course with replicates available}
-Trendy is able to make use of replicated time-points if available. To do so,
-the user can specify the replicated directly into the the tVectIn parameter in the 
-\Rfunction{trendy} function.
-
-For example, suppose for the example data, 10 time points were observed 4 times each. We may 
-define the time vector as:
-<<eval=TRUE>>=
-t.v <- rep(1:10, each=4)
-names(t.v) <- colnames(trendyExampleData)
-t.v
-@
-
-<<eval=TRUE, warning=FALSE, fig.height=7, fig.width=7, fig.align='center', out.width='.8\\textwidth'>>=
-res2 <- trendy(Data = trendyExampleData, tVectIn = t.v, maxK=2)
-res2 <- results(res2)
-res.top2 <- topTrendy(res2)
-res.trend2 <- trendHeatmap(res.top2)
-str(res.trend2)
-@
 
 
 \section{Extract genes with certain pattern}
@@ -407,11 +374,15 @@ pat1 <- extractPattern(res2, Pattern = c("up","down"))
 head(pat1)
 par(mfrow=c(3,2))
 plotPat1 <- plotFeature(trendyExampleData, tVectIn=t.v,
-                      featureNames = pat1$Gene[1:6],
-                      trendyOut = res2)
+featureNames = pat1$Gene[1:6],
+trendyOut = res2)
 
 @
 
+% # <<eval=TRUE, warning=FALSE, fig.height=7, fig.width=7, fig.align='center', out.width='.8\\textwidth'>>=
+% # # Genes that oscillate
+% # pat1 <- extractPattern(res3, Pattern = c("up","down","up","down"))
+% # @
 
 <<eval=TRUE, warning=FALSE, fig.height=3.5, fig.width=7, fig.align='center', out.width='.8\\textwidth'>>=
 # Genes that peak after some time
@@ -419,41 +390,9 @@ pat3 <- extractPattern(res2, Pattern = c("up","down"), Delay = 25)
 head(pat3)
 par(mfrow=c(1,2))
 plotPat3 <- plotFeature(trendyExampleData, tVectIn=t.v,
-                      featureNames = pat3$Gene,
-                      trendyOut = res2)
+featureNames = pat3$Gene,
+trendyOut = res2)
 @
-
-<<eval=FALSE, warning=FALSE, fig.height=3.5, fig.width=7, fig.align='center', out.width='.8\\textwidth'>>=
-# Genes that are constant, none
-pat4 <- extractPattern(res2, Pattern = c("same"))
-@
-
-
-\section{Further analysis of Trendy expression trends}
-For each gene, the Trendy segments are assigned a direction as: "up", "down", or "same".
-These directions can be used to cluster genes having similar trends along the time-course. Here I will use
-a simple hierarchical clustering to demonstrate the clustering but other clustering methods may be applicable.
-
-<<eval=TRUE, warning=FALSE, fig.height=3, fig.width=3, fig.align='center', out.width='.3\\textwidth'>>=
-# Get trend matrix:
-trendMat <- res.top$Trends
-# Cluster genes using hierarchical clustering:
-hc.results <- hclust(dist(trendMat))
-plot(hc.results) #decide how many cluster to choose
-#Let's say there are 4 main clusters
-hc.groups <- cutree(hc.results, k = 4)
-
-cluster1.genes <- names(which(hc.groups == 1))
-res.trend2 <- trendHeatmap(res.top, featureNames = cluster1.genes)
-
-cluster4.genes <- names(which(hc.groups == 4))
-res.trend2 <- trendHeatmap(res.top, featureNames = cluster4.genes)
-@
-
-The genes in each cluster can then be input to a gene enrichment analysis, using tools such as enrichr, allez, or GSEA.
-
-
-
 
 
 \section{Additional options}
