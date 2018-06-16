@@ -61,6 +61,10 @@ trendyShiny <- function() {
                     tags$div(tags$h4("Select a row in the table to update the
                     trend visualization."))
                     ),
+                    column(4, align='right',
+					downloadButton('downloadPlot', 'Download Plot')
+                    ),
+					
                     column(10, align="center",
                     mainPanel(plotOutput('genePlot'), width = "100%"),
                     tags$br(),
@@ -191,53 +195,47 @@ server <- function(input, output, session) {
     observeEvent(input$tab_rows_selected, {
         raVar$plotVals <- input$tab_rows_selected
     })
-    
+	
+	plotInput <- reactive({
+		IN <- In()
+	    topg <- as.character(IN$ToPrint[raVar$plotVals, 1])
+	    par(mfrow=c(1,1), cex=1.5, cex.lab=1, cex.axis=1, cex.main=1.1, 
+	    mar=c(5,5,2,2), oma=c(0,.1,.1,6))
+	    plot(IN$tVectIn, IN$origData[topg,], pch=20, col="#696969", 
+	        main=paste0(topg), ylab="Normalized Expr.", xlab="Time", 
+	        cex.axis=1.2, cex.lab=1.2)
+	    if (topg %in% names(IN$trendyOut)) {
+		    plotFeature(Data = IN$origData, tVectIn = IN$tVectIn, 
+				featureNames=topg, simple=FALSE, showLegend=TRUE,
+				showFit=TRUE, trendyOutData = IN$trendyOut, 
+				xlab = "Time", ylab="Normalized Expr.")
+	    }
+	    
+
+	  })
+	  
     output$genePlot <- renderPlot({
-        IN <- In()
-        topg <- as.character(IN$ToPrint[raVar$plotVals, 1])
-        par(mfrow=c(1,1), cex=1.5, cex.lab=1, cex.axis=1, cex.main=1.1, 
-        mar=c(5,5,2,2), oma=c(0,.1,.1,6))
-        plot(IN$tVectIn, IN$origData[topg,], pch=20, col="#696969", 
-            main=paste0(topg), ylab="Normalized Expr.", xlab="Time", 
-            cex.axis=1.2, cex.lab=1.2)
-        if (topg %in% names(IN$trendyOut)) {
-            tmp <- IN$trendyOut[[topg]]
-            lines(IN$tVectIn, tmp$Fitted.Values, lwd = 3, col="#ededed")
-            abline(v = tmp$Breakpoints, lty = 2, lwd = 3, col="chartreuse3")
-            ID <- tmp$Trends
-            FIT <- tmp$Fitted.Values
-            BKS <- c(0, tmp$Breakpoints, max(IN$tVectIn))
-            if (length(BKS) > 3 | (length(BKS) == 3 & !is.na(BKS[2]))) {
-                for (i in seq_len(length(BKS) - 1)) {
-                    toCol <- which(IN$tVectIn <= BKS[i+1] & IN$tVectIn >= BKS[i])
-                    IDseg <- ID[toCol]
-                    useCol <- switch(names(which.max(table(IDseg))), 
-                    "0" = "black", 
-                    "-1" = "cornflowerblue", 
-                    "1" = "coral1")
-                    lines(IN$tVectIn[toCol], FIT[toCol], lwd = 5, col=useCol)
-                }
-                par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), 
-                    mar = c(0, 0, 4, 0), new = TRUE)
-                plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
-                legend("topright", c("Breakpoint"), xpd = TRUE, horiz = FALSE,
-                    inset = c(.02,0), bty = "n", lty = c(2, 1, 1, 1), 
-                    lwd = c(3,5,5,5), 
-                    col = c("chartreuse3" ), cex = 1)
-                par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), 
-                    mar = c(0, 0, 7.5, 0),new = TRUE)
-                plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
-                legend("topright", c("Up", "No change", "Down"), xpd = TRUE, 
-                horiz = FALSE, 
-                inset = c(.02,0), bty = "n", title = "Segment trend:", 
-                lty = c(1, 1, 1), 
-                lwd = c(5,5,5), 
-                col = c("coral1", "black","cornflowerblue"), cex = 1) 
-            }
-        }
-        
+        plotInput()
     }, height=400, width=800)
     
+	output$downloadPlot <- downloadHandler(
+	    filename = function() { 
+	        IN <- In()
+	        topg <- as.character(IN$ToPrint[raVar$plotVals, 1])
+			paste0("trendPlot_", topg, ".pdf") 
+			},
+	    content = function(file) {
+	        pdf(file, height=5, width=10)
+	        IN <- In()
+	        topg <- as.character(IN$ToPrint[raVar$plotVals, 1])
+		    par(mfrow=c(1,1), cex=1.5, cex.lab=1, cex.axis=1, cex.main=1.1, 
+		    mar=c(5,5,2,2), oma=c(0,.1,.1,6))
+		    plotFeature(Data = IN$origData, tVectIn = IN$tVectIn, featureNames=topg,
+				showFit=TRUE, trendyOutData = IN$trendyOut, xlab = "Time", ylab="Normalized Expr.")
+			dev.off()
+	    }
+	)
+	
     # Show the values using an HTML table
     output$tab <- DT::renderDataTable({
         IN <- In()

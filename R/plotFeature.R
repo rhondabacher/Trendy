@@ -6,6 +6,9 @@
 #' @param featureNames a list of genes or features to plot
 #' @param showFit whether to plot the segmented regression 
 #'  fitting (default is TRUE)
+#' @param simple if TRUE the plot will not highlight the breakpoints and segments 
+#' and will only display a black fitted line. (default is FALSE)
+#' @param showLegend if TRUE and simple=FALSE then a legend will be output (default = TRUE)
 #' @param trendyOutData segmented regression fitting result from 
 #'  running trendy(); if showFit is TRUE and trendyOutData is NULL, then the
 #'  segmented regression will be fit for each of the genes and it may 
@@ -32,9 +35,9 @@
 #' @export
 
 plotFeature <- 
-    function(Data, tVectIn = NULL, featureNames, showFit = TRUE, 
-        trendyOutData = NULL, condCol = NULL,
-        condColSample = NULL,
+    function(Data, tVectIn = NULL, featureNames, showFit = TRUE, simple=FALSE,
+				showLegend = TRUE, trendyOutData = NULL, condCol = NULL,
+        condColSample = NULL, 
         condPrefix = "Day", xlab = "Time", 
         ylab = "Normalized Expression") 
 
@@ -69,14 +72,58 @@ plotFeature <-
     }
     if (is.null(condCol)) {condColSample = "black"}
     ignoreOUT <- lapply(featureNames, function(x) {
-        plot(tVectIn, Data[x,], pch = 20, col = condColSample, 
-            main = x, ylab = ylab, xlab = xlab)
+        
         if (showFit==TRUE){
             if (is.null(trendyOutData)) {tmp.fit <- fitSegBIC(Data = Data[x,],
                 tVectIn=tVectIn)
             }
             if (!is.null(trendyOutData)) {tmp.fit <- trendyOutData[[x]]}
-            lines(tVectIn, tmp.fit$Fitted.Values, lwd = 2)
+						if (simple==TRUE) {
+			        plot(tVectIn, Data[x,], pch = 20, col = condColSample, 
+			            main = x, ylab = ylab, xlab = xlab)
+							lines(tVectIn, tmp.fit$Fitted.Values, lwd = 2)
+						} else {
+							if(showLegend == TRUE) {par(mfrow=c(1,1), cex=1.5, cex.lab=1, 
+									cex.axis=1, cex.main=1.1, 
+							        mar=c(5,5,2,2), oma=c(0,.1,.1,6))}
+							plot(tVectIn, Data[x,], pch = 20, col = "#696969", main = x, 
+										ylab = ylab, xlab = xlab)
+							lines(tVectIn, tmp.fit$Fitted.Values, lwd = 3, col="#ededed")
+							abline(v = tmp.fit$Breakpoints, lty = 2, lwd = 3, col="chartreuse3")
+							ID <- tmp.fit$Trends
+							FIT <- tmp.fit$Fitted.Values
+							BKS <- c(0, tmp.fit$Breakpoints, max(tVectIn))
+							if (length(BKS) > 3 | (length(BKS) == 3 & !is.na(BKS[2]))) {
+							   for (i in seq_len(length(BKS) - 1)) {
+							       toCol <- which(tVectIn <= BKS[i+1] & tVectIn >= BKS[i])
+							       IDseg <- ID[toCol]
+							       useCol <- switch(names(which.max(table(IDseg))), 
+							       "0" = "black", 
+							       "-1" = "cornflowerblue", 
+							       "1" = "coral1")
+							       lines(tVectIn[toCol], FIT[toCol], lwd = 5, col=useCol)
+							   }
+							   if(showLegend == TRUE) {
+									 par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), 
+							     		mar = c(0, 0, 4, 0), new = TRUE)
+								   plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
+								   legend("topright", c("Breakpoint"), xpd = TRUE, horiz = FALSE,
+								       inset = c(.02,0), bty = "n", lty = c(2, 1, 1, 1),
+								       lwd = c(3,5,5,5),
+								       col = c("chartreuse3" ), cex = 1)
+								   par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0),
+								       mar = c(0, 0, 7.5, 0),new = TRUE)
+								   plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
+								   legend("topright", c("Up", "No change", "Down"), xpd = TRUE,
+								   horiz = FALSE,
+								   inset = c(.02,0), bty = "n", title = "Segment trend:",
+								   lty = c(1, 1, 1),
+								   lwd = c(5,5,5),
+								   col = c("coral1", "black","cornflowerblue"), cex = 1)
+								 }
+							
+						}
         }
-    })
+    	}
+		})
 }
