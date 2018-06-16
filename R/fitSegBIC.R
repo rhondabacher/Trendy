@@ -52,7 +52,6 @@ fitSegBIC <-
                 return(OUT) 
             # If it is not solved in 100 trys then return lm 
             # results (if numTry=100)
-            break
     }
     
     
@@ -85,7 +84,6 @@ fitSegBIC <-
                 AdjustedR2 = lm.radj, Fit = lmLinear)
                 if (keepFit == FALSE) {OUT <- OUT[seq_len(7)]}
                     return(OUT)
-                break
             }
             
             # now make sure that best fit model satisfies having minimum 
@@ -102,7 +100,6 @@ fitSegBIC <-
                     AdjustedR2 = lm.radj, Fit = lmLinear)
                     if(keepFit == FALSE) {OUT <- OUT[seq_len(7)]}
                         return(OUT)
-                    break
             }
     }
     
@@ -121,7 +118,6 @@ fitSegBIC <-
         if (keepFit == FALSE) {OUT <- OUT[seq_len(7)]}
         return(OUT) 
         # If lm is better 
-        break
     }
     
     # Actual k (before remove the NA fitting)
