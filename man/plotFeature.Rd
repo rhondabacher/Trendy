@@ -5,8 +5,9 @@
 \title{Plot features of interest}
 \usage{
 plotFeature(Data, tVectIn = NULL, featureNames, showFit = TRUE,
-  trendyOutData = NULL, condCol = NULL, condColSample = NULL,
-  condPrefix = "Day", xlab = "Time", ylab = "Normalized Expression")
+  simple = FALSE, showLegend = TRUE, trendyOutData = NULL,
+  condCol = NULL, condColSample = NULL, condPrefix = "Day",
+  xlab = "Time", ylab = "Normalized Expression")
 }
 \arguments{
 \item{Data}{a matrix of normalized expression measurements. Rows are 
@@ -20,6 +21,11 @@ will be assumed to be equaly spaced from 1:N (N is number of samples).}
 
 \item{showFit}{whether to plot the segmented regression 
 fitting (default is TRUE)}
+
+\item{simple}{if TRUE the plot will not highlight the breakpoints and segments 
+and will only display a black fitted line. (default is FALSE)}
+
+\item{showLegend}{if TRUE and simple=FALSE then a legend will be output (default = TRUE)}
 
 \item{trendyOutData}{segmented regression fitting result from 
 running trendy(); if showFit is TRUE and trendyOutData is NULL, then the
