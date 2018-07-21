@@ -59,7 +59,8 @@ trendHeatmap <-
     
     gplots::heatmap.2(seg.all.id.highr.sign.sort, trace = "none",
         Rowv = FALSE, Colv = FALSE, col = c("slateblue1", "black", "tomato"),
-        key = FALSE, cexRow = cexRow, cexCol=cexCol)
+        key = FALSE, cexRow = cexRow, cexCol=cexCol,
+		dendrogram='none')
     legend("top", ncol = 3, c("up", "no change", "down"), 
         fill = rev(c("slateblue1", "black", "tomato")))
         

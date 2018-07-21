@@ -13,6 +13,8 @@
 #'  running trendy(); if showFit is TRUE and trendyOutData is NULL, then the
 #'  segmented regression will be fit for each of the genes and it may 
 #'  take longer to run
+#' @param cexLegend cex option for sizing of legend text, default is 1.
+#' @param legendLocation whether to place the legend to the right 'side' of each plot or at the 'bottom' of a multo-panelled plot (default is 'side').
 #' @param condCol color for each condition, names of this vector should be
 #'  condition names; if it is NULL (default), no legend will be generated
 #' @param condColSample each sample's color. The vector's length should match
@@ -36,10 +38,12 @@
 
 plotFeature <- 
     function(Data, tVectIn = NULL, featureNames, showFit = TRUE, simple=FALSE,
-				showLegend = TRUE, trendyOutData = NULL, condCol = NULL,
-        condColSample = NULL, 
-        condPrefix = "Day", xlab = "Time", 
-        ylab = "Normalized Expression") 
+				showLegend = TRUE, trendyOutData = NULL, cexLegend=1, 
+				legendLocation = "side",
+				condCol = NULL,
+				condColSample = NULL, 
+				condPrefix = "Day", xlab = "Time", 
+				ylab = "Normalized Expression") 
 
 {
     if (methods::is(Data, "SummarizedExperiment")) {
@@ -71,6 +75,18 @@ plotFeature <-
         col = condCol, ncol = 4, lwd = 2)
     }
     if (is.null(condCol)) {condColSample = "black"}
+	origMF <- par()
+	par(mfrow = origMF$mfrow, mar=c(5,4,2,1))
+	
+	if (simple == FALSE & showLegend == TRUE) {
+	  if(legendLocation == 'side') {
+		par(mar = c(5,4,2,8), mfrow = origMF$mfrow)
+	  }
+	  if(legendLocation == 'bottom') {
+	    par(oma = c(2,.5, .5, .5), mar=c(5,4,2,1), mfrow = origMF$mfrow)
+	  }
+	}
+	
     ignoreOUT <- lapply(featureNames, function(x) {
         
         if (showFit==TRUE){
@@ -79,13 +95,11 @@ plotFeature <-
             }
             if (!is.null(trendyOutData)) {tmp.fit <- trendyOutData[[x]]}
 						if (simple==TRUE) {
-			        plot(tVectIn, Data[x,], pch = 20, col = condColSample, 
-			            main = x, ylab = ylab, xlab = xlab)
+			        		plot(tVectIn, Data[x,], pch = 20, col = condColSample, 
+			            		main = x, ylab = ylab, xlab = xlab)
 							lines(tVectIn, tmp.fit$Fitted.Values, lwd = 2)
 						} else {
-							if(showLegend == TRUE) {par(mfrow=c(1,1), cex=1.5, cex.lab=1, 
-									cex.axis=1, cex.main=1.1, 
-							        mar=c(5,5,2,2), oma=c(0,.1,.1,6))}
+							
 							plot(tVectIn, Data[x,], pch = 20, col = "#696969", main = x, 
 										ylab = ylab, xlab = xlab)
 							lines(tVectIn, tmp.fit$Fitted.Values, lwd = 3, col="#ededed")
@@ -103,27 +117,48 @@ plotFeature <-
 							       "1" = "coral1")
 							       lines(tVectIn[toCol], FIT[toCol], lwd = 5, col=useCol)
 							   }
-							   if(showLegend == TRUE) {
-									 par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), 
-							     		mar = c(0, 0, 4, 0), new = TRUE)
-								   plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
-								   legend("topright", c("Breakpoint"), xpd = TRUE, horiz = FALSE,
-								       inset = c(.02,0), bty = "n", lty = c(2, 1, 1, 1),
-								       lwd = c(3,5,5,5),
-								       col = c("chartreuse3" ), cex = 1)
-								   par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0),
-								       mar = c(0, 0, 7.5, 0),new = TRUE)
-								   plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
-								   legend("topright", c("Up", "No change", "Down"), xpd = TRUE,
-								   horiz = FALSE,
-								   inset = c(.02,0), bty = "n", title = "Segment trend:",
-								   lty = c(1, 1, 1),
-								   lwd = c(5,5,5),
-								   col = c("coral1", "black","cornflowerblue"), cex = 1)
-								 }
-							
-						}
-        }
-    	}
-		})
+						 	} else {
+							   IDseg <- ID[1]
+						       useCol <- switch(names(which.max(table(IDseg))), 
+						       "0" = "black", 
+						       "-1" = "cornflowerblue", 
+						       "1" = "coral1")
+							   	lines(tVectIn, tmp.fit$Fitted.Values, lwd = 5, col=useCol)
+						   }
+						  } 
+						   if(simple == FALSE & showLegend == TRUE & legendLocation=='side') {
+									LEFT = max(tVectIn) + .05*max(tVectIn)
+									TOP = max(Data[x,]) + .01*max(Data[x,])
+									BOTTOM = quantile(Data[x,], .90)
+								    legend(LEFT, TOP, c("Breakpoint"), xpd = TRUE, horiz = FALSE,
+								           inset = c(.02,0), bty = "n", lty = c(2, 1, 1, 1),
+								           lwd = c(3,5,5,5),
+								           col = c("chartreuse3" ), cex = cexLegend)
+    
+								    legend(LEFT,BOTTOM, c("Up", "No change", "Down"), xpd = TRUE,
+								           horiz = FALSE,
+								           bty = "n", title = "Segment trend:",
+								           lty = c(1, 1, 1),
+								           lwd = c(5,5,5),
+								           col = c("coral1", "black","cornflowerblue"), cex = cexLegend)
+								  
+							  }
+    					  
+		}
+	})
+   if (simple == FALSE & showLegend == TRUE & legendLocation=='bottom') {
+	      par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), 
+	          mar = c(0, 0, 0, 0), new = TRUE)
+	      plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
+	      legend('bottom', xpd = NA, 
+	             c("Breakpoint", "Up", "No change", "Down"), 
+	             horiz = TRUE, 
+	             bty = "n", lty = c(2, 1, 1, 1), 
+	             lwd = c(3,5,5,5), cex=cexLegend, seg.len = 2, 
+	             col = c("chartreuse3", "coral1", "black", "cornflowerblue"))
+				 
+		
+	}
+	
+	par(mar=origMF$mar)
 }

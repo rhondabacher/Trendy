@@ -25,47 +25,40 @@ expression dynamics for high-throughput time-course experiments}
 
 \section{Overview}
 \label{sec:intro}
-Trendy is an R package for analyzing high throughput expression data
+Trendy is an R package for analyzing high-throughput expression data
 (e.g RNA-seq or microarray) with ordered conditions
 (e.g. time-course, spatial-course).
 
 For each gene (or other features), Trendy fits a set of segmented
-(or breakpoint) regression models. The optimal model is chosen as
-the one with the lowest BIC. Each breakpoint represents a significant
-changes in the gene's expression across the time-course.
+(or breakpoint) regression models.Each breakpoint represents a significant
+change in the gene's expression across the time-course. The optimal model is chosen as
+the one with the lowest BIC.
 
-The top dynamic genes are then identified as those that are well
-profiled by their gene-specific segmented regression model. Trendy also
-implements functions to visualize the dynamic genes and their trends,
-to order dynamic genes by their trends, and to compute breakpoint distribution
-at different
-time-points (e.g. detect time-points with a large number of expression
-changes).
+The top dynamic genes are identified as those that are well
+profiled by their optimal gene-specific segmented regression model. Trendy also
+implements functions to: visualize dynamic genes and their trends,
+to order dynamic genes by their trends, and to compute the distribution of breakpoints across all genes and time-points.
+
+To illustrate Trendy here we refer specifically to time-course gene expression data, 
+however Trendy may also be applied to other types of features
+(e.g. isoform or exon expression) and/or other types of experiments with
+ordered conditions (e.g. spatial-course).
 
 \subsection{The model}
-To illustrate Trendy, here we use time-course gene expression data as an
-example. Although, Trendy may also be applied to other types of features
-(e.g. isoform or exon expression) and/or other types of experiments with
-ordered conditions (e.g. spatial course).
-
 Denote the normalized gene expression of gene $g$ and sample/time $t$
-as $Y_{g,t}$.
-Denote the total number of genes as $G$ and the total number of samples/times
-as $N$.
-For each gene, Trendy fits segmented regression models with varying numbers of
-breakpoints from 1 to $K$. $K$ defaults to 3 but can also be specified by the
+as $Y_{g,t}$ for a total of $G$ genes and a total of $N$ samples. For each gene, 
+Trendy fits a set of segmented regression models having 0 to $K$ 
+breakpoints. $K$ defaults to 3 but can also be specified by the
 user. The \CRANpkg{segmented} R package is used to fit the segmented
 regression models.
 
-For a given gene, among the models with varying $k$, Trendy selects the
-optimal
-number of breakpoints for this gene by comparing the BIC for each model.
+For a given gene, among the models with varying number of breakpoints, Trendy selects the
+optimal model by comparing the BIC. 
 
 To avoid overfitting, the optimal number of breakpoints will be set as
 $\tilde{k_g} = \tilde{k_g} -1$ if at least one segment has less than
 $c_{num}$ samples. The threshold $c_{num}$ can be specified by the user; the
 default is 5.
-
 
 Trendy reports the following for the optimal model:
 \begin{itemize}
@@ -78,29 +71,30 @@ Trendy reports the following for the optimal model:
 Among all genes, the top dynamic genes are defined as those whose optimal
 model has a high adjusted $R^2$.
 
-To compute the breakpoint distribution over the time-course, Trendy calculates
-the number of breakpoints for each time-point across all the genes. The time-points with high $D_t$ can be investigated further as possibly being those with global
-expression changes.
 
 Trendy also summarizes the fitted trend or expression pattern of top genes.
 For samples between the $i^{th}$
 and $i+1 ^{th}$ breakpoint for a given gene, if the t-statistic of
 the segment slope (slope and standard errors are estimated by the segmented package) has p-value greater than $c_{pval}$,
 the trend of this segment will be defined as no change. Otherwise the
-trend of this segment will be defined as up/down based on the
-slope coefficient.
+trend  will be defined as up/down based on the slope coefficient.
 The default value of $c_{pval}$ is 0.1, but may also be specified by the user.
 
 In the \Rfunction{trendy} function,
 the thresholds $c_{num}$and  $c_{pval}$
 can be specified via parameters
-minNumInSeg and pvalCut, respectively.
+\Rcode{minNumInSeg} and \Rcode{pvalCut}, respectively.
+
+Trendy also computes a breakpoint distribution of the number of breakpoints over all genes alonge the time-course. Time-points with a large number of breakpoints may represent global expression changes and be targetted for follow-up investigations.
+
 
 \section{Installation}
 
 \subsection{Install via Bioconductor}
 
-The Trendy package can be installed frm Bioconductor if you have R version $\geq 3.5$.
+
+The Trendy package can be installed from Bioconductor if you have R version $\geq 3.5$:
+
 
 <<eval=FALSE, echo=TRUE, cache=FALSE, message=FALSE, warning=FALSE>>=
 source("https://bioconductor.org/biocLite.R")
@@ -109,9 +103,11 @@ biocLite("Trendy")
 
 \subsection{Install via GitHub}
 
-The Trendy package can also be installed using functions in the devtools package.
+The \Rpackage{Trendy} package can also be installed using functions in the \Rpackage{devtools} package.
 
 If you have R version $\geq 3.5$:
+
+
 <<eval=FALSE, echo=TRUE, cache=FALSE, message=FALSE, warning=FALSE>>=
 install.packages("devtools")
 library(devtools)
@@ -129,7 +125,7 @@ install_github("rhondabacher/Trendy", ref="devel")
 
 Trendy may also be installed locally.
 
-Download the Trendy package from: \url{https://github.com/rhonda/Trendy}
+Download the Trendy package from: \url{https://github.com/rhondabacher/Trendy}
 
 \subsection{Load the package}
 
@@ -157,7 +153,7 @@ str(trendyExampleData)
 
 These values should be expression data after normalization across
 samples. For example, for RNA-seq data, the raw counts may be normalized using
-MedianNorm (Median Normalization from Anders and Huber (2010)) via the \Rfunction{GetNormalizedMat} function in \Biocpkg{EBSeq}:
+Median Normalization (Anders and Huber, 2010) via the \Rfunction{MedianNorm} and \Rfunction{GetNormalizedMat} functions in the \Biocpkg{EBSeq} package:
 
 <<eval=FALSE>>=
 library(EBSeq)
@@ -167,7 +163,6 @@ normalizedData <- GetNormalizedMat(trendyExampleData, Sizes)
 More details can be found in the \Biocpkg{EBSeq} vignette:
 
 \small{\url{http://www.bioconductor.org/packages/devel/bioc/vignettes/EBSeq/inst/doc/EBSeq_Vignette.pdf}}
-
 
 If you are working with microarray expression data, an extensive overview for normalization can be found in the vignette of the \Biocpkg{affy} package:
 
@@ -186,14 +181,14 @@ time.vector <- 1:40
 time.vector
 @
 
-Suppose all there are 20 equally spaced time points, each with 2 replicates:
+Suppose there are 20 equally spaced time points, each with 2 replicates:
 
 <<eval=TRUE>>=
 time.vector <- rep(1:20, each = 2)
 time.vector
 @
 
-Suppose all there are 18 unequally spaced time points, most times have 2 replicates but a few times have 3:
+Suppose there are 18 unequally spaced time points, most times have 2 replicates but a few times have 3:
 
 <<eval=TRUE>>=
 time.vector <- c(rep(1, 3), rep(2:9, each = 2), rep(10:11, 3), 
@@ -202,7 +197,7 @@ time.vector
 table(time.vector)
 @
 
-This specification must correspond exactly to the order of samples (columns) in the normalized data matrix described in the previous section.
+This specification must correspond exactly to the order of samples (columns) in the normalized data matrix described in the previous section!
 
 \subsection{Run Trendy}
 
@@ -227,18 +222,16 @@ $R^2$, $\bar{R}^{2}$,
 is greater or equal to 0.5. To change this threshold, a user may specify the
 \Rcode{adjR2Cut} parameter in the \Rfunction{topTrendy} function. The
 \Rfunction{topTrendy} function returns
-the Trendy output with genes sorted decereasingly by $\bar{R}^{2}$.
-
+the Trendy output with genes sorted decreasingly by $\bar{R}^{2}$.
 
 By default the \Rfunction{trendy} function only considers genes whose mean
-expression is greater than 10.
-To use another threshold, the user may specify the parameter
-\Robject{meanCut}.
+expression is greater than 10. To use another threshold, the user may specify
+the desired value using the parameter \Robject{meanCut}.
 
 
 \subsection{Visualize trends of the top dynamic genes}
 
-\Robject{res.top\$Trend} contains the trend specification of the top genes.
+The object \Robject{res.top\$Trend} contains the trend specification of the top genes.
 The function \Rfunction{trendHeatmap} can be used to display these trends.
 First, the \Rfunction{trendHeatmap} function classifies the top dynamic genes into
 three groups: those that start with 'up', start with 'down' and start with 'no change'.
@@ -252,27 +245,27 @@ str(res.trend)
 
 To generate an expression heatmap of the first group of genes (first go 'up'):
 
-<<eval=TRUE, warning=FALSE, fig.width=7, fig.align='center', out.width='.8\\textwidth', message=FALSE>>=
+<<eval=TRUE, warning=FALSE, fig.width=7, fig.align='left', out.width='.8\\textwidth', message=FALSE>>=
 library(gplots)
 heatmap.2(trendyExampleData[names(res.trend$firstup),],
-  trace="none", Rowv=FALSE,Colv=FALSE,
+  trace="none", Rowv=FALSE,Colv=FALSE,dendrogram='none',
 	scale="row", main="top genes (first go up)")
 @
 
 
 Similarly, to generate an expression heatmap of the second group of genes
 (first go down):
-<<eval=TRUE, warning=FALSE, fig.width=7, fig.align='center', out.width='.8\\textwidth'>>=
+<<eval=TRUE, warning=FALSE, fig.width=7, fig.align='left', out.width='.8\\textwidth'>>=
 heatmap.2(trendyExampleData[names(res.trend$firstdown),],
-  trace="none", Rowv=FALSE,Colv=FALSE,
+  trace="none", Rowv=FALSE,Colv=FALSE,dendrogram='none',
 	scale="row", main="top genes (first go down)")
 @
 
 To generate an expression heatmap of the second group of genes
 (first no change):
-<<eval=TRUE, warning=FALSE, fig.width=7, fig.align='center', out.width='.8\\textwidth'>>=
+<<eval=TRUE, warning=FALSE, fig.width=7, fig.align='left', out.width='.8\\textwidth'>>=
 heatmap.2(trendyExampleData[names(res.trend$firstnochange),],
-  trace="none", Rowv=FALSE,Colv=FALSE,
+  trace="none", Rowv=FALSE,Colv=FALSE,dendrogram='none',
 	scale="row", main="top genes (first no change)",
 	cexRow=.8)
 @
@@ -285,25 +278,35 @@ individual features/genes and the fitted lines.
 For example, to plot the top six genes in the first group of genes (first go
 up):
 
-<<eval=TRUE, warning=FALSE, fig.height=10, fig.width=10, fig.align='center', out.width='\\textwidth'>>=
+<<eval=TRUE, warning=FALSE, fig.height=10, fig.width=10, fig.align='left', out.width='\\textwidth'>>=
 par(mfrow=c(3,2))
-plot1 <- plotFeature(Data = trendyExampleData, tVectIn = time.vector, simple = TRUE,
+plotFeature(Data = trendyExampleData, tVectIn = time.vector, simple = TRUE,
                     featureNames = names(res.trend$firstup)[1:6],
                     trendyOutData = res)
 @
 
-Genes can also be plot in a fancier way by setting the simple = FALSE option (default):
-<<eval=TRUE, warning=FALSE,fig.align='center'>>=
-plot1 <- plotFeature(Data = trendyExampleData, tVectIn = time.vector, simple = FALSE,
-                    featureNames = names(res.trend$firstup)[1],
+These can be plot together with segment trends colored and breakpoints highlighted by setting \Rcode{simple=FALSE}. A legend can be placed by specifying \Rcode{legendLocation = 'side'} or \Rcode{legendLocation = 'bottom'}. The user may supress the legend by setting \Rcode{showLegend = FALSE}. The size of the legend text can be adjusted using the parameter \Rcode{legendCex}.
+
+<<eval=TRUE, warning=FALSE, fig.height=10, fig.width=10, fig.align='left', out.width='\\textwidth'>>=
+par(mfrow=c(3,2)) #specify the layout of multiple plots in a single panel
+plotFeature(Data = trendyExampleData, tVectIn = time.vector, simple = FALSE,
+                    showLegend = TRUE, legendLocation='side',cexLegend=1,
+                    featureNames = names(res.trend$firstup)[1:6],
                     trendyOutData = res)
 @
 
+<<eval=TRUE, warning=FALSE, fig.height=10, fig.width=10, fig.align='left', out.width='\\textwidth'>>=
+par(mfrow=c(3,2)) #specify the layout of multiple plots in a single panel
+plotFeature(Data = trendyExampleData, tVectIn = time.vector, simple = FALSE, showLegend = TRUE,
+                    legendLocation='bottom',cexLegend=1,
+                    featureNames = names(res.trend$firstup)[1:6],
+                    trendyOutData = res)
+
+@
+
 The input of function \Rfunction{plotFeature} requires the expression data and
-a list of genes of interest.
-The parameter \Robject{trendyOut} are the results from the \Rfunction{trendy}
-function.
-If it is not specified, then \Rfunction{plotFeature} will run
+a list of genes of interest. The parameter \Robject{trendyOut} contains the results 
+from the \Rfunction{trendy} function. If it is not specified, then \Rfunction{plotFeature} will run
 \Rfunction{trendy} on the genes of interest before plotting.
 Specifying the output obtained from previous steps will save time by avoiding
 fitting the models again.
@@ -311,17 +314,18 @@ fitting the models again.
 Similarly, to plot the top six genes in the second group of genes (first go
 down):
 
-<<eval=TRUE, warning=FALSE, fig.height=10, fig.width=10, fig.align='center'>>=
+<<eval=TRUE, warning=FALSE, fig.height=10, fig.width=10, fig.align='left'>>=
 par(mfrow=c(3,2))
-plot2 <- plotFeature(Data = trendyExampleData,tVectIn = time.vector, simple=TRUE,
+plotFeature(Data = trendyExampleData,tVectIn = time.vector, simple=TRUE,
                     featureNames = names(res.trend$firstdown)[1:6],
                     trendyOutData = res)
 @
 
 To plot the two genes in the third group of genes (first no change):
-<<eval=TRUE, warning=FALSE, fig.height=5, fig.width=10, fig.align='center'>>=
+<<eval=TRUE, warning=FALSE, fig.height=5, fig.width=10, fig.align='left'>>=
 par(mfrow=c(1,2))
-plot2 <- plotFeature(trendyExampleData,tVectIn = time.vector, simple=TRUE,
+
+plotFeature(trendyExampleData,tVectIn = time.vector, simple=TRUE,
                     featureNames = names(res.trend$firstnochange)[1:2],
                     trendyOutData = res)
 @
@@ -330,7 +334,8 @@ plot2 <- plotFeature(trendyExampleData,tVectIn = time.vector, simple=TRUE,
 
 For a given gene of interest, its estimated parameters can be obtained individually:
 
-<<eval=TRUE, fig.align='center'>>=
+
+<<eval=TRUE, fig.align='center', fig.height=4, fig.width=6, >>=
 par(mfrow=c(1,1))
 plot2 <- plotFeature(trendyExampleData,tVectIn = time.vector,
                     featureNames = "g2",
@@ -341,14 +346,14 @@ res.top$Segments["g2",] # fitted slopes of the segments
 res.top$Segment.Pvalues["g2",] # p value of each the segment
 @
 
-The above printout show that for gene g2 the optimal number of breakpoints
-is 2. Two estimated breakpoints are around time-points 12 and 30.
-The fitted slopes for the 3 segments are 3.31, 0.06 and -2.97, which indicate
-the trend is 'up'-'no change'-'down.'
+The above printout shows that for gene g2 the optimal number of breakpoints
+is two estimated at time-points 12 and 30.
+The fitted slopes for the 3 adjoining segments are 3.31, 0.06 and -2.97, which 
+indicates the trend is 'up'-'no change'-'down.'
 
 
 These estimates can be automatically formatted using the function
-\Rfunction{formatResults}
+\Rfunction{formatResults}, 
 which can then be saved as a .txt. or .csv file. The output currently includes the
 estimated slope, p-value, and trend of
 each segment, the estimated breakpoints, the trend for each sample, and the
@@ -366,26 +371,25 @@ breakpoint (i.e two segments).
 
 \subsection{Breakpoint distribution over the time course}
 
-To calculate number of breakpoints for all genes over the time course:
+To calculate the number of breakpoints for all genes over the time course:
 
 <<eval=TRUE, warning=FALSE, fig.height=3.5, fig.width=7, fig.align='left', out.width='.8\\textwidth'>>=
 res.bp <- breakpointDist(res.top)
 barplot(res.bp, ylab="Number of breakpoints", col="lightblue")
 @
 
-The bar plot indicates that a number of genes have breakpoints around times 12 and
-13.
+The bar plot indicates that a number of genes have breakpoints around times 11 - 13.
 
 \section{More advanced analysis}
 
 \subsection{Time course with non-uniform sampling}
 If the samples were collected at different time intervals then it is highly
-suggested to use the original time (instead of a vector of consecutive numbers). To do so,
+suggested to denote the time vector by this scale (instead of a vector of consecutive numbers). To do so,
 the user may specify the order/times via the tVectIn parameter in the
 \Rfunction{trendy} function.
 
 For example, suppose for the simulated data, the first 30 samples were collected
-every hour and the other 10 samples were collected every 5 hours. We may
+every hour and the remaining 10 samples were collected every 5 hours. We may
 define the time vector as:
 <<eval=TRUE>>=
 time.vector <- c(1:30, seq(31, 80, 5))
@@ -393,7 +397,7 @@ names(time.vector) <- colnames(trendyExampleData)
 time.vector
 @
 
-To run Trendy model using the empirical collecting time instead of sample
+To run Trendy using the empirical collecting time instead of sample
 ID (1-40):
 
 <<eval=TRUE, warning=FALSE, fig.height=7, fig.width=7, fig.align='center', out.width='.8\\textwidth'>>=
@@ -404,83 +408,100 @@ res.trend2 <- trendHeatmap(res.top2)
 str(res.trend2)
 @
 
-To plot the first six genes that have up-regulated pattern at the beginning of
+To plot the first four genes that have up-regulated pattern at the beginning of
 the time course:
-<<eval=TRUE, fig.height=10, fig.width=8>>=
-par(mfrow=c(3,2))
-plot1.new <- plotFeature(trendyExampleData, tVectIn=time.vector, simple = TRUE,
-                        featureNames = names(res.trend2$firstup)[1:6],
+
+<<eval=TRUE, fig.height=8, fig.width=8>>=
+par(mfrow=c(2,2))
+plotFeature(trendyExampleData, tVectIn=time.vector, simple = TRUE,
+                        featureNames = names(res.trend2$firstup)[1:4],
                         trendyOutData = res2)
 @
 
 \subsection{Time-course with replicates available}
 Trendy is able to make use of replicated time-points if available. To do so,
-the user can specify the replicated directly into the the tVectIn parameter in the
+the user can specify the replicates directly in the the \Rcode{tVectIn} parameter in the
 \Rfunction{trendy} function.
 
-For example, suppose for the example data, 10 time points were observed 4 times each. We may
+For example, suppose for the simulated data, 10 time points were observed 4 times each. We may
 define the time vector as:
 <<eval=TRUE>>=
-t.v <- rep(1:10, each=4)
-names(t.v) <- colnames(trendyExampleData)
-t.v
+time.vector <- rep(1:10, each=4)
+names(time.vector) <- colnames(trendyExampleData)
+time.vector
 @
 
 <<eval=TRUE, warning=FALSE, fig.height=7, fig.width=7, fig.align='center', out.width='.8\\textwidth'>>=
-res2 <- trendy(Data = trendyExampleData, tVectIn = time.vector, maxK=2)
-res2 <- results(res2)
-res.top2 <- topTrendy(res2)
-res.trend2 <- trendHeatmap(res.top2)
-str(res.trend2)
+res3 <- trendy(Data = trendyExampleData, tVectIn = time.vector, maxK=2)
+res3 <- results(res3)
+res.top3 <- topTrendy(res3)
+res.trend3 <- trendHeatmap(res.top3)
 @
 
+<<eval=TRUE, fig.height=6, fig.width=6>>=
+par(mfrow=c(2,2))
+plotFeature(trendyExampleData, tVectIn=time.vector, simple = FALSE, 
+                        legendLocation = 'bottom',
+                        featureNames = names(res.trend2$firstup)[1:4],
+                        trendyOutData = res3)
+@
 
-\section{Extract genes with certain pattern}
-Genes that have a peak along the time-course will have fitted trend somewhere
-as "up-down". Genes that are oscillating may have the fitted trend "up-down".
-To extract a list of such genes we can use the \Rfunction{extractPattern}:
+\section{Extract genes with specific patterns}
 
-<<eval=TRUE, warning=FALSE,fig.align='center', out.width='.8\\textwidth'>>=
+Users can search for genes with patterns of interest using the \Rfunction{extractPatterns} 
+function in the Trendy package. 
+
+For example, genes that have a peak along the time-course will have fitted trend somewhere
+as "up-down":
+
+<<eval=TRUE, warning=FALSE,fig.align='left',  fig.height=4, fig.width=10, out.width='1\\textwidth'>>=
 # Genes that peak
-pat1 <- extractPattern(res2, Pattern = c("up","down"))
+pat1 <- extractPattern(res3, Pattern = c("up","down"))
 head(pat1)
+
+par(mfrow=c(1,2))
 plotPat1 <- plotFeature(trendyExampleData, tVectIn=time.vector,
                       featureNames = pat1$Gene[1:2],
-                      trendyOutData = res2)
+                      trendyOutData = res3)
 
 @
 
+We may only want those where the peak has occured after some time-point. This can be specified using the \Rcode{Delay} parameter:
 
 <<eval=TRUE, warning=FALSE, fig.height=10, fig.width=7, fig.align='center', out.width='\\textwidth'>>=
 # Genes that peak after some time
-pat3 <- extractPattern(res2, Pattern = c("up","down"), Delay = 25)
+pat3 <- extractPattern(res3, Pattern = c("up","down"), Delay = 7)
 head(pat3)
-par(mfrow=c(3,2))
-plotPat3 <- plotFeature(trendyExampleData, tVectIn=time.vector, simple=TRUE,
-                      featureNames = pat3$Gene,
-                      trendyOutData = res2)
 @
 
-<<eval=FALSE, warning=FALSE, fig.height=3.5, fig.width=7, fig.align='center', out.width='.8\\textwidth'>>=
+To search for genes that have a 'no change' segment, the \Rcode{extractPattern} function accepts both 'no change' and 'same'. For example, here we search for genes that are stable and then go up:
+<<eval=TRUE, warning=FALSE, fig.height=3.5, fig.width=7, fig.align='center', out.width='.8\\textwidth'>>=
 # Genes that are constant, none
-pat4 <- extractPattern(res2, Pattern = c("same"))
+extractPattern(res2, Pattern = c("no change", "up"))
+extractPattern(res2, Pattern = c("same", "up"))
 @
 
 
 \section{Further analysis of Trendy expression trends}
-For each gene, the Trendy segments are assigned a direction as: "up", "down", or "same".
-These directions can be used to cluster genes having similar trends along the time-course. Here I will use
-a simple hierarchical clustering to demonstrate the clustering but other clustering methods may be applicable.
 
-<<eval=TRUE, warning=FALSE, fig.height=5, fig.width=10, fig.align='center', out.width='.8\\textwidth'>>=
+
+For each gene, the Trendy segments are assigned a trend as: "up", "down", or "same".
+These trends can be used to cluster genes having similar dynamics along the time-course. Here I will use
+a simple hierarchical clustering to demonstrate the clustering but other clustering methods may be used instead.
+
+<<eval=TRUE, warning=FALSE, fig.height=7, fig.width=10, fig.align='left', out.width='.8\\textwidth'>>=
+
 # Get trend matrix:
 trendMat <- res.top$Trends
 # Cluster genes using hierarchical clustering:
 hc.results <- hclust(dist(trendMat))
-plot(hc.results) #decide how many cluster to choose
+plot(hc.results) #Decide how many clusters to choose
 #Let's say there are 4 main clusters
 hc.groups <- cutree(hc.results, k = 4)
 @
+
+
+Here are heatmaps of genes in Clusters 1 and 4.
 
 <<eval=TRUE, warning=FALSE, fig.height=5, fig.width=8, fig.align='center', out.width='.8\\textwidth'>>=
 cluster1.genes <- names(which(hc.groups == 1))
@@ -490,14 +511,14 @@ cluster4.genes <- names(which(hc.groups == 4))
 res.trend2 <- trendHeatmap(res.top, featureNames = cluster4.genes)
 @
 
-The genes in each cluster can then be input to a gene enrichment analysis, using tools such as enrichr, allez, or GSEA.
+The genes in each cluster can then be used as input for gene enrichment analysis. Two popular gene set enrichment tools include: enrichr (web-based, http://amp.pharm.mssm.edu/Enrichr/) or GSEA (via MSigDB: http://software.broadinstitute.org/gsea/msigdb/index.jsp).
 
 
 
 \section{Trendy shiny app}
 
-The Trendy shiny app requires an .RData object output from the
-\Rfunction{trendy} function, which can be obtained by setting \Rcode{saveObject=TRUE}.
+The Trendy shiny app requires the .RData object output from the
+\Rfunction{trendy} function, which can be obtained by setting \Rcode{saveObject=TRUE} and specifying a name via the \Rfunction{fileName} parameter.
 
 <<eval=TRUE, warning=FALSE>>=
 res <- trendy(trendyExampleData, maxK=2, saveObject = TRUE, fileName="exampleObject")
@@ -508,6 +529,8 @@ Then in R run:
 <<eval=FALSE, warning=FALSE>>=
 trendyShiny()
 @
+
+Below are screenshots of the Shiny application:
 
 \begin{figure}[H]
 \centering

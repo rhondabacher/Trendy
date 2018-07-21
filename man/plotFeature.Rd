@@ -6,8 +6,9 @@
 \usage{
 plotFeature(Data, tVectIn = NULL, featureNames, showFit = TRUE,
   simple = FALSE, showLegend = TRUE, trendyOutData = NULL,
-  condCol = NULL, condColSample = NULL, condPrefix = "Day",
-  xlab = "Time", ylab = "Normalized Expression")
+  cexLegend = 1, legendLocation = "side", condCol = NULL,
+  condColSample = NULL, condPrefix = "Day", xlab = "Time",
+  ylab = "Normalized Expression")
 }
 \arguments{
 \item{Data}{a matrix of normalized expression measurements. Rows are 
@@ -31,6 +32,10 @@ and will only display a black fitted line. (default is FALSE)}
 running trendy(); if showFit is TRUE and trendyOutData is NULL, then the
 segmented regression will be fit for each of the genes and it may 
 take longer to run}
+
+\item{cexLegend}{cex option for sizing of legend text, default is 1.}
+
+\item{legendLocation}{whether to place the legend to the right 'side' of each plot or at the 'bottom' of a multo-panelled plot (default is 'side').}
 
 \item{condCol}{color for each condition, names of this vector should be
 condition names; if it is NULL (default), no legend will be generated}
