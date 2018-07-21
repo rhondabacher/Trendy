@@ -48,7 +48,7 @@ install_github("rhondabacher/Trendy", ref="devel")
 
 ## Trendy R/Shiny Visualization
 
-Trendy R/Shiny assumes you have already run the trendy() function in the Trendy package and saved the output as an .RData object (by setting Save.Object = TRUE). The app allows you to extract lists of genes/features according to any pattern of interest. The patten of interest can also be extracted after a given condition (time-point) via the delay option. The Shiny application also enables the trend and breakpoints of each gene to be explored and visualized.
+Trendy R/Shiny assumes you have already run the trendy() function in the Trendy package and saved the output as an .RData object (by setting saveObject = TRUE). The app allows you to extract lists of genes/features according to any pattern of interest. The patten of interest can also be extracted after a given condition (time-point) via the Delay option. The Shiny application also enables the trend and breakpoints of each gene to be explored and visualized.
 
 #### To launch the Shiny app in R:
 
