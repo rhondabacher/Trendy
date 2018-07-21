@@ -46,7 +46,7 @@ extractPattern<-
     # Get slps for all genes
     segdata.slps <- lapply(segdata.pass, function(i) i$Segment.Trends) 
     Pattern[Pattern == "up"] <- 1
-    Pattern[Pattern == "same"] <- 0
+    Pattern[Pattern == "same" | Pattern == "no change"] <- 0
     Pattern[Pattern == "down"] <- 2
 
     if (length(Pattern) == 1) {
@@ -88,7 +88,8 @@ extractPattern<-
     outPats[,-1] <- apply(outPats[,-1, drop = FALSE], 2, as.numeric)
     colnames(outPats)[1] <- c("Gene")
     outPats <- outPats[order(outPats$BreakPoint1),]
-
+	
+	outPats <- outPats[which(outPats$BreakPoint1 > Delay),]
 
     return(outPats)
 }
