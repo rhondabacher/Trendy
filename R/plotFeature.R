@@ -17,7 +17,7 @@
 #' @param legendLocation whether to place the legend to the right 'side' of each plot or at the 'bottom' of a multo-panelled plot (default is 'side').
 #' @param xlab x-axis name
 #' @param ylab y-axis name
-#' @param segColors define colors for the 'same', 'down', and 'up' segments (default= segColors = c("black", "cornflowerblue", 	"coral1"))
+#' @param segColors define colors for the 'breakpoint', and 'up', 'same', 'down' segments (default: segColors = 	c("chartreuse3", "coral1", "black", "cornflowerblue"))
 #' @param customTitle default is set the plot title as the name of the feature. Other titles can be specified here. 
 #' @param customLabels.x specify x-axis tick labels instead of using the default values from tVectIn.
 
@@ -38,7 +38,7 @@ plotFeature <-
 				legendLocation = "side",
 				xlab = "Time", 
 				ylab = "Normalized Expression",
-				segColors = c("black", "cornflowerblue", "coral1"),
+				segColors = c("chartreuse3", "coral1", "black", "cornflowerblue"),
 				customTitle= NULL, customLabels.x=NULL) 
 
 {
@@ -98,7 +98,7 @@ plotFeature <-
 										ylab = ylab, xlab = xlab, xaxt = 'n')
 							axis(1, at=unique(tVectIn), labels = customLabels.x)
 							lines(tVectIn, tmp.fit$Fitted.Values, lwd = 3, col="#ededed")
-							abline(v = tmp.fit$Breakpoints, lty = 2, lwd = 3, col="chartreuse3")
+							abline(v = tmp.fit$Breakpoints, lty = 2, lwd = 3, col=segColors[1])
 							ID <- tmp.fit$Trends
 							FIT <- tmp.fit$Fitted.Values
 							BKS <- c(0, tmp.fit$Breakpoints, max(tVectIn))
@@ -108,17 +108,17 @@ plotFeature <-
 								   forCol <- which(tVectIn <= BKS[i + 1] & tVectIn > BKS[i])
 								   IDseg <- ID[toCol]
 								   useCol <- switch(names(which.max(table(ID[forCol]))), 
-								                    `0` = "black", 
-													`-1` = "cornflowerblue", 
-								                    `1` = "coral1")
+								                    `0` = segColors[3], 
+													`-1` = segColors[4], 
+								                    `1` = segColors[2])
 									lines(tVectIn[toCol], FIT[toCol], lwd = 5, col = useCol)
 							   }
 						 	} else {
 							   IDseg <- ID[1]
 						       useCol <- switch(names(which.max(table(IDseg))), 
-						       "0" = "black", 
-						       "-1" = "cornflowerblue", 
-						       "1" = "coral1")
+						       "0" = segColors[3], 
+						       "-1" = segColors[4], 
+						       "1" = segColors[2])
 							   	lines(tVectIn, tmp.fit$Fitted.Values, lwd = 5, col=useCol)
 						   }
 						  } 
@@ -130,14 +130,14 @@ plotFeature <-
 							   legend(LEFT, TOP, c("Breakpoint"), xpd = TRUE, horiz = FALSE,
 							          inset = c(.02,0), bty = "n", lty = c(2, 1, 1, 1),
 							          lwd = c(3,5,5,5),
-							          col = c("chartreuse3" ), cex = cexLegend)
+							          col = segColors[1], cex = cexLegend)
 
 							    legend(LEFT,BOTTOM, c("Up", "No change", "Down"), xpd = TRUE,
 							           horiz = FALSE,
 							           bty = "n", title = "Segment trend:",
 							           lty = c(1, 1, 1),
 							           lwd = c(5,5,5),
-							           col = c("coral1", "black","cornflowerblue"), cex = cexLegend)
+							           col = segColors[2:4], cex = cexLegend)
 								  
 							  }
     					  
@@ -152,7 +152,7 @@ plotFeature <-
 	             horiz = TRUE, 
 	             bty = "n", lty = c(2, 1, 1, 1), 
 	             lwd = c(3,5,5,5), cex=cexLegend, seg.len = 2, 
-	             col = c("chartreuse3", "coral1", "black", "cornflowerblue"))
+	             col = segColors)
 				 
 		
 	}
