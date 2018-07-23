@@ -6,9 +6,9 @@
 \usage{
 plotFeature(Data, tVectIn = NULL, featureNames, showFit = TRUE,
   simple = FALSE, showLegend = TRUE, trendyOutData = NULL,
-  cexLegend = 1, legendLocation = "side", condCol = NULL,
-  condColSample = NULL, condPrefix = "Day", xlab = "Time",
-  ylab = "Normalized Expression")
+  cexLegend = 1, legendLocation = "side", xlab = "Time",
+  ylab = "Normalized Expression", segColors = c("black", "cornflowerblue",
+  "coral1"), customTitle = NULL, customLabels.x = NULL)
 }
 \arguments{
 \item{Data}{a matrix of normalized expression measurements. Rows are 
@@ -37,19 +37,15 @@ take longer to run}
 
 \item{legendLocation}{whether to place the legend to the right 'side' of each plot or at the 'bottom' of a multo-panelled plot (default is 'side').}
 
-\item{condCol}{color for each condition, names of this vector should be
-condition names; if it is NULL (default), no legend will be generated}
-
-\item{condColSample}{each sample's color. The vector's length should match
-number of samples. if it is NULL, expression will be shown in 
-black (default).}
-
-\item{condPrefix}{name to be used in the condition legend (Default is Day, 
-but could be hour, minute, etc.).}
-
 \item{xlab}{x-axis name}
 
 \item{ylab}{y-axis name}
+
+\item{segColors}{define colors for the 'same', 'down', and 'up' segments (default= segColors = c("black", "cornflowerblue",     "coral1"))}
+
+\item{customTitle}{default is set the plot title as the name of the feature. Other titles can be specified here.}
+
+\item{customLabels.x}{specify x-axis tick labels instead of using the default values from tVectIn.}
 }
 \value{
 plot of gene expression and fitted line

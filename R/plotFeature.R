@@ -19,7 +19,7 @@
 #' @param ylab y-axis name
 #' @param segColors define colors for the 'same', 'down', and 'up' segments (default= segColors = c("black", "cornflowerblue", 	"coral1"))
 #' @param customTitle default is set the plot title as the name of the feature. Other titles can be specified here. 
-#' @customLabels.x specify x-axis tick labels instead of using the default values from tVectIn.
+#' @param customLabels.x specify x-axis tick labels instead of using the default values from tVectIn.
 
 #' @return plot of gene expression and fitted line
 #' @examples d1 <- rbind(c(rep(1,50),seq_len(50)), rev(seq_len(100)))
