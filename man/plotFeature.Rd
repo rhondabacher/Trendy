@@ -7,8 +7,8 @@
 plotFeature(Data, tVectIn = NULL, featureNames, showFit = TRUE,
   simple = FALSE, showLegend = TRUE, trendyOutData = NULL,
   cexLegend = 1, legendLocation = "side", xlab = "Time",
-  ylab = "Normalized Expression", segColors = c("black", "cornflowerblue",
-  "coral1"), customTitle = NULL, customLabels.x = NULL)
+  ylab = "Normalized Expression", segColors = c("chartreuse3", "coral1",
+  "black", "cornflowerblue"), customTitle = NULL, customLabels.x = NULL)
 }
 \arguments{
 \item{Data}{a matrix of normalized expression measurements. Rows are 
@@ -41,7 +41,7 @@ take longer to run}
 
 \item{ylab}{y-axis name}
 
-\item{segColors}{define colors for the 'same', 'down', and 'up' segments (default= segColors = c("black", "cornflowerblue",     "coral1"))}
+\item{segColors}{define colors for the 'breakpoint', and 'up', 'same', 'down' segments (default: segColors =     c("chartreuse3", "coral1", "black", "cornflowerblue"))}
 
 \item{customTitle}{default is set the plot title as the name of the feature. Other titles can be specified here.}
 
