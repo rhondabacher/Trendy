@@ -109,13 +109,14 @@ plotFeature <-
 							BKS <- c(0, tmp.fit$Breakpoints, max(tVectIn))
 							if (length(BKS) > 3 | (length(BKS) == 3 & !is.na(BKS[2]))) {
 							   for (i in seq_len(length(BKS) - 1)) {
-							       toCol <- which(tVectIn <= BKS[i+1] & tVectIn >= BKS[i])
-							       IDseg <- ID[toCol]
-							       useCol <- switch(names(which.max(table(IDseg))), 
-							       "0" = "black", 
-							       "-1" = "cornflowerblue", 
-							       "1" = "coral1")
-							       lines(tVectIn[toCol], FIT[toCol], lwd = 5, col=useCol)
+								   toCol <- which(tVectIn <= BKS[i + 1] & tVectIn >= BKS[i])
+								   forCol <- which(tVectIn <= BKS[i + 1] & tVectIn > BKS[i])
+								   IDseg <- ID[toCol]
+								   useCol <- switch(names(which.max(table(ID[forCol]))), 
+								                    `0` = "black", 
+													`-1` = "cornflowerblue", 
+								                    `1` = "coral1")
+									lines(tVectIn[toCol], FIT[toCol], lwd = 5, col = useCol)
 							   }
 						 	} else {
 							   IDseg <- ID[1]
