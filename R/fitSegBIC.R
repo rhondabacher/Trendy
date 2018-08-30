@@ -18,6 +18,9 @@ fitSegBIC <-
     
     whichFit <- seq_len(maxK)
     
+		# If any replicates, jitter a small amount to help with the segmented fitting:
+		if (length(unique(tVectIn)) < length(tVectIn)) {tVectIn <- jitter(tVectIn)}
+			
     # Start with lm without any breaks
     lmLinear <- lm(Data ~ tVectIn)
     lm.radj <- summary(lmLinear)$adj.r.squared

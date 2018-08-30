@@ -170,8 +170,8 @@ If you are working with microarray expression data, an extensive overview for no
 
 \subsubsection{Time Vector}
 
-The time vector is important to specify as it contains the relative timing of each sample.
-Trendy can handle a number of situations regarding replicates and spacing of time-points.
+The time vector is important to specify as it contains information regarding replicates and the relative timing or spacing of each sample.
+The order of the time vector should match the order of the columns in the expression data.
 Below are a few examples on how to specify the time vector for a variety of situations:
 
 Suppose all 40 samples are equally spaced time-points:
@@ -197,7 +197,7 @@ time.vector
 table(time.vector)
 @
 
-This specification must correspond exactly to the order of samples (columns) in the normalized data matrix described in the previous section!
+Remember, it is critical that this specification corresponds exactly to the order of samples (columns) in the normalized data matrix described in the previous section!
 
 \subsection{Run Trendy}
 
