@@ -92,11 +92,14 @@ Trendy also computes a breakpoint distribution of the number of breakpoints over
 
 \subsection{Install via Bioconductor}
 
+
 The Trendy package can be installed from Bioconductor if you have R version $\geq 3.5$:
 
+
 <<eval=FALSE, echo=TRUE, cache=FALSE, message=FALSE, warning=FALSE>>=
-source("https://bioconductor.org/biocLite.R")
-biocLite("Trendy")
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+BiocManager::install("Trendy")
 @
 
 \subsection{Install via GitHub}
@@ -104,6 +107,7 @@ biocLite("Trendy")
 The \Rpackage{Trendy} package can also be installed using functions in the \Rpackage{devtools} package.
 
 If you have R version $\geq 3.5$:
+
 
 <<eval=FALSE, echo=TRUE, cache=FALSE, message=FALSE, warning=FALSE>>=
 install.packages("devtools")
@@ -167,8 +171,8 @@ If you are working with microarray expression data, an extensive overview for no
 
 \subsubsection{Time Vector}
 
-The time vector is important to specify as it contains the relative timing of each sample.
-Trendy can handle a number of situations regarding replicates and spacing of time-points.
+The time vector is important to specify as it contains information regarding replicates and the relative timing or spacing of each sample.
+The order of the time vector should match the order of the columns in the expression data.
 Below are a few examples on how to specify the time vector for a variety of situations:
 
 Suppose all 40 samples are equally spaced time-points:
@@ -194,7 +198,7 @@ time.vector
 table(time.vector)
 @
 
-This specification must correspond exactly to the order of samples (columns) in the normalized data matrix described in the previous section!
+Remember, it is critical that this specification corresponds exactly to the order of samples (columns) in the normalized data matrix described in the previous section!
 
 \subsection{Run Trendy}
 
@@ -274,6 +278,7 @@ individual features/genes and the fitted lines.
 
 For example, to plot the top six genes in the first group of genes (first go
 up):
+
 <<eval=TRUE, warning=FALSE, fig.height=10, fig.width=10, fig.align='left', out.width='\\textwidth'>>=
 par(mfrow=c(3,2))
 plotFeature(Data = trendyExampleData, tVectIn = time.vector, simple = TRUE,
@@ -297,6 +302,7 @@ plotFeature(Data = trendyExampleData, tVectIn = time.vector, simple = FALSE, sho
                     legendLocation='bottom',cexLegend=1,
                     featureNames = names(res.trend$firstup)[1:6],
                     trendyOutData = res)
+
 @
 
 The input of function \Rfunction{plotFeature} requires the expression data and
@@ -319,6 +325,7 @@ plotFeature(Data = trendyExampleData,tVectIn = time.vector, simple=TRUE,
 To plot the two genes in the third group of genes (first no change):
 <<eval=TRUE, warning=FALSE, fig.height=5, fig.width=10, fig.align='left'>>=
 par(mfrow=c(1,2))
+
 plotFeature(trendyExampleData,tVectIn = time.vector, simple=TRUE,
                     featureNames = names(res.trend$firstnochange)[1:2],
                     trendyOutData = res)
@@ -327,6 +334,7 @@ plotFeature(trendyExampleData,tVectIn = time.vector, simple=TRUE,
 \subsection{Gene specific estimates}
 
 For a given gene of interest, its estimated parameters can be obtained individually:
+
 
 <<eval=TRUE, fig.align='center', fig.height=4, fig.width=6, >>=
 par(mfrow=c(1,1))
@@ -403,6 +411,7 @@ str(res.trend2)
 
 To plot the first four genes that have up-regulated pattern at the beginning of
 the time course:
+
 <<eval=TRUE, fig.height=8, fig.width=8>>=
 par(mfrow=c(2,2))
 plotFeature(trendyExampleData, tVectIn=time.vector, simple = TRUE,
@@ -450,6 +459,7 @@ as "up-down":
 # Genes that peak
 pat1 <- extractPattern(res3, Pattern = c("up","down"))
 head(pat1)
+
 par(mfrow=c(1,2))
 plotPat1 <- plotFeature(trendyExampleData, tVectIn=time.vector,
                       featureNames = pat1$Gene[1:2],
@@ -475,11 +485,13 @@ extractPattern(res2, Pattern = c("same", "up"))
 
 \section{Further analysis of Trendy expression trends}
 
+
 For each gene, the Trendy segments are assigned a trend as: "up", "down", or "same".
 These trends can be used to cluster genes having similar dynamics along the time-course. Here I will use
 a simple hierarchical clustering to demonstrate the clustering but other clustering methods may be used instead.
 
 <<eval=TRUE, warning=FALSE, fig.height=7, fig.width=10, fig.align='left', out.width='.8\\textwidth'>>=
+
 # Get trend matrix:
 trendMat <- res.top$Trends
 # Cluster genes using hierarchical clustering:
@@ -489,7 +501,9 @@ plot(hc.results) #Decide how many clusters to choose
 hc.groups <- cutree(hc.results, k = 4)
 @
 
+
 Here are heatmaps of genes in Clusters 1 and 4.
+
 <<eval=TRUE, warning=FALSE, fig.height=5, fig.width=8, fig.align='center', out.width='.8\\textwidth'>>=
 cluster1.genes <- names(which(hc.groups == 1))
 res.trend2 <- trendHeatmap(res.top, featureNames = cluster1.genes)

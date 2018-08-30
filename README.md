@@ -20,13 +20,14 @@ You need to have R version 3.5 installed.
 
 ##### Option 1:
 
-library(BiocInstaller)
+library(BiocManager)
 
 useDevel()
 
-source("https://bioconductor.org/biocLite.R")
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
 
-biocLite("Trendy")
+BiocManager::install("Trendy")
 
 
 ##### Option 2:
@@ -48,7 +49,9 @@ install_github("rhondabacher/Trendy", ref="devel")
 
 ## Trendy R/Shiny Visualization
 
+
 Trendy R/Shiny assumes you have already run the trendy() function in the Trendy package and saved the output as an .RData object (by setting saveObject = TRUE). The app allows you to extract lists of genes/features according to any pattern of interest. The patten of interest can also be extracted after a given condition (time-point) via the Delay option. The Shiny application also enables the trend and breakpoints of each gene to be explored and visualized.
+
 
 #### To launch the Shiny app in R:
 
