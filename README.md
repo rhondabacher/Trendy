@@ -20,13 +20,14 @@ You need to have R version 3.5 installed.
 
 ##### Option 1:
 
-library(BiocInstaller)
+library(BiocManager)
 
 useDevel()
 
-source("https://bioconductor.org/biocLite.R")
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
 
-biocLite("Trendy")
+BiocManager::install("Trendy")
 
 
 ##### Option 2:
