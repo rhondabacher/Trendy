@@ -97,8 +97,9 @@ The Trendy package can be installed from Bioconductor if you have R version $\ge
 
 
 <<eval=FALSE, echo=TRUE, cache=FALSE, message=FALSE, warning=FALSE>>=
-source("https://bioconductor.org/biocLite.R")
-biocLite("Trendy")
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+BiocManager::install("Trendy")
 @
 
 \subsection{Install via GitHub}
