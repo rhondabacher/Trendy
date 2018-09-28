@@ -7,9 +7,9 @@ Details of Trendy may be found in the bioRxiv preprint:
 http://www.biorxiv.org/content/early/2017/09/07/185413
 
 The vignette for Trendy can be found here:
-http://www.bioconductor.org/packages/devel/bioc/vignettes/Trendy/inst/doc/Trendy_vignette.pdf
+http://www.bioconductor.org/packages/release/bioc/vignettes/Trendy/inst/doc/Trendy_vignette.pdf
 
-#### The current version of Trendy is now on Bioconductor: http://www.bioconductor.org/packages/devel/bioc/html/Trendy.html
+#### The current version of Trendy is now on Bioconductor: http://www.bioconductor.org/packages/release/bioc/html/Trendy.html
 
 #### For previous versions check the release page.
 
