@@ -22,8 +22,6 @@ You need to have R version 3.5 installed.
 
 library(BiocManager)
 
-useDevel()
-
 if (!requireNamespace("BiocManager", quietly=TRUE))
     install.packages("BiocManager")
 
