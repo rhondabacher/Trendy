@@ -31,7 +31,6 @@
 #' @import grDevices
 #' @inheritParams trendy
 #' @export
-
 plotFeature <- 
     function(Data, tVectIn = NULL, featureNames, showFit = TRUE, simple=FALSE,
 				showLegend = TRUE, trendyOutData = NULL, cexLegend=1, 
@@ -83,6 +82,10 @@ plotFeature <-
         if (is.null(customTitle)) {
         	customTitle = x
         }
+				if (showFit==FALSE) {
+		        	plot(tVectIn, Data[x,], pch = 20,
+		            		main = customTitle, ylab = ylab, xlab = xlab)
+				}
         if (showFit==TRUE){
             if (is.null(trendyOutData)) {tmp.fit <- fitSegBIC(Data = Data[x,],
                 tVectIn=tVectIn)

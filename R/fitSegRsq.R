@@ -1,6 +1,8 @@
-#' @title Fit segmented regression models on a feature/gene
+#' @title Fit segmented regression models on a feature/gene using adjusted R squared  
+#'  to determine the optimal model.
 
-#' @description fits segmented regression models
+#' @description fits segmented regression models and selects the optimal model as the gene with
+#' the largest R squared. This is here to be similar to early versions of Trendy.
 #' @inheritParams trendy
 #' @return Trend: direction of each sample; -1: down, 0: no change, 1: up
 #'  Slope: fitted slopes, Slope.Trend: sign of fitted slopes, 
@@ -10,17 +12,14 @@
 #' @author Rhonda Bacher and Ning Leng
 
 
-fitSegBIC <- 
-    function(Data, maxK = 5, tVectIn = NULL, minNumInSeg = 5, pvalCut = .1, 
+
+fitSegRsq <-  function(Data, maxK = 5, tVectIn = NULL, minNumInSeg = 5, pvalCut = .1, 
         numTry = 100, keepFit = FALSE) 
 
 {
-    
+
     whichFit <- seq_len(maxK)
     
-		# If any replicates, jitter a small amount to help with the segmented fitting:
-		if (length(unique(tVectIn)) < length(tVectIn)) {tVectIn <- jitter(tVectIn)}
-			
     # Start with lm without any breaks
     lmLinear <- lm(Data ~ tVectIn)
     lm.radj <- summary(lmLinear)$adj.r.squared
@@ -37,8 +36,8 @@ fitSegBIC <-
     lm.id.sign <- rep(lm.sign, length(tVectIn))
     names(lm.id.sign) <- paste0(names(tVectIn), ".Trend")
     names(lm.fit) <- paste0(names(tVectIn), ".Fitted")
-    bic.lm <- BIC(lmLinear)
-    
+
+
     # Fit all possible breakpoints now:
     fit.bp.all <- lapply(whichFit, .breakpointFit, tVectIn, lmLinear, numTry)
     
@@ -56,35 +55,35 @@ fitSegBIC <-
             # If it is not solved in 100 trys then return lm 
             # results (if numTry=100)
     }
-    
-    
+
     fit.keep <- fit.bp.all
     if (length(isna) > 0) { # if one of whichFit cant be fitted then remove it.
         fit.keep <- fit.keep[-isna]
         whichFit <- whichFit[-isna]
     }
-    
+
     # Get info for each fit:
     slp.l <- lapply(fit.keep, segmented::slope)
     radj <- vapply(fit.keep, function(i) {summary(i)$adj.r.squared},numeric(1))
     brk.l <- lapply(fit.keep, function(i) {i$psi[,2]})
     id.l <- lapply(fit.keep, function(i) {i$id.group})
-    allBIC <- vapply(fit.keep, function(i) {BIC(i)}, numeric(1))
     
     
     if (length(whichFit) > 1) {
-        bic.whichmin <- which.min(allBIC)
-        if (length(bic.whichmin) > 0) {
-            r.choose <- max(bic.whichmin)
+        radj.whichmax <- which.max(radj)
+        if (length(radj.whichmax) > 0) {
+            r.choose <- max(radj.whichmax)
         } 
-        # compare here using bic. 
-        if (allBIC[r.choose] >= bic.lm) {
-            # if linear has smaller BIC then take the linear, return values
+        # compare here using adjusted R squared 
+        if (radj[r.choose] <= lm.radj) {
+            # if linear has larger adjusted R squared then take the linear, return values
             OUT <- list(Trends = lm.id.sign, Segment.Slopes = lm.slp, 
                 Segment.Trends = lm.sign, 
-                Segment.Pvalues = lm.pval, Breakpoints = NA, 
+                Segment.Pvalues = lm.pval, 
+                Breakpoints = NA, 
                 Fitted.Values = lm.fit,
-                AdjustedR2 = lm.radj, Fit = lmLinear)
+                AdjustedR2 = lm.radj, 
+                Fit = lmLinear)
                 if (keepFit == FALSE) {OUT <- OUT[seq_len(7)]}
                     return(OUT)
             }
@@ -112,7 +111,7 @@ fitSegBIC <-
     
     # Finally decide if best BP model is better than linear,
     # If not return linear
-    if (allBIC[r.choose] >= bic.lm) {
+    if (radj[r.choose] <= lm.radj) {
         OUT <- list(Trends = lm.id.sign, Segment.Slopes = lm.slp, 
             Segment.Trends = lm.sign, 
             Segment.Pvalues = lm.pval, Breakpoints = NA, 
@@ -157,3 +156,4 @@ fitSegBIC <-
         
     return(OUT)
 }
+	

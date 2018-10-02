@@ -7,9 +7,9 @@ Details of Trendy may be found in the bioRxiv preprint:
 http://www.biorxiv.org/content/early/2017/09/07/185413
 
 The vignette for Trendy can be found here:
-http://www.bioconductor.org/packages/devel/bioc/vignettes/Trendy/inst/doc/Trendy_vignette.pdf
+http://www.bioconductor.org/packages/release/bioc/vignettes/Trendy/inst/doc/Trendy_vignette.pdf
 
-#### The current version of Trendy is now on Bioconductor: http://www.bioconductor.org/packages/devel/bioc/html/Trendy.html
+#### The current version of Trendy is now on Bioconductor: http://www.bioconductor.org/packages/release/bioc/html/Trendy.html
 
 #### For previous versions check the release page.
 
@@ -20,13 +20,12 @@ You need to have R version 3.5 installed.
 
 ##### Option 1:
 
-library(BiocInstaller)
+library(BiocManager)
 
-useDevel()
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
 
-source("https://bioconductor.org/biocLite.R")
-
-biocLite("Trendy")
+BiocManager::install("Trendy")
 
 
 ##### Option 2:
@@ -48,7 +47,9 @@ install_github("rhondabacher/Trendy", ref="devel")
 
 ## Trendy R/Shiny Visualization
 
+
 Trendy R/Shiny assumes you have already run the trendy() function in the Trendy package and saved the output as an .RData object (by setting saveObject = TRUE). The app allows you to extract lists of genes/features according to any pattern of interest. The patten of interest can also be extracted after a given condition (time-point) via the Delay option. The Shiny application also enables the trend and breakpoints of each gene to be explored and visualized.
+
 
 #### To launch the Shiny app in R:
 

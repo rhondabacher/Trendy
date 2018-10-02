@@ -118,18 +118,21 @@ results <- function(DATA, type=c("TrendyFits")) {
 #' @title break point fits
 #' @param J number of breakpoints in the model
 
+
 .breakpointFit <- function(J, tVectIn, lmLinear, numTry) {
-    lastT <- tVectIn[length(tVectIn)]
-    useSeed <- 1
-    lmseg.try <- suppressMessages(try(segmented(lmLinear, seg.Z = ~tVectIn,
-        psi = round(seq(1, lastT, length.out = J + 2)[seq_len(J+1)[-1]]), 
-        control = seg.control(seed = useSeed)), silent = TRUE))
-        useSeed2 <- useSeed
-        while("try-error" %in% class(lmseg.try) & useSeed2 <= numTry) {
-            useSeed2 <- useSeed2 + 1
-            lmseg.try <- suppressMessages(try(segmented(lmLinear, 
-                seg.Z = ~tVectIn, psi = round(seq(1, lastT, 
-                        length.out = J + 2)[seq_len(J+1)[-1]]), 
-                control = seg.control(seed = useSeed2)), silent = TRUE))}
-                lmseg.try 
+  lastT <- tVectIn[length(tVectIn)]
+  firstT <- tVectIn[1]
+  useSeed <- 1
+  lmseg.try <- suppressMessages(try(segmented(lmLinear, seg.Z = ~tVectIn,
+                                              psi = round(seq(firstT, lastT, length.out = J + 2)[seq_len(J+1)[-1]]), 
+                                              control = seg.control(seed = useSeed)), silent = TRUE))
+  useSeed2 <- useSeed
+  while("try-error" %in% class(lmseg.try) & useSeed2 <= numTry) {
+    useSeed2 <- useSeed2 + 1
+    lmseg.try <- suppressMessages(try(segmented(lmLinear, 
+                                                seg.Z = ~tVectIn, psi = round(seq(firstT, lastT, 
+                                                                                  length.out = J + 2)[seq_len(J+1)[-1]]), 
+                                                control = seg.control(seed = useSeed2)), silent = TRUE))
+    }
+  lmseg.try 
 }

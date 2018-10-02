@@ -134,6 +134,11 @@ trendy <-
         [# segments] * [min number of samples in a segment]. maxK has been
         set to", maxK)
     }
+    if (length(unique(tVectIn)) <= (maxK + 1)) {
+        maxK <- length(unique(tVectIn)) - 2
+        message("Number of unique times (", length(unique(tVectIn)), ") is less than 
+        setting of maxK. Trendy has automatically set maxK to ", maxK)
+    }
     if (maxK < 1) {
         stop("Invalid value for maxK. Adjust minNumInSeg setting
         in order to run Trendy.")
