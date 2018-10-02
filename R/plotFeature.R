@@ -100,7 +100,9 @@ plotFeature <-
 							plot(tVectIn, Data[x,], pch = 20, col = "#696969", main = customTitle, 
 										ylab = ylab, xlab = xlab, xaxt = 'n')
 							axis(1, at=unique(tVectIn), labels = customLabels.x)
-							lines(tVectIn, tmp.fit$Fitted.Values, lwd = 3, col="#ededed")
+                            toplot <- which(!duplicated(tVectIn))
+                            lines(tVectIn[toplot], tmp.fit$Fitted.Values[toplot],lwd = 3, col="#ededed")
+                                
 							abline(v = tmp.fit$Breakpoints, lty = 2, lwd = 3, col=segColors[1])
 							ID <- tmp.fit$Trends
 							FIT <- tmp.fit$Fitted.Values
@@ -114,7 +116,11 @@ plotFeature <-
 								                    `0` = segColors[3], 
 													`-1` = segColors[4], 
 								                    `1` = segColors[2])
-									lines(tVectIn[toCol], FIT[toCol], lwd = 5, col = useCol)
+                                tvect.seg <- tVectIn[toCol]
+                                fit.seg <- FIT[toCol]
+                                toplot <- which(!duplicated(tvect.seg))
+                                toplot <- toplot[c(1, length(toplot))]
+                                lines(tvect.seg[toplot], fit.seg[toplot], lwd = 5, col = useCol)
 							   }
 						 	} else {
 							   IDseg <- ID[1]
@@ -122,7 +128,8 @@ plotFeature <-
 						       "0" = segColors[3], 
 						       "-1" = segColors[4], 
 						       "1" = segColors[2])
-							   	lines(tVectIn, tmp.fit$Fitted.Values, lwd = 5, col=useCol)
+                               toplot <- which(!duplicated(tVectIn))
+							   lines(tVectIn[toplot], tmp.fit$Fitted.Values[toplot], lwd = 5, col=useCol)
 						   }
 						  } 
 						   if(simple == FALSE & showLegend == TRUE & legendLocation=='side') {
