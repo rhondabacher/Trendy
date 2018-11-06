@@ -109,7 +109,15 @@ plotFeature <-
 							BKS <- c(0, tmp.fit$Breakpoints, max(tVectIn))
 							if (length(BKS) > 3 | (length(BKS) == 3 & !is.na(BKS[2]))) {
 							   for (i in seq_len(length(BKS) - 1)) {
-								   toCol <- which(tVectIn <= BKS[i + 1] & tVectIn >= BKS[i])
+                                   toCol <- which(tVectIn <= BKS[i + 1] & tVectIn >= BKS[i])
+                                   while (length(unique(tVectIn[toCol]))<2) {
+                                       if (rev(toCol)[1] < length(tVectIn)) {
+                                           toCol <- c(toCol, rev(toCol)[1] + 1)
+                                       } else {
+                                           toCol <- c((toCol[1] - 1), toCol)
+                                       }
+                                   }
+								   
 								   forCol <- which(tVectIn <= BKS[i + 1] & tVectIn > BKS[i])
 								   IDseg <- ID[toCol]
 								   useCol <- switch(names(which.max(table(ID[forCol]))), 
