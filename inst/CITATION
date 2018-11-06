@@ -14,7 +14,7 @@ citEntry(entry = "Article",
   url          = "https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-018-2405-x",
 
   textVersion  =
-  paste("Bacher R, Leng N, Zijian N, Chu LF, Thomson JA, Kendziorski C, Stewart RM,", 
+  paste("Bacher R, Leng N, Ni Z, Chu LF, Thomson JA, Kendziorski C, Stewart RM,", 
         "Trendy: segmented regression analysis of expression dynamics in high-throughput ordered profiling experiments.", 
         "BMC Bioinformatics. 2018 Dec;19(1):380.")
 )
