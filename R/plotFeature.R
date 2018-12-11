@@ -18,7 +18,8 @@
 #' @param xlab x-axis name
 #' @param ylab y-axis name
 #' @param segColors define colors for the 'breakpoint', and 'up', 'same', 'down' segments (default: segColors = 	c("chartreuse3", "coral1", "black", "cornflowerblue"))
-#' @param customTitle default is set the plot title as the name of the feature. Other titles can be specified here. 
+#' @param customTitle default is set the plot title as the name of the feature. Otherwise this should be a named vector, 
+#'    with the featureName as the name and the element as the desired plot title. (i.e. customTitle <- c("MyTitle" = gene1)).
 #' @param customLabels.x specify x-axis tick labels instead of using the default values from tVectIn.
 
 #' @return plot of gene expression and fitted line
@@ -84,7 +85,7 @@ plotFeature <-
         }
 				if (showFit==FALSE) {
 		        	plot(tVectIn, Data[x,], pch = 20,
-		            		main = customTitle, ylab = ylab, xlab = xlab)
+		            		main = customTitle[x], ylab = ylab, xlab = xlab)
 				}
         if (showFit==TRUE){
             if (is.null(trendyOutData)) {tmp.fit <- fitSegBIC(Data = Data[x,],
@@ -93,11 +94,11 @@ plotFeature <-
             if (!is.null(trendyOutData)) {tmp.fit <- trendyOutData[[x]]}
 						if (simple==TRUE) {
 			        		plot(tVectIn, Data[x,], pch = 20,
-			            		main = customTitle, ylab = ylab, xlab = xlab)
+			            		main = customTitle[x], ylab = ylab, xlab = xlab)
 							lines(tVectIn, tmp.fit$Fitted.Values, lwd = 2)
 						} else {
 							
-							plot(tVectIn, Data[x,], pch = 20, col = "#696969", main = customTitle, 
+							plot(tVectIn, Data[x,], pch = 20, col = "#696969", main = customTitle[x], 
 										ylab = ylab, xlab = xlab, xaxt = 'n')
 							axis(1, at=unique(tVectIn), labels = customLabels.x)
                             toplot <- which(!duplicated(tVectIn))
