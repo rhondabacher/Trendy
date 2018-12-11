@@ -105,11 +105,10 @@ trendy <-
 	BiocParallel::register(BPPARAM = param)
     
     if (is.null(featureNames)) {
-        featureNames <- rownames(Trendy::getCounts(Data))
+        featureNames <- rownames(Data)
     }
     
-    SummarizedExperiment::assays(Data)[["Counts"]]<-
-        Trendy::getCounts(Data)[featureNames,]
+    Data <- Data[rownames(Data) %in% featureNames, ]
         
     if (length(featureNames) == 1) {
 
