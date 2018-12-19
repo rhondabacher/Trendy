@@ -82,7 +82,7 @@ plotFeature <-
   }
     ignoreOUT <- lapply(featureNames, function(x) {
         if (is.null(customTitle)) {
-        	customTitle = x
+        	customTitle = x; names(customTitle) <- x
         }
 				if (showFit==FALSE) {
 		        	plot(tVectIn, Data[x,], pch = 20,
