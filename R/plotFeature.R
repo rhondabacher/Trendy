@@ -21,6 +21,7 @@
 #' @param customTitle default is set the plot title as the name of the feature. Otherwise this should be a named vector, 
 #'    with the featureName as the name and the element as the desired plot title. (i.e. customTitle <- c("MyTitle" = gene1)).
 #' @param customLabels.x specify x-axis tick labels instead of using the default values from tVectIn.
+#' @param spacing.x specify x-axis tick spacing, smaller values give more tick marks.
 
 #' @return plot of gene expression and fitted line
 #' @examples d1 <- rbind(c(rep(1,50),seq_len(50)), rev(seq_len(100)))
@@ -39,7 +40,7 @@ plotFeature <-
 				xlab = "Time", 
 				ylab = "Normalized Expression",
 				segColors = c("chartreuse3", "coral1", "black", "cornflowerblue"),
-				customTitle= NULL, customLabels.x=NULL) 
+				customTitle= NULL, customLabels.x=NULL, spacing.x=NULL) 
 
 {
     if (methods::is(Data, "SummarizedExperiment")) {
@@ -76,12 +77,12 @@ plotFeature <-
 	    par(oma = c(2,.5, .5, .5), mar=c(5,4,2,1), mfrow = origMF$mfrow)
 	  }
 	}
-	if(is.null(customLabels.x)) {
-		customLabels.x <- unique(tVectIn)
-	}
+  if(is.null(spacing.x)) {
+    spacing.x <- sd(tVectIn)
+  }
     ignoreOUT <- lapply(featureNames, function(x) {
         if (is.null(customTitle)) {
-        	customTitle = x
+        	customTitle = x; names(customTitle) <- x
         }
 				if (showFit==FALSE) {
 		        	plot(tVectIn, Data[x,], pch = 20,
@@ -100,9 +101,9 @@ plotFeature <-
 							
 							plot(tVectIn, Data[x,], pch = 20, col = "#696969", main = customTitle[x], 
 										ylab = ylab, xlab = xlab, xaxt = 'n')
-							axis(1, at=unique(tVectIn), labels = customLabels.x)
-                            toplot <- which(!duplicated(tVectIn))
-                            lines(tVectIn[toplot], tmp.fit$Fitted.Values[toplot],lwd = 3, col="#ededed")
+							axis(1, at=round(seq(min(tVectIn),max(tVectIn),spacing.x)), labels = customLabels.x)
+              toplot <- which(!duplicated(tVectIn))
+              lines(tVectIn[toplot], tmp.fit$Fitted.Values[toplot],lwd = 3, col="#ededed")
                                 
 							abline(v = tmp.fit$Breakpoints, lty = 2, lwd = 3, col=segColors[1])
 							ID <- tmp.fit$Trends
