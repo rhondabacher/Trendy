@@ -94,21 +94,22 @@ fitSegBIC <-
             while((min(table(id.l[[r.choose]]))<minNumInSeg)&r.choose > 1) {
                 r.choose <- r.choose - 1
             }
-            if (r.choose == 1 & (min(table(id.l[[r.choose]])) < minNumInSeg)){
-                # if 1 bp gives too small segment, then take the linear
-                OUT <- list(Trends = lm.id.sign, Segment.Slopes = lm.slp, 
-                    Segment.Trends = lm.sign, 
-                    Segment.Pvalues = lm.pval, Breakpoints = NA, 
-                    Fitted.Values = lm.fit,
-                    AdjustedR2 = lm.radj, Fit = lmLinear)
-                    if(keepFit == FALSE) {OUT <- OUT[seq_len(7)]}
-                        return(OUT)
-            }
-    }
-    
-    if (length(whichFit) == 1) {
+            
+    } else if (length(whichFit) == 1) {
         r.choose <- 1
     }
+    
+    if (r.choose == 1 & (min(table(id.l[[r.choose]])) < minNumInSeg)){
+        # if 1 bp gives too small segment, then take the linear
+        OUT <- list(Trends = lm.id.sign, Segment.Slopes = lm.slp, 
+            Segment.Trends = lm.sign, 
+            Segment.Pvalues = lm.pval, Breakpoints = NA, 
+            Fitted.Values = lm.fit,
+            AdjustedR2 = lm.radj, Fit = lmLinear)
+            if(keepFit == FALSE) {OUT <- OUT[seq_len(7)]}
+                return(OUT)
+    }
+    
     
     # Finally decide if best BP model is better than linear,
     # If not return linear

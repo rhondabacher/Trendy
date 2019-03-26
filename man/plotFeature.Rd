@@ -7,8 +7,9 @@
 plotFeature(Data, tVectIn = NULL, featureNames, showFit = TRUE,
   simple = FALSE, showLegend = TRUE, trendyOutData = NULL,
   cexLegend = 1, legendLocation = "side", xlab = "Time",
-  ylab = "Normalized Expression", segColors = c("chartreuse3", "coral1",
-  "black", "cornflowerblue"), customTitle = NULL, customLabels.x = NULL)
+  ylab = "Normalized Expression", segColors = c("chartreuse3",
+  "coral1", "black", "cornflowerblue"), customTitle = NULL,
+  customLabels.x = NULL, spacing.x = NULL)
 }
 \arguments{
 \item{Data}{a matrix of normalized expression measurements. Rows are 
@@ -43,9 +44,12 @@ take longer to run}
 
 \item{segColors}{define colors for the 'breakpoint', and 'up', 'same', 'down' segments (default: segColors =     c("chartreuse3", "coral1", "black", "cornflowerblue"))}
 
-\item{customTitle}{default is set the plot title as the name of the feature. Other titles can be specified here.}
+\item{customTitle}{default is set the plot title as the name of the feature. Otherwise this should be a named vector, 
+with the featureName as the name and the element as the desired plot title. (i.e. customTitle <- c("MyTitle" = gene1)).}
 
 \item{customLabels.x}{specify x-axis tick labels instead of using the default values from tVectIn.}
+
+\item{spacing.x}{specify x-axis tick spacing, smaller values give more tick marks.}
 }
 \value{
 plot of gene expression and fitted line

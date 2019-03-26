@@ -4,9 +4,10 @@
 \alias{trendy}
 \title{Trendy}
 \usage{
-trendy(Data = NULL, tVectIn = NULL, saveObject = FALSE, fileName = NULL,
-  meanCut = 10, maxK = 3, minNumInSeg = 5, pvalCut = 0.1,
-  numTry = 100, keepFit = FALSE, NCores = NULL, featureNames = NULL)
+trendy(Data = NULL, tVectIn = NULL, saveObject = FALSE,
+  fileName = NULL, meanCut = 10, maxK = 3, minNumInSeg = 5,
+  pvalCut = 0.1, numTry = 100, keepFit = FALSE, NCores = NULL,
+  featureNames = NULL)
 }
 \arguments{
 \item{Data}{a matrix of normalized expression measurements. Rows are 
