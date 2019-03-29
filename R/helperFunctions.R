@@ -115,8 +115,10 @@ results <- function(DATA, type=c("TrendyFits")) {
 }
 
 
-#' @title break point fits
+#' @title breakpoint fits
+#' @inheritParams trendy
 #' @param J number of breakpoints in the model
+#' @param lmLinear the linear fit as a starting point to segmented function
 
 
 .breakpointFit <- function(J, tVectIn, lmLinear, numTry) {
