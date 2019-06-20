@@ -15,7 +15,7 @@
 #'
 #' @importFrom SummarizedExperiment assays
 #' @examples 
-#'  m1 <- rbind(c(rep(1,50),seq_len(50)), rev(seq_len(100)))
+#'  m1 <- matrix(c(c(rnorm(50,5,1),sort(rnorm(50, 15, 5))), rnorm(100, 50,10)), 2, 100, TRUE)
 #'  ExampleData <- 
 #'  SummarizedExperiment::SummarizedExperiment(assays=list("Counts"=m1))
 #'  myData <- getCounts(ExampleData)
@@ -117,22 +117,26 @@ results <- function(DATA, type=c("TrendyFits")) {
 
 #' @title break point fits
 #' @param J number of breakpoints in the model
-
+#' @param lmLinear the linear model fit; no breakpoints
+#' @inheritParams trendy
 
 .breakpointFit <- function(J, tVectIn, lmLinear, numTry) {
   lastT <- tVectIn[length(tVectIn)]
   firstT <- tVectIn[1]
   useSeed <- 1
-  lmseg.try <- suppressMessages(try(segmented(lmLinear, seg.Z = ~tVectIn,
+  lmseg.try <- tryCatch(segmented(lmLinear, seg.Z = ~tVectIn,
                                               psi = round(seq(firstT, lastT, length.out = J + 2)[seq_len(J+1)[-1]]), 
-                                              control = seg.control(seed = useSeed)), silent = TRUE))
+                                              control = seg.control(seed = useSeed)), 
+                            warning = function(w) "NoFit",
+                            error = function(e) "NoFit")
   useSeed2 <- useSeed
-  while("try-error" %in% class(lmseg.try) & useSeed2 <= numTry) {
+  while(class(lmseg.try)[1] == "character" & useSeed2 <= numTry) {
     useSeed2 <- useSeed2 + 1
-    lmseg.try <- suppressMessages(try(segmented(lmLinear, 
-                                                seg.Z = ~tVectIn, psi = round(seq(firstT, lastT, 
-                                                                                  length.out = J + 2)[seq_len(J+1)[-1]]), 
-                                                control = seg.control(seed = useSeed2)), silent = TRUE))
+    lmseg.try <- tryCatch(segmented(lmLinear, seg.Z = ~tVectIn, 
+                                              psi = round(seq(firstT, lastT, length.out = J + 2)[seq_len(J+1)[-1]]), 
+                                              control = seg.control(seed = useSeed2)), 
+                          warning = function(w) "NoFit",
+                          error = function(e) "NoFit")
     }
   lmseg.try 
 }

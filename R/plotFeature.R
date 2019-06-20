@@ -24,7 +24,8 @@
 #' @param spacing.x specify x-axis tick spacing, smaller values give more tick marks.
 
 #' @return plot of gene expression and fitted line
-#' @examples d1 <- rbind(c(rep(1,50),seq_len(50)), rev(seq_len(100)))
+#' @examples 
+#'  d1 <- matrix(c(c(rnorm(50,5,1),sort(rnorm(50, 15, 5))), rnorm(100, 50,10)), 2, 100, TRUE)
 #'  rownames(d1) <- c("g1","g2")
 #'  colnames(d1) <- paste0("time", seq_len(100))
 #'  plotFeature(d1, featureNames=c("g1","g2"))

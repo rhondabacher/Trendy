@@ -4,7 +4,7 @@
 \alias{fitSegBIC}
 \title{Fit segmented regression models on a feature/gene}
 \usage{
-fitSegBIC(Data, maxK = 5, tVectIn = NULL, minNumInSeg = 5,
+fitSegBIC(Data, maxK = 2, tVectIn = NULL, minNumInSeg = 5,
   pvalCut = 0.1, numTry = 100, keepFit = FALSE)
 }
 \arguments{

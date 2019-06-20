@@ -27,7 +27,7 @@ reformats the list output for genes with a
  given adjusted R^2 cutoff
 }
 \examples{
-d1 <- rbind(c(rep(1,50),seq_len(50)), rev(seq_len(100)))
+ d1 <- matrix(c(c(rnorm(50,5,1),sort(rnorm(50, 15, 5))), rnorm(100, 50,10)), 2, 100, TRUE)
  rownames(d1) <- c("g1","g2")
  colnames(d1) <- paste0("time", seq_len(100))
  seg.all <- trendy(d1)

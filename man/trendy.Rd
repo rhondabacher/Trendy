@@ -4,9 +4,10 @@
 \alias{trendy}
 \title{Trendy}
 \usage{
-trendy(Data = NULL, tVectIn = NULL, saveObject = FALSE, fileName = NULL,
-  meanCut = 10, maxK = 3, minNumInSeg = 5, pvalCut = 0.1,
-  numTry = 100, keepFit = FALSE, NCores = NULL, featureNames = NULL)
+trendy(Data = NULL, tVectIn = NULL, saveObject = FALSE,
+  fileName = NULL, meanCut = 10, maxK = 3, minNumInSeg = 5,
+  pvalCut = 0.1, numTry = 100, keepFit = FALSE, NCores = NULL,
+  featureNames = NULL)
 }
 \arguments{
 \item{Data}{a matrix of normalized expression measurements. Rows are 
@@ -63,7 +64,7 @@ Segmented regression models are fit for each gene.
  The number of model fits is 1 -> maxK.
 }
 \examples{
-m1 <- rbind(c(rep(1,50),seq_len(50)), rev(seq_len(100)))
+ m1 <- matrix(c(c(rnorm(50,5,1),sort(rnorm(50, 15, 5))), rnorm(100, 50,10)), 2, 100, TRUE)
  rownames(m1) <- c("g1","g2")
  colnames(m1) <- paste0("time", seq_len(100))
  myTrends <- trendy(m1)

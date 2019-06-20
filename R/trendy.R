@@ -51,7 +51,8 @@
 #' @import stats
 #' @import segmented
 
-#' @examples m1 <- rbind(c(rep(1,50),seq_len(50)), rev(seq_len(100)))
+#' @examples 
+#'  m1 <- matrix(c(c(rnorm(50,5,1),sort(rnorm(50, 15, 5))), rnorm(100, 50,10)), 2, 100, TRUE)
 #'  rownames(m1) <- c("g1","g2")
 #'  colnames(m1) <- paste0("time", seq_len(100))
 #'  myTrends <- trendy(m1)
@@ -100,16 +101,16 @@ trendy <-
         param = SnowParam(workers=NCores)
     }
 
-	param = MulticoreParam(workers=NCores)
-	
+	param = BiocParallel::MulticoreParam(workers=NCores)
+
 	BiocParallel::register(BPPARAM = param)
-    
+
     if (is.null(featureNames)) {
         featureNames <- rownames(Data)
     }
-    
+
     Data <- Data[rownames(Data) %in% featureNames, ]
-        
+
     if (length(featureNames) == 1) {
 
         if (mean(Trendy::getCounts(Data)) >= meanCut) {
@@ -126,34 +127,36 @@ trendy <-
         stop("No genes pass the mean cutoff filter!")
     }
     }
-    
+
     if (NSample < (maxK + 1) * minNumInSeg) {
         maxK <- floor(NSample / minNumInSeg) - 1
-        message("Number of samples (", NSample, ") is less than 
+        message("Number of samples (", NSample, ") is less than
         [# segments] * [min number of samples in a segment]. maxK has been
         set to", maxK)
     }
     if (length(unique(tVectIn)) <= (maxK + 1)) {
         maxK <- length(unique(tVectIn)) - 2
-        message("Number of unique times (", length(unique(tVectIn)), ") is less than 
+        message("Number of unique times (", length(unique(tVectIn)), ") is less than
         setting of maxK. Trendy has automatically set maxK to ", maxK)
     }
     if (maxK < 1) {
         stop("Invalid value for maxK. Adjust minNumInSeg setting
         in order to run Trendy.")
     }
-    
+
     segAll <- BiocParallel::bplapply(X = seq_len(nrow(Data.MeanFiltered)),
-    function(X) { 
+      function(X) {
         inGene = Data.MeanFiltered[X,]
         fitSegBIC(Data = inGene,
-            tVectIn = tVectIn,  maxK = maxK, 
-            minNumInSeg = minNumInSeg, 
-            pvalCut = pvalCut, numTry = numTry, 
+            tVectIn = tVectIn,  
+            maxK = maxK,
+            minNumInSeg = minNumInSeg,
+            pvalCut = pvalCut, 
+            numTry = numTry,
             keepFit = keepFit)
         })
     names(segAll) <- rownames(Data.MeanFiltered)
-    
+
     if (saveObject == TRUE) {
         if (is.null(fileName)){
             fileName <- "trendyForShiny.RData"

@@ -30,7 +30,7 @@ The function takes significant genes/features called from
 heatmap of the fitted trends
 }
 \examples{
-m1 <- rbind(c(rep(1,50),seq_len(50)), rev(seq_len(100)))
+ m1 <- matrix(c(c(rnorm(50,5,1),sort(rnorm(50, 15, 5))), rnorm(100, 50,10)), 2, 100, TRUE)
  rownames(m1) <- c("g1","g2")
  colnames(m1) <- paste0("time", seq_len(100))
  myTrends <- results(trendy(m1))
