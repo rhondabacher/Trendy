@@ -22,7 +22,7 @@ http://www.bioconductor.org/packages/release/bioc/vignettes/Trendy/inst/doc/Tren
 
 #### To install Trendy:
 
-You need to have R version 3.5 installed.
+You need to have R version >= 3.5 installed.
 
 ##### Option 1:
 
