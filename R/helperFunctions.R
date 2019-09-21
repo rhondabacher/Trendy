@@ -119,24 +119,36 @@ results <- function(DATA, type=c("TrendyFits")) {
 #' @param J number of breakpoints in the model
 #' @param lmLinear the linear model fit; no breakpoints
 #' @inheritParams trendy
+#' @export
 
-.breakpointFit <- function(J, tVectIn, lmLinear, numTry) {
+breakpointFit <- function(J, tVectIn, lmLinear, numTry) {
   lastT <- tVectIn[length(tVectIn)]
   firstT <- tVectIn[1]
   useSeed <- 1
-  lmseg.try <- tryCatch(segmented(lmLinear, seg.Z = ~tVectIn,
+  lmseg.try <- tryCatch(segmented::segmented(lmLinear, seg.Z = ~tVectIn,
                                               psi = round(seq(firstT, lastT, length.out = J + 2)[seq_len(J+1)[-1]]), 
                                               control = seg.control(seed = useSeed)), 
                             warning = function(w) "NoFit",
                             error = function(e) "NoFit")
   useSeed2 <- useSeed
-  while(class(lmseg.try)[1] == "character" & useSeed2 <= numTry) {
+
+  if (class(lmseg.try)[1] == "character") {
+    breaks <- 0
+  } else {  
+    breaks <- lmseg.try$psi[,2] }
+
+  while((class(lmseg.try)[1] == "character" | any(breaks < tVectIn[2])) & useSeed2 <= numTry) {
     useSeed2 <- useSeed2 + 1
-    lmseg.try <- tryCatch(segmented(lmLinear, seg.Z = ~tVectIn, 
+    lmseg.try <- tryCatch(segmented::segmented(lmLinear, seg.Z = ~tVectIn, 
                                               psi = round(seq(firstT, lastT, length.out = J + 2)[seq_len(J+1)[-1]]), 
                                               control = seg.control(seed = useSeed2)), 
                           warning = function(w) "NoFit",
                           error = function(e) "NoFit")
+    if (class(lmseg.try)[1] == "character") {
+      breaks <- 0
+    } else {  
+      breaks <- lmseg.try$psi[,2] }
     }
   lmseg.try 
+  
 }

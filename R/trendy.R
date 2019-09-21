@@ -60,7 +60,7 @@
 trendy <- 
     function(Data = NULL, tVectIn = NULL, saveObject = FALSE, fileName = NULL,
             meanCut = 10, maxK = 3, minNumInSeg = 5, pvalCut = .1,  
-            numTry = 100, keepFit = FALSE, NCores = NULL, featureNames = NULL) 
+            numTry = 5, keepFit = FALSE, NCores = NULL, featureNames = NULL) 
 {
     # Checks
     if (methods::is(Data, "SummarizedExperiment")) {

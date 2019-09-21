@@ -8,11 +8,11 @@
 #'  Fitted.Values: fitted values AdjustedR2: adjusted r value of the model
 #'  Fit: fit object
 #' @author Rhonda Bacher and Ning Leng
-
+#' @export
 
 fitSegBIC <- function(Data, maxK = 2, tVectIn = NULL, 
                       minNumInSeg = 5, pvalCut = .1, 
-                      numTry = 100, keepFit = FALSE) 
+                      numTry = 5, keepFit = FALSE) 
 
 {
     
@@ -40,8 +40,8 @@ fitSegBIC <- function(Data, maxK = 2, tVectIn = NULL,
     bic.lm <- BIC(lmLinear)
     
     # Fit all possible breakpoints now:
-    fit.bp.all <- lapply(whichFit, .breakpointFit, tVectIn, lmLinear, numTry)
-    
+    fit.bp.all <- lapply(whichFit, breakpointFit, tVectIn, lmLinear, numTry)
+
     isna <- which(vapply(fit.bp.all, function(i) {
                 (class(i)[1] == "character")
               }, logical(1)))
@@ -73,7 +73,7 @@ fitSegBIC <- function(Data, maxK = 2, tVectIn = NULL,
     allBIC <- vapply(fit.keep, function(i) {BIC(i)}, numeric(1))
 
 
-    if (length(whichFit) > 1) {
+    if (length(whichFit) >= 1) {
         bic.whichmin <- which.min(allBIC)
         if (length(bic.whichmin) > 0) {
             r.choose <- max(bic.whichmin)
@@ -92,10 +92,36 @@ fitSegBIC <- function(Data, maxK = 2, tVectIn = NULL,
 
             # now make sure that best fit model satisfies having minimum
             # number of segments, if it does not then decrease breakpoints.
-            while((min(table(id.l[[r.choose]]))<minNumInSeg)&r.choose > 1) {
+            while((min(table(id.l[[r.choose]])) < minNumInSeg | any(brk.l[[r.choose]] < tVectIn[minNumInSeg])) & r.choose > 1) {
                 r.choose <- r.choose - 1
             }
-            if (r.choose == 1 & (min(table(id.l[[r.choose]])) < minNumInSeg)){
+						checkMinSeg = 0
+						while (any(checkMinSeg < minNumInSeg)) {
+							checkMinSeg <- c()
+              breaks.temp <- brk.l[[r.choose]]
+              if (length(breaks.temp) == 1) {
+                checkMinSeg <- c(length(tVectIn[tVectIn < breaks.temp]), length(tVectIn[tVectIn > breaks.temp]))
+              }
+              if (length(breaks.temp) >= 2) {
+                breaks.temp <- c(tVectIn[1], breaks.temp, tVectIn[length(tVectIn)])
+                for (i in 1:(length(breaks.temp)-1)) {
+							    checkMinSeg <- c(checkMinSeg, length(tVectIn[tVectIn < breaks.temp[i+1] & tVectIn > breaks.temp[i]]))
+							  }
+              }
+							if (any(checkMinSeg < minNumInSeg)) {r.choose <- r.choose - 1}
+							if (r.choose == 0) {break}
+						}
+		        if (r.choose == 0) {
+		            # take the linear, return values
+		            OUT <- list(Trends = lm.id.sign, Segment.Slopes = lm.slp,
+		                Segment.Trends = lm.sign,
+		                Segment.Pvalues = lm.pval, Breakpoints = NA,
+		                Fitted.Values = lm.fit,
+		                AdjustedR2 = lm.radj, Fit = lmLinear)
+		                if (keepFit == FALSE) {OUT <- OUT[seq_len(7)]}
+		                    return(OUT)
+		            }
+            if (r.choose == 1 & (min(table(id.l[[r.choose]])) < minNumInSeg | any(brk.l[[r.choose]] < tVectIn[minNumInSeg]))){
                 # if 1 bp gives too small segment, then take the linear
                 OUT <- list(Trends = lm.id.sign, Segment.Slopes = lm.slp,
                     Segment.Trends = lm.sign,
@@ -105,10 +131,6 @@ fitSegBIC <- function(Data, maxK = 2, tVectIn = NULL,
                     if(keepFit == FALSE) {OUT <- OUT[seq_len(7)]}
                         return(OUT)
             }
-    }
-
-    if (length(whichFit) == 1) {
-        r.choose <- 1
     }
 
     # Finally decide if best BP model is better than linear,
