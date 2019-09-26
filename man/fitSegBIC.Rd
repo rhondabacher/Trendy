@@ -5,7 +5,7 @@
 \title{Fit segmented regression models on a feature/gene}
 \usage{
 fitSegBIC(Data, maxK = 2, tVectIn = NULL, minNumInSeg = 5,
-  pvalCut = 0.1, numTry = 100, keepFit = FALSE)
+  pvalCut = 0.1, numTry = 5, keepFit = FALSE)
 }
 \arguments{
 \item{Data}{a matrix of normalized expression measurements. Rows are 
