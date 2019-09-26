@@ -6,7 +6,7 @@
 \usage{
 trendy(Data = NULL, tVectIn = NULL, saveObject = FALSE,
   fileName = NULL, meanCut = 10, maxK = 3, minNumInSeg = 5,
-  pvalCut = 0.1, numTry = 100, keepFit = FALSE, NCores = NULL,
+  pvalCut = 0.1, numTry = 5, keepFit = FALSE, NCores = NULL,
   featureNames = NULL)
 }
 \arguments{
