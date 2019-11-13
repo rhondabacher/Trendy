@@ -19,7 +19,7 @@ fitSegBIC <- function(Data, maxK = 2, tVectIn = NULL,
     whichFit <- seq_len(maxK)
     
 		# If any replicates, jitter a small amount to help with the segmented fitting:
-		if (length(unique(tVectIn)) < length(tVectIn)) {tVectIn <- jitter(tVectIn)}
+		if (length(unique(tVectIn)) < length(tVectIn)) {tVectIn <- jitter(tVectIn, .1)}
 			
     # Start with lm without any breaks
     lmLinear <- lm(Data ~ tVectIn)
