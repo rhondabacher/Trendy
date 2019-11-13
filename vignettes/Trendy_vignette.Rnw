@@ -207,6 +207,22 @@ table(time.vector)
 
 Remember, it is critical that this specification corresponds exactly to the order of samples (columns) in the normalized data matrix described in the previous section!
 
+\noindent \textbf{FAQ: Does it matter if I use the real time or equally spaced time?}
+
+Suppose you have an experiment that was sampled at minutes 1,2,10,20, and 60 with two replicates at each time. In the plot below we can clearly see that the interpretation would be quite different depending on the definition of the time vector. In the true time plot (right), the expression increases quickly initially then levels off, whereas in the equal spacing plot (left) the expression appears to increase at a constant rate. 
+
+In the majority of cases, we recommend using the true time to define the time vector. An example is given in Section 4.1 and 4.2.
+
+<<eval=TRUE, fig.height=3, fig.width=7, fig.align='left', out.width='.8\\textwidth', message=FALSE>>=
+mygene <- trendyExampleData[2,1:10]
+equalSpacing <- rep(c(1:5), each=2)
+trueSpacing <- c(1,1,2,2,10,10,20,20,60,60)
+par(mfrow=c(1,2), mar=c(5,5,2,1))
+plot(equalSpacing, mygene, ylab="Expression")
+plot(trueSpacing, mygene, ylab="Expression")
+@
+
+
 \subsection{Run Trendy}
 
 The \Rfunction{trendy} function will fit multiple segmented regressions models
@@ -431,8 +447,7 @@ Trendy is able to make use of replicated time-points if available. To do so,
 the user can specify the replicates directly in the the \Rcode{tVectIn} parameter in the
 \Rfunction{trendy} function.
 
-For example, suppose for the simulated data, 10 time points were observed 4 times each. We may
-define the time vector as:
+For example, suppose for the simulated data, 10 time points were observed 4 times each. We may define the time vector as:
 <<eval=TRUE>>=
 time.vector <- rep(1:10, each=4)
 names(time.vector) <- colnames(trendyExampleData)
@@ -454,7 +469,7 @@ plotFeature(trendyExampleData, tVectIn=time.vector, simple = FALSE,
                         trendyOutData = res3)
 @
 
-\section{Extract genes with specific patterns}
+\subsection{Extract genes with specific patterns}
 
 Users can search for genes with patterns of interest using the \Rfunction{extractPatterns} 
 function in the Trendy package. 
@@ -489,8 +504,64 @@ extractPattern(res2, Pattern = c("no change", "up"))
 extractPattern(res2, Pattern = c("same", "up"))
 @
 
+\subsection{Determining threshold for adjusted $R^2$}
+Depending on the type of experiment (RNA-seq, microarray, scRNA-seq, etc.) and level of noise, different thresholds for the adjusted $R^2$ may be used.
 
-\section{Further analysis of Trendy expression trends}
+One way to decide an appropriate threshold is to perform a permutation procedure as follows:
+
+<<eval=FALSE, warning=FALSE, fig.height=3.5, fig.width=7, fig.align='center', out.width='.8\\textwidth'>>=
+library(Trendy)
+res.r2 <- c()
+for(i in 1:100) { # permute 100 times at least
+  BiocParallel::register(BiocParallel::SerialParam())
+  seg.shuffle <- trendy(trendyExampleData[sample(1:nrow(data.norm.scale), 100),], #sample genes each time
+                        tVectIn = sample(time.vector), # shuffle the time vector
+                        saveObject=FALSE, numTry = 5)
+  res <- results(seg.shuffle)
+  res.r2 <- c(res.r2, sapply(res, function(x) x$AdjustedR2))
+}
+
+# Histogram of all R^2
+hist(res.r2, ylim=c(0,1000), xlim=c(0,1), xlab=expression(paste("Adjusted R"^"2")))
+
+# Say you want to use the value such that less than 1% of permutations reach:
+sort(res.r2, decreasing=T)[round(.01 * length(res.r2))]
+# Say you want to use the value such that less than 5% of permutations reach:
+sort(res.r2, decreasing=T)[round(.05 * length(res.r2))]
+@
+
+Note: For an experiment with replicates, you should shuffle the replicated timepoints together:
+<<eval=TRUE, warning=FALSE>>=
+time.vector = c(1,1,2,2,10,10,20,20,60,60)
+# How to shuffle the replicates -together-
+set.seed(12)
+shuf.temp=sample(unique(time.vector))
+print(shuf.temp)
+setshuff=do.call(c,lapply(shuf.temp, function(x) which(!is.na(match(time.vector, x)))))
+use.shuff <- time.vector[setshuff]
+print(use.shuff)
+@
+
+<<eval=FALSE, warning=FALSE>>=
+## Then in the permutation code you'll do:
+
+for(i in 1:100) { # permute 100 times at least
+  BiocParallel::register(BiocParallel::SerialParam())
+  
+  shuf.temp=sample(unique(time.vector))
+  setshuff=do.call(c,lapply(shuf.temp, function(x) which(!is.na(match(time.vector, x)))))
+  use.shuff <- time.vector[setshuff]
+  seg.shuffle <- trendy(trendyExampleData[sample(1:nrow(data.norm.scale), 100),], #sample genes each time
+                        tVectIn = use.shuff, # shuffle the time vector
+                        saveObject=FALSE, numTry = 5)
+  res <- results(seg.shuffle)
+  res.r2 <- c(res.r2, sapply(res, function(x) x$AdjustedR2))
+}
+
+@
+
+
+\subsection{Further analysis of Trendy expression trends}
 
 
 For each gene, the Trendy segments are assigned a trend as: "up", "down", or "same".
@@ -529,7 +600,7 @@ The Trendy shiny app requires the .RData object output from the
 \Rfunction{trendy} function, which can be obtained by setting \Rcode{saveObject=TRUE} and specifying a name via the \Rfunction{fileName} parameter.
 
 <<eval=TRUE, warning=FALSE>>=
-res <- trendy(trendyExampleData, maxK=2, saveObject = TRUE, fileName="exampleObject")
+res <- trendy(trendyExampleData, tVectIn = 1:40, maxK=2, saveObject = TRUE, fileName="exampleObject")
 res <- results(res)
 @
 
