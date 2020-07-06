@@ -70,3 +70,4 @@ trendHeatmap <- function (topTrendyData, featureNames=NULL, cexRow = .5, cexCol=
            fill = rev(c("slateblue1", "black", "tomato")))
     
     return(bks.sign.sort.list)
+}
