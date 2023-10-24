@@ -121,7 +121,7 @@ plotFeature <-
                                        }
                                    }
 								   
-								   forCol <- which(tVectIn <= BKS[i + 1] & tVectIn > BKS[i])
+								   forCol <- which(tVectIn <= round(BKS[i + 1]) & tVectIn > BKS[i])
 								   IDseg <- ID[toCol]
 								   useCol <- switch(names(which.max(table(ID[forCol]))), 
 								                    `0` = segColors[3], 
